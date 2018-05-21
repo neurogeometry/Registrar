@@ -23,7 +23,7 @@ params.FE.MLOG3 = 3;               %default:   params.FE.MLOG3 = 3
 params.FE.windowsize = [4 4 4];
 
     % Expected number of features per stack
-params.FE.MaxN_Features=4000;
+params.FE.MaxN_Features=1000;
 params.FE.Mesh = [15 15 5]; %Features distance / Higher for less Features
 
     % Expected [x,y,z] movement of voxles during registration relative to stack size

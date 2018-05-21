@@ -159,7 +159,7 @@ elseif v_val == 9 % Other
     k = 2.5; %Lower for more features
 end
 %   Mesh = round((Dm/(pixelSize(1)*pixelSize(2)*pixelSize(3)*s)));
-%   k = 1.5;
+   k = 1.5;
 TransformationValue = get(handles.popupmenu3,'Value');%1=Smooth3 2=3D Gaussian lowpass 3=Imboxfilt3 4=Multi-scaleGaussian
 
 Seq_Par = get(handles.popupmenu4,'Value');
