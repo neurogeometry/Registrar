@@ -1,4 +1,4 @@
-# registrar
+# Registrar
 Registrar is a software for registration of 3D images in time and space.
 
 <img src="https://web.northeastern.edu/kahaki/reg_before_after.PNG" alt="Registrar" align="middle">
@@ -14,6 +14,14 @@ The ability to map neural circuits on the scale of an entire brain is critical f
 # Examples
 
 <img src="https://web.northeastern.edu/kahaki/Registrar.PNG" alt="Registrar" align="middle">
+
+A sample of input CSV file:
+
+% Stack location on disk, stack position x, stack position y, stack position z
+E:\SubTiling\00735\00735-ngc.0.tif,203299.775250213,196643.100746094,19118.6238160000
+E:\SubTiling\00736\00736-ngc.0.tif,204164.694690563,196643.100746094,19118.6238160000
+E:\SubTiling\00759\00759-ngc.0.tif,203299.775250213,198088.934353151,19118.6238160000
+E:\SubTiling\00760\00760-ngc.0.tif,204164.694690563,198088.934353151,19118.6238160000
 
 # License
 

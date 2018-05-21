@@ -56,7 +56,7 @@ function NCT_Registration_OpeningFcn(hObject, eventdata, handles, varargin)
 % jicon=javax.swing.ImageIcon('icon.png');
 % jFrame.setFigureIcon(jicon);
 %web('mailto:your.mail@address.org');
-handles.output = hObject;
+handles.output = hObject; 
 guidata(hObject, handles);
 % Choose default command line output for NCT_Registration
 handles.output = hObject;
