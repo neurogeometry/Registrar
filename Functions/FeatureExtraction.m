@@ -1,4 +1,4 @@
-function [FeatureExtractionLog,listboxItems,v,stop]=FeatureExtraction(v,StackList,k,listboxItems,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels,debug)
+function [FeatureExtractionLog,listboxItems,v,stop]=FeatureExtraction(v,StackList,listboxItems,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels,debug)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 %
@@ -61,7 +61,7 @@ if Seq_Par > 1 % do parallel
         
         tifFile = StackList(i,1);
         overlap_ind=[i,find(All_overlaps(i,:)),find(All_overlaps(:,i))'];
-        [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,~,~,~] = FeatureExtractionFunc(v,tifFile,k,i,listboxItems,tb11,stop,debug,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
+        [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,~,~,~] = FeatureExtractionFunc(v,tifFile,i,listboxItems,tb11,stop,debug,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
         
     end
     parfor_progress(0);
@@ -90,7 +90,7 @@ else % do sequential
                 break;
             end
             overlap_ind=[i,find(All_overlaps(i,:)),find(All_overlaps(:,i))'];
-            [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,listboxItems,v,stop] = FeatureExtractionFunc(v,tifFile,k,i,listboxItems,tb11,stop,debug,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
+            [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,listboxItems,v,stop] = FeatureExtractionFunc(v,tifFile,i,listboxItems,tb11,stop,debug,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
             q = round(1000/size(StackList,1))/0;
             patch('XData',[0,0,x(min(i*q,size(x,2))),x(min(i*q,size(x,2)))],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
             drawnow;

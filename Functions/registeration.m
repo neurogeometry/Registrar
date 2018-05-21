@@ -1,4 +1,4 @@
-function registeration (k,StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles)
+function registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 %
@@ -123,7 +123,7 @@ if exist(StackList_csv_pth,'file') > 0
             mkdir(DataFolder);
         end
         tic
-        [~,listbox_log,v,stop]=FeatureExtraction(v,StackList, k,listbox_log,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels,debug);
+        [~,listbox_log,v,stop]=FeatureExtraction(v,StackList,listbox_log,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels,debug);
         featureExtractionTime = toc
     end
     

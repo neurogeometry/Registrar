@@ -22,6 +22,9 @@ params.FE.MLOG3 = 3;               %default:   params.FE.MLOG3 = 3
     %  Size of the window to exgtract information around features 
 params.FE.windowsize = [4 4 4];
 
+    %  Feature Extraction Threshold - higher k for less features
+params.FE.k = 1.5;
+
     % Expected number of features per stack
 params.FE.MaxN_Features=1000;
 params.FE.Mesh = [15 15 5]; %Features distance / Higher for less Features

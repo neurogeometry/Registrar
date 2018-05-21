@@ -4,7 +4,7 @@
 % thr is the threshold
 % R_min,R_step, and R_max are parameters of Multi_Scale_LoG filter
 
-function SVr=Find_Seeds(Orig,k,StackPositions_pixels,StackSizes_pixels)
+function SVr=Find_Seeds(Orig,StackPositions_pixels,StackSizes_pixels)
 addpath('Functions');
 parameters;
 Orig = double(Orig);
@@ -37,7 +37,7 @@ else
     end
 end
 
-thr = mean(Orig(:))+k*std(Orig(:));
+thr = mean(Orig(:))+params.FE.k*std(Orig(:));
 
 sizeIm=size(Orig);
 if length(sizeIm)==2

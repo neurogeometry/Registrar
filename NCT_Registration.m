@@ -113,53 +113,7 @@ set(handles.radio_after,'Enable','off');
 set(handles.z_projection,'Enable','off');
 set(handles.radio_layerview,'Enable','off');
 set(handles.checkbox10,'Enable','off');
-v_val = get(handles.v,'Value');
-Dm = 3;%Features Distance in micrometer
-s = 4;
-if v_val == 1 %MouseLight
-    pixelSize = [0.377607421875 0.277486979166667 0.99601593625498];
-%     Mesh = 7;%Features Distance (Mesh)
-    %     k = 5; %Feature Thr. K
-    k = 5;
-elseif v_val == 2 % Diadem1,2
-    pixelSize = [0.3 0.3 1.02];
-%     Mesh = 7;%Features Distance (Mesh)
-    %     k = 3; %Feature Thr. K
-    k = 1; %Lower for more features
-elseif v_val == 3 % Diadem1,2
-    pixelSize = [0.3 0.3 1.02];
-%     Mesh = 7;%Features Distance (Mesh)
-    %     k = 3; %Feature Thr. K
-    k = 1; %Lower for more features
-elseif v_val == 4 % Neuromuscular
-    pixelSize = [0.1 0.1 0.21];
-    pixelSize = [0.26 0.26 0.81];
-%     Mesh = 15;%Features Distance (Mesh)
-    %     k = 3; %Feature Thr. K
-    k = 1.5; %Lower for more features
-elseif v_val == 5 % Holtmaat
-    pixelSize = [0.26 0.26 0.8];
-%     Mesh = 20;%Features Distance (Mesh)
-    %     k = 5; %Feature Thr. K
-    k = 1.5; %Lower for more features
-elseif v_val == 6 % Visual
-    pixelSize = [0.3 0.3 0.879];
-%     Mesh = 20;%Features Distance (Mesh)
-    %     k = 1.5; %Feature Thr. K
-    k = 1.5; %Lower for more features
-elseif v_val == 7 % TimeLapse
-%     Mesh = 30;%Features Distance (Mesh)
-    k = 5; %Feature Thr. K  %Lower for more features
-elseif v_val == 8 % Alignment of Stacks
-%     Mesh = 30;%Features Distance (Mesh)
-    k = 1; %Feature Thr. K  %Lower for more features
-elseif v_val == 9 % Other
-%     Mesh = 7;%Features Distance (Mesh)
-    %     k = 5; %Feature Thr. K
-    k = 2.5; %Lower for more features
-end
-%   Mesh = round((Dm/(pixelSize(1)*pixelSize(2)*pixelSize(3)*s)));
-   k = 1.5;
+
 TransformationValue = get(handles.popupmenu3,'Value');%1=Smooth3 2=3D Gaussian lowpass 3=Imboxfilt3 4=Multi-scaleGaussian
 
 Seq_Par = get(handles.popupmenu4,'Value');
@@ -168,7 +122,7 @@ blendingSID = str2double(get(handles.edit15,'String'));
 StackList_csv_pth = get(handles.edt_stacklist,'String');
 addpath('Functions');
 parameters;
-registeration (k,StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles)
+registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles)
 
 
 

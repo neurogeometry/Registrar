@@ -1,4 +1,4 @@
-function [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,listboxItems,v,stop] = FeatureExtractionFunc(v,File,k,stackID,listboxItems,tb11,stop,debug,DataFolder,StackPositions_pixels,StackSizes_pixels)
+function [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,listboxItems,v,stop] = FeatureExtractionFunc(v,File,stackID,listboxItems,tb11,stop,debug,DataFolder,StackPositions_pixels,StackSizes_pixels)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 % Purpose: Feature Extracion Function
@@ -55,7 +55,7 @@ set(tb, 'String', listboxItems);drawnow
 tb.Value = v-1;drawnow
 
 tic
-r_seed=Find_Seeds(IM_Original,k,StackPositions_pixels,StackSizes_pixels);
+r_seed=Find_Seeds(IM_Original,StackPositions_pixels,StackSizes_pixels);
 SeedsTime = toc;
 listboxItems{v}  = ['End Finding the Seeds for ',char(File),' - Finding Seeds Time:',num2str(SeedsTime)];
 v = v + 1;
