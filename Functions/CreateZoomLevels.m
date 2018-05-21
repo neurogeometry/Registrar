@@ -1,0 +1,284 @@
+% This function creates factor of 2 zoom levels, e.g. 2,4,8,16
+% Zoom is uniform in xyz. Tile sizes remain the same
+
+function NumTiles = CreateZoomLevels(ZoomLevel,DataFolder,usedDB)
+addpath('../Functions');
+parameters;
+StackClass='uint8';
+SaveFolder=[DataFolder,params.RE.savefolder];
+options.overwrite = 1;
+prevZoomLevel = num2str(ZoomLevel/2);
+PrevZoomLevelFolder=[SaveFolder,'Zoom',prevZoomLevel,'\'];
+
+SaveFolder=[SaveFolder,'Zoom',num2str(ZoomLevel),'\'];
+if usedDB
+    %     DBFile = [pwd,'\',DataFolder,'\nctracer.db'];
+%     SpecimenName = [extractBefore(extractAfter(DataFolder,"MicroscopeFiles\Results-"),'_StackList'),'_Z_',num2str(ZoomLevel)];
+    
+    DBFile = 'E:\TilesCreation\NCTracerWeb\New\NCtracerWeb-master\NCtracerWeb-master\NCT-Web\data\db\nctracer.db';
+    conn = database('','','','org.sqlite.JDBC',['jdbc:sqlite:',DBFile]);
+    conn.Message
+    x = conn.Handle;
+    %     setdbprefs('DataReturnFormat','cellarray');
+    %     insertcommand_IMAGE = 'INSERT INTO image (name) values (?)';
+    %     StatementObject = x.prepareStatement(insertcommand_IMAGE);
+    %     StatementObject.setObject(1,SpecimenName);
+    %     StatementObject.execute
+    %     close(StatementObject);
+    q2 = ("select seq from sqlite_sequence where name='image'");
+    % execute the query and retrieve the results
+    curs = exec(conn, q2);
+    curs = fetch(curs);
+    image_id = curs.Data{1};
+end
+
+
+
+temp=log2(ZoomLevel);
+if temp<=0 || temp-fix(temp)~=0
+    error('ZoomLevel must equal 2, 4, 8, 16, 32, 64, 128, or 256')
+end
+
+% check that ZoomLevel/2 exists
+if ~usedDB
+    if exist(PrevZoomLevelFolder,'dir')~=7
+        error(['Create zoom level',num2str(ZoomLevel/2),'first'])
+    end
+end
+
+if usedDB
+    SqlStr = ['SELECT x,y,z FROM pix where image_id = ',num2str(image_id),' and zoom_out = ',prevZoomLevel];
+    result = fetch(conn,SqlStr);
+    Tile_x=zeros(1,size(result,1));
+    Tile_y=zeros(1,size(result,1));
+    Tile_z=zeros(1,size(result,1));
+    for i=1:size(result,1)
+        Tile_x(i)=result{i,1};
+        Tile_y(i)=result{i,2};
+        Tile_z(i)=result{i,3};
+    end
+else
+    Tile_names = dir(PrevZoomLevelFolder);
+    Tile_x=zeros(1,length(Tile_names)-2);
+    Tile_y=zeros(1,length(Tile_names)-2);
+    Tile_z=zeros(1,length(Tile_names)-2);
+    for i=1:length(Tile_names)-2
+        temp=Tile_names(i+2).name;
+        ind=find(temp=='_');
+        Tile_x(i)=str2double(temp(1:ind(1)-1));
+        Tile_y(i)=str2double(temp(ind(1)+1:ind(2)-1));
+        Tile_z(i)=str2double(temp(ind(2)+1:end));
+    end
+end
+
+N_tiles=[length(unique(Tile_x)),length(unique(Tile_y)),length(unique(Tile_z))];
+N_tiles_new=ceil(N_tiles./2);
+
+[xx,yy,zz]=ndgrid(0:N_tiles_new(1)-1,0:N_tiles_new(2)-1,0:N_tiles_new(3)-1);
+NewTilePositions=1+[xx(:).*paramsFinalTileSize(1),yy(:).*paramsFinalTileSize(2),zz(:).*paramsFinalTileSize(3)];
+BigTilePositions=NewTilePositions.*2-1;
+NumTiles = prod(N_tiles_new);
+for i=1:prod(N_tiles_new)
+    Tile=zeros(2*paramsFinalTileSize,StackClass);
+    Tile(:,:,:) = 111;
+    temp_x=BigTilePositions(i,1);
+    temp_y=BigTilePositions(i,2);
+    temp_z=BigTilePositions(i,3);
+    temp_name=[num2str(BigTilePositions(i,1)),'_',num2str(BigTilePositions(i,2)),'_',num2str(BigTilePositions(i,3))];
+    if usedDB
+        SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
+        result = fetch(conn,SqlStr);
+        if ~isempty(result)
+            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),1:paramsFinalTileSize(3)) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(1),paramsFinalTileSize(3));
+        end
+    else
+        if exist([PrevZoomLevelFolder,temp_name],'dir')==7
+            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+        end
+    end
+    
+    temp_name=[num2str(BigTilePositions(i,1)+paramsFinalTileSize(1)),'_',num2str(BigTilePositions(i,2)),'_',num2str(BigTilePositions(i,3))];
+    temp_x=BigTilePositions(i,1)+paramsFinalTileSize(1);
+    temp_y=BigTilePositions(i,2);
+    temp_z=BigTilePositions(i,3);
+    if usedDB
+        SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
+        result = fetch(conn,SqlStr);
+        if ~isempty(result)
+            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),1:paramsFinalTileSize(3)) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+        end
+    else
+        if exist([PrevZoomLevelFolder,temp_name],'dir')==7
+            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+        end
+    end
+    temp_x=BigTilePositions(i,1);
+    temp_y=BigTilePositions(i,2)+paramsFinalTileSize(2);
+    temp_z=BigTilePositions(i,3);
+    temp_name=[num2str(BigTilePositions(i,1)),'_',num2str(BigTilePositions(i,2)+paramsFinalTileSize(2)),'_',num2str(BigTilePositions(i,3))];
+    if usedDB
+        SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
+        result = fetch(conn,SqlStr);
+        if ~isempty(result)
+            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3)) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+        end
+    else
+        if exist([PrevZoomLevelFolder,temp_name],'dir')==7
+            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+        end
+    end
+    temp_x=BigTilePositions(i,1)+paramsFinalTileSize(1);
+    temp_y=BigTilePositions(i,2)+paramsFinalTileSize(2);
+    temp_z=BigTilePositions(i,3);
+    temp_name=[num2str(BigTilePositions(i,1)+paramsFinalTileSize(1)),'_',num2str(BigTilePositions(i,2)+paramsFinalTileSize(2)),'_',num2str(BigTilePositions(i,3))];
+    if usedDB
+        SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
+        result = fetch(conn,SqlStr);
+        if ~isempty(result)
+            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3)) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+        end
+    else
+        if exist([PrevZoomLevelFolder,temp_name],'dir')==7
+            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+        end
+    end
+    temp_x=BigTilePositions(i,1);
+    temp_y=BigTilePositions(i,2);
+    temp_z=BigTilePositions(i,3)+paramsFinalTileSize(3);
+    temp_name=[num2str(BigTilePositions(i,1)),'_',num2str(BigTilePositions(i,2)),'_',num2str(BigTilePositions(i,3)+paramsFinalTileSize(3))];
+    if usedDB
+        SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
+        result = fetch(conn,SqlStr);
+        if ~isempty(result)
+            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+        end
+    else
+        if exist([PrevZoomLevelFolder,temp_name],'dir')==7
+            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+        end
+    end
+    temp_x=BigTilePositions(i,1)+paramsFinalTileSize(1);
+    temp_y=BigTilePositions(i,2);
+    temp_z=BigTilePositions(i,3)+paramsFinalTileSize(3);
+    temp_name=[num2str(BigTilePositions(i,1)+paramsFinalTileSize(1)),'_',num2str(BigTilePositions(i,2)),'_',num2str(BigTilePositions(i,3)+paramsFinalTileSize(3))];
+    if usedDB
+        SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
+        result = fetch(conn,SqlStr);
+        if ~isempty(result)
+            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+        end
+    else
+        if exist([PrevZoomLevelFolder,temp_name],'dir')==7
+            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+        end
+    end
+    temp_x=BigTilePositions(i,1);
+    temp_y=BigTilePositions(i,2)+paramsFinalTileSize(2);
+    temp_z=BigTilePositions(i,3)+paramsFinalTileSize(3);
+    temp_name=[num2str(BigTilePositions(i,1)),'_',num2str(BigTilePositions(i,2)+paramsFinalTileSize(2)),'_',num2str(BigTilePositions(i,3)+paramsFinalTileSize(3))];
+    if usedDB
+        SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
+        result = fetch(conn,SqlStr);
+        if ~isempty(result)
+            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+        end
+    else
+        if exist([PrevZoomLevelFolder,temp_name],'dir')==7
+            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+        end
+    end
+    temp_x=BigTilePositions(i,1)+paramsFinalTileSize(1);
+    temp_y=BigTilePositions(i,2)+paramsFinalTileSize(2);
+    temp_z=BigTilePositions(i,3)+paramsFinalTileSize(3);
+    temp_name=[num2str(BigTilePositions(i,1)+paramsFinalTileSize(1)),'_',num2str(BigTilePositions(i,2)+paramsFinalTileSize(2)),'_',num2str(BigTilePositions(i,3)+paramsFinalTileSize(3))];
+    if usedDB
+        SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
+        result = fetch(conn,SqlStr);
+        if ~isempty(result)
+            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+        end
+    else
+        if exist([PrevZoomLevelFolder,temp_name],'dir')==7
+            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+        end
+    end
+    
+    
+    Tile=max(Tile(1:2:end-1,:,:),Tile(2:2:end,:,:));
+    Tile=max(Tile(:,1:2:end-1,:),Tile(:,2:2:end,:));
+    Tile=max(Tile(:,:,1:2:end-1),Tile(:,:,2:2:end));
+    
+%     Tile(all(all(Tile == 0,3),2),:,:) = 111;
+%     Tile(:,all(all(Tile == 0,3),1),:) = 111;
+    if ~isempty(find(Tile(:),1,'first'))
+        % save the tile
+        TileName=[num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,2)),'_',num2str(NewTilePositions(i,3))];
+        if usedDB
+%             raw_im = typecast(reshape(im2uint8(Tile),1,[]),'uint8');
+              raw_im = reshape(Tile,1,[]);
+            %            raw_im = reshape(Tile,1,[]);
+            
+            %             insertcommand = ['INSERT INTO pix (image_id,x,y,z,x_dim,y_dim,z_dim,pixels,z_level) values (?,?,?,?,?,?,?,?,?)'];
+            insertcommand = 'INSERT INTO pix (image_id,x,y,z,x_dim,y_dim,z_dim,pixels,zoom_out) values (?,?,?,?,?,?,?,?,?)';
+            StatementObject = x.prepareStatement(insertcommand);
+            StatementObject.setObject(1,image_id);
+%             StatementObject.setObject(2,TileName);
+            StatementObject.setObject(2,NewTilePositions(i,1)-1);
+            StatementObject.setObject(3,NewTilePositions(i,2)-1);
+            StatementObject.setObject(4,NewTilePositions(i,3)-1);
+            StatementObject.setObject(5,paramsFinalTileSize(1));
+            StatementObject.setObject(6,paramsFinalTileSize(2));
+            StatementObject.setObject(7,paramsFinalTileSize(3));
+            StatementObject.setObject(8,raw_im);
+            StatementObject.setObject(9,ZoomLevel);
+            StatementObject.execute;
+            close(StatementObject);
+            disp(['Tile ',TileName,' created.']);
+            if prod(N_tiles_new) == 1
+%                 raw_im = typecast(reshape(im2uint8(max(Tile,[],3)),1,[]),'uint8');
+                raw_im = typecast(reshape(im2uint8(Tile),1,[]),'uint8');
+                insertcommand = 'INSERT INTO pix (image_id,x,y,z,x_dim,y_dim,z_dim,pixels,zoom_out) values (?,?,?,?,?,?,?,?,?)';
+                StatementObject = x.prepareStatement(insertcommand);
+                StatementObject.setObject(1,image_id);
+%                 StatementObject.setObject(2,'Map');
+                StatementObject.setObject(2,NewTilePositions(i,1)-1);
+                StatementObject.setObject(3,NewTilePositions(i,2)-1);
+                StatementObject.setObject(4,NewTilePositions(i,3)-1);
+                StatementObject.setObject(5,paramsFinalTileSize(1));
+                StatementObject.setObject(6,paramsFinalTileSize(2));
+                StatementObject.setObject(7,paramsFinalTileSize(3));
+                StatementObject.setObject(8,raw_im);
+                StatementObject.setObject(9,ZoomLevel);
+                StatementObject.execute;
+                close(StatementObject);
+            end
+        else
+            mkdir([SaveFolder,TileName]);
+            saveastiff(Tile, [SaveFolder,TileName,'\',TileName,'.tif'],options);
+            disp(['Tile ',TileName,' created.']);
+        end
+    end
+    
+    %     saveastiff(Tile, [SaveFolder,TileName,'.tif']);
+    
+    %          figure, imshow(max(Tile,[],3)), drawnow
+end
+if usedDB
+    close(conn)
+    clear conn
+end
+
+% save: TileNames NewTilePositions TileSizes ZoomLevels
+% TileInfo.N_tiles=N_tiles_new;
+% TileInfo.TileNames=num2cell(num2str((1:prod(N_tiles_new))',['%0',num2str(fix(log10(prod(N_tiles_new)))+1),'.0f']),2);
+% TileInfo.NewTilePositions=NewTilePositions;
+% paramsFinalTileSize=repmat(paramsFinalTileSize(1,:),prod(N_tiles_new),1);
+% TileInfo.ZoomLevels=ZoomLevel.*ones(prod(N_tiles_new),1);
+% if ~exist(SaveFolder, 'dir')
+%     mkdir(SaveFolder)
+% end
+% save([SaveFolder,'TileInfo.mat'],'TileInfo')
+%
+% T = table(TileInfo.TileNames,TileInfo.NewTilePositions,paramsFinalTileSize,TileInfo.ZoomLevels);
+% writetable(T,[SaveFolder,'TileInfo.csv'],'WriteVariableNames',false)
+
