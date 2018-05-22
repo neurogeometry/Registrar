@@ -295,17 +295,13 @@ if exist(StackList_csv_pth,'file') > 0
         TSize = strsplit(handles.editTilesSize.String,',');
         TilesSize = [str2double(TSize{1}),str2double(TSize{2}),str2double(TSize{3})];
         switch TransformationValue
-            case 1
-                
+            case 1 
                 load([DataFolder,params.GT.Transformation],'T');
-            case 2
-                
+            case 2  
                 load([DataFolder,params.GR.Transformation],'T');
             case 3
-                
                 load([DataFolder,params.GA.Transformation],'T');
             case 4
-                
                 load([DataFolder,params.GT.Transformation],'T');
         end
         
@@ -314,28 +310,16 @@ if exist(StackList_csv_pth,'file') > 0
         RetilingTime = toc
         
     end
-%     if handles.popupretilling.Value
-%         CreateZoomLevels(2,DataFolder,1)
-%         CreateZoomLevels(4,DataFolder,1)
-%         CreateZoomLevels(8,DataFolder,1)
-%         CreateZoomLevels(16,DataFolder,1)
-%         CreateZoomLevels(32,DataFolder,1)
-%     end
     
-    if handles.chkretilling.Value && ~stop
+    if handles.chkretilling.Value && ~stop && (handles.popupretilling.Value == 1 || handles.popupretilling.Value == 2)
         ZL = 2;
         NumTiles = inf;
-        if handles.popupretilling.Value == 1
-            usedDB = 1;
-        else
-            usedDB = 0;
-        end
+        
         while NumTiles > 1
-            NumTiles = CreateZoomLevels(ZL,DataFolder,usedDB);
+            NumTiles = CreateZoomLevels(ZL,DataFolder,handles.popupretilling.Value);
             ZL = ZL * 2;
         end
     end
-%     CreateZoomLevels(64,DataFolder,1)
     
     if runGlobal && ~stop
         listbox_log{v}  = 'Done!';

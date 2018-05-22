@@ -99,15 +99,6 @@ end
 % --- Executes on button press in pushbutton7.
 function pushbutton7_Callback(hObject, eventdata, handles)
 
-% Features_Dist_Mesh = get(handles.edit3,'String');
-% Mesh = str2double(Features_Dist_Mesh);
-
-% Pad = get(handles.edit5,'String');
-% Pad = str2double(Pad);
-
-% FE_th_k = get(handles.edit13,'String');
-% k = str2double(FE_th_k);
-
 set(handles.radio_before,'Enable','off');
 set(handles.radio_after,'Enable','off');
 set(handles.z_projection,'Enable','off');

@@ -1,7 +1,7 @@
 % This function creates factor of 2 zoom levels, e.g. 2,4,8,16
 % Zoom is uniform in xyz. Tile sizes remain the same
 
-function NumTiles = CreateZoomLevels(ZoomLevel,DataFolder,usedDB)
+function NumTiles = CreateZoomLevels(ZoomLevel,DataFolder,OutMethod)
 addpath('../Functions');
 parameters;
 StackClass='uint8';
@@ -11,7 +11,7 @@ prevZoomLevel = num2str(ZoomLevel/2);
 PrevZoomLevelFolder=[SaveFolder,'Zoom',prevZoomLevel,'\'];
 
 SaveFolder=[SaveFolder,'Zoom',num2str(ZoomLevel),'\'];
-if usedDB
+if OutMethod == 1
     %     DBFile = [pwd,'\',DataFolder,'\nctracer.db'];
 %     SpecimenName = [extractBefore(extractAfter(DataFolder,"MicroscopeFiles\Results-"),'_StackList'),'_Z_',num2str(ZoomLevel)];
     
@@ -39,16 +39,16 @@ if temp<=0 || temp-fix(temp)~=0
     error('ZoomLevel must equal 2, 4, 8, 16, 32, 64, 128, or 256')
 end
 
-% check that ZoomLevel/2 exists
-if ~usedDB
-    if exist(PrevZoomLevelFolder,'dir')~=7
-        error(['Create zoom level',num2str(ZoomLevel/2),'first'])
-    end
-end
 
-if usedDB
+
+
+if OutMethod == 1
     SqlStr = ['SELECT x,y,z FROM pix where image_id = ',num2str(image_id),' and zoom_out = ',prevZoomLevel];
     result = fetch(conn,SqlStr);
+    % check that ZoomLevel/2 exists
+    if isempty(result)
+        error(['Create zoom level',num2str(ZoomLevel/2),'first'])
+    end
     Tile_x=zeros(1,size(result,1));
     Tile_y=zeros(1,size(result,1));
     Tile_z=zeros(1,size(result,1));
@@ -58,6 +58,10 @@ if usedDB
         Tile_z(i)=result{i,3};
     end
 else
+    % check that ZoomLevel/2 exists
+    if exist(PrevZoomLevelFolder,'dir')~=7
+        error(['Create zoom level',num2str(ZoomLevel/2),'first'])
+    end
     Tile_names = dir(PrevZoomLevelFolder);
     Tile_x=zeros(1,length(Tile_names)-2);
     Tile_y=zeros(1,length(Tile_names)-2);
@@ -85,7 +89,7 @@ for i=1:prod(N_tiles_new)
     temp_y=BigTilePositions(i,2);
     temp_z=BigTilePositions(i,3);
     temp_name=[num2str(BigTilePositions(i,1)),'_',num2str(BigTilePositions(i,2)),'_',num2str(BigTilePositions(i,3))];
-    if usedDB
+    if OutMethod == 1
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
@@ -101,7 +105,7 @@ for i=1:prod(N_tiles_new)
     temp_x=BigTilePositions(i,1)+paramsFinalTileSize(1);
     temp_y=BigTilePositions(i,2);
     temp_z=BigTilePositions(i,3);
-    if usedDB
+    if OutMethod == 1
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
@@ -116,7 +120,7 @@ for i=1:prod(N_tiles_new)
     temp_y=BigTilePositions(i,2)+paramsFinalTileSize(2);
     temp_z=BigTilePositions(i,3);
     temp_name=[num2str(BigTilePositions(i,1)),'_',num2str(BigTilePositions(i,2)+paramsFinalTileSize(2)),'_',num2str(BigTilePositions(i,3))];
-    if usedDB
+    if OutMethod == 1
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
@@ -131,7 +135,7 @@ for i=1:prod(N_tiles_new)
     temp_y=BigTilePositions(i,2)+paramsFinalTileSize(2);
     temp_z=BigTilePositions(i,3);
     temp_name=[num2str(BigTilePositions(i,1)+paramsFinalTileSize(1)),'_',num2str(BigTilePositions(i,2)+paramsFinalTileSize(2)),'_',num2str(BigTilePositions(i,3))];
-    if usedDB
+    if OutMethod == 1
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
@@ -146,7 +150,7 @@ for i=1:prod(N_tiles_new)
     temp_y=BigTilePositions(i,2);
     temp_z=BigTilePositions(i,3)+paramsFinalTileSize(3);
     temp_name=[num2str(BigTilePositions(i,1)),'_',num2str(BigTilePositions(i,2)),'_',num2str(BigTilePositions(i,3)+paramsFinalTileSize(3))];
-    if usedDB
+    if OutMethod == 1
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
@@ -161,7 +165,7 @@ for i=1:prod(N_tiles_new)
     temp_y=BigTilePositions(i,2);
     temp_z=BigTilePositions(i,3)+paramsFinalTileSize(3);
     temp_name=[num2str(BigTilePositions(i,1)+paramsFinalTileSize(1)),'_',num2str(BigTilePositions(i,2)),'_',num2str(BigTilePositions(i,3)+paramsFinalTileSize(3))];
-    if usedDB
+    if OutMethod == 1
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
@@ -176,7 +180,7 @@ for i=1:prod(N_tiles_new)
     temp_y=BigTilePositions(i,2)+paramsFinalTileSize(2);
     temp_z=BigTilePositions(i,3)+paramsFinalTileSize(3);
     temp_name=[num2str(BigTilePositions(i,1)),'_',num2str(BigTilePositions(i,2)+paramsFinalTileSize(2)),'_',num2str(BigTilePositions(i,3)+paramsFinalTileSize(3))];
-    if usedDB
+    if OutMethod == 1
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
@@ -191,7 +195,7 @@ for i=1:prod(N_tiles_new)
     temp_y=BigTilePositions(i,2)+paramsFinalTileSize(2);
     temp_z=BigTilePositions(i,3)+paramsFinalTileSize(3);
     temp_name=[num2str(BigTilePositions(i,1)+paramsFinalTileSize(1)),'_',num2str(BigTilePositions(i,2)+paramsFinalTileSize(2)),'_',num2str(BigTilePositions(i,3)+paramsFinalTileSize(3))];
-    if usedDB
+    if OutMethod == 1
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
@@ -213,7 +217,7 @@ for i=1:prod(N_tiles_new)
     if ~isempty(find(Tile(:),1,'first'))
         % save the tile
         TileName=[num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,2)),'_',num2str(NewTilePositions(i,3))];
-        if usedDB
+        if OutMethod == 1
 %             raw_im = typecast(reshape(im2uint8(Tile),1,[]),'uint8');
               raw_im = reshape(Tile,1,[]);
             %            raw_im = reshape(Tile,1,[]);
@@ -263,7 +267,7 @@ for i=1:prod(N_tiles_new)
     
     %          figure, imshow(max(Tile,[],3)), drawnow
 end
-if usedDB
+if OutMethod == 1
     close(conn)
     clear conn
 end
