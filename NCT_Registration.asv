@@ -785,12 +785,38 @@ function chkretilling_Callback(hObject, eventdata, handles)
 val = get(handles.chkretilling,'Value');
 if val == 1
     set(handles.popupretilling,'Enable','on');
+    set(handles.txtretilling,'Enable','on');
     set(handles.txtoutput,'Enable','on');
 else
     set(handles.popupretilling,'Enable','off');
+    set(handles.txtretilling,'Enable','off');
     set(handles.txtoutput,'Enable','off');
 end
 % Hint: get(hObject,'Value') returns toggle state of chkretilling
+
+
+% --- Executes on selection change in popupretilling.
+function popupretilling_Callback(hObject, eventdata, handles)
+val = get(handles.popupretilling,'Value');
+if val == 6 % CATMAID
+    set(handles.editTilesSize,'String','256,256,100');
+    set(handles.txtretilling,'Enable','off');
+    set(handles.editTilesSize,'Enable','off');
+elseif val == 3
+    set(handles.editTilesSize,'String','400,400,100');
+    set(handles.txtretilling,'Enable','on');
+    set(handles.editTilesSize,'Enable','on');
+elseif val == 1
+    set(handles.editTilesSize,'String','200,200,100');
+    set(handles.txtretilling,'Enable','on');
+    set(handles.editTilesSize,'Enable','on');
+else
+    set(handles.editTilesSize,'String','1024,1536,251');
+    set(handles.txtretilling,'Enable','on');
+    set(handles.editTilesSize,'Enable','on');
+    
+end
+
 
 % --- Executes during object creation, after setting all properties.
 function popupretilling_CreateFcn(hObject, eventdata, handles)
@@ -820,3 +846,25 @@ web('http://www.northeastern.edu/neurogeometry/');
 function manual_mnu_Callback(hObject, eventdata, handles)
 open('UserManual.docx');
 
+
+
+function editTilesSize_Callback(hObject, eventdata, handles)
+% hObject    handle to editTilesSize (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of editTilesSize as text
+%        str2double(get(hObject,'String')) returns contents of editTilesSize as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function editTilesSize_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editTilesSize (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

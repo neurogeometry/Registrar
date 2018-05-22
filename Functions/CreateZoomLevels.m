@@ -40,8 +40,6 @@ if temp<=0 || temp-fix(temp)~=0
 end
 
 
-
-
 if OutMethod == 1
     SqlStr = ['SELECT x,y,z FROM pix where image_id = ',num2str(image_id),' and zoom_out = ',prevZoomLevel];
     result = fetch(conn,SqlStr);

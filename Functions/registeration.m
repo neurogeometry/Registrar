@@ -292,8 +292,8 @@ if exist(StackList_csv_pth,'file') > 0
     % if Retilling checkbox is checked
     if handles.chkretilling.Value && ~stop
         
-        TSize = strsplit(handles.editTilesSize.String,',');
-        TilesSize = [str2double(TSize{1}),str2double(TSize{2}),str2double(TSize{3})];
+%         TSize = strsplit(handles.editTilesSize.String,',');
+%         TilesSize = [str2double(TSize{1}),str2double(TSize{2}),str2double(TSize{3})];
         switch TransformationValue
             case 1 
                 load([DataFolder,params.GT.Transformation],'T');
