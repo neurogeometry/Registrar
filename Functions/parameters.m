@@ -126,6 +126,7 @@ params.BP.remove_pad = 0;
                          %% Resampling Parameters
 params.RE.savefolder = '\Tiles\';
 paramsREuseHDF5 = 0;
+paramsRERemoveBlack = 1;
 paramsBigTileSize = [1024 1024 256]; % powers of 2 only
 paramsFinalTileSize = [128 128 64]; % powers of 2 only
                          

@@ -203,7 +203,9 @@ if strcmp(T.transform,'Translation')
             TileCenter=TilePositions(i,:)+(paramsBigTileSize-1)./2;
             StackInd=find(abs(StackCentersTransformed(:,1)-TileCenter(1))<StackHW(:,1)+TileHW(1) & abs(StackCentersTransformed(:,2)-TileCenter(2))<StackHW(:,2)+TileHW(2) & abs(StackCentersTransformed(:,3)-TileCenter(3))<StackHW(:,3)+TileHW(3));
             Tile=zeros(paramsBigTileSize,StackClass);
-            Tile(:,:,:) = 111;
+            if paramsRERemoveBlack
+                Tile(:,:,:) = 111;
+            end
             for j=1:length(StackInd)
                 if paramsREuseHDF5
                     X = hdf5read([DataFolder,'\tmp\temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
@@ -228,7 +230,9 @@ if strcmp(T.transform,'Translation')
                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
                         X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3));
                 else
-                    Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),:) = 0;
+                    if paramsRERemoveBlack
+                        Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),:) = 0;
+                    end
                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
                         max(Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3)),...
                         X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3)));
@@ -254,7 +258,9 @@ if strcmp(T.transform,'Translation')
             TileCenter=TilePositions(i,:)+(paramsBigTileSize-1)./2;
             StackInd=find(abs(StackCentersTransformed(:,1)-TileCenter(1))<StackHW(:,1)+TileHW(1) & abs(StackCentersTransformed(:,2)-TileCenter(2))<StackHW(:,2)+TileHW(2) & abs(StackCentersTransformed(:,3)-TileCenter(3))<StackHW(:,3)+TileHW(3));
             Tile=zeros(paramsBigTileSize,StackClass);
-            Tile(:,:,:) = 111;
+            if paramsRERemoveBlack
+                Tile(:,:,:) = 111;
+            end
             for j=1:length(StackInd)
                 if paramsREuseHDF5
                     X = hdf5read([DataFolder,'\tmp\temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
@@ -279,7 +285,9 @@ if strcmp(T.transform,'Translation')
                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
                         X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3));
                 else
-                    Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),:) = 0;
+                    if paramsRERemoveBlack
+                        Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),:) = 0;
+                    end
                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
                         max(Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3)),...
                         X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3)));
@@ -349,7 +357,9 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
             end
             
             Tile=zeros(paramsBigTileSize,StackClass);
-            Tile(:,:,:) = 111;
+            if paramsRERemoveBlack
+                Tile(:,:,:) = 111;
+            end
             for j=1:length(StackInd)
                 
                 if paramsREuseHDF5
@@ -372,7 +382,9 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 
                 ind=(xx2>=1 & xx2<=StackSizes(StackInd(j),1) & yy2>=1 & yy2<=StackSizes(StackInd(j),2) & zz2>=1 & zz2<=StackSizes(StackInd(j),3));
                 ind2=xx2+(yy2-1).*StackSizes(StackInd(j),1)+(zz2-1).*(StackSizes(StackInd(j),1)*StackSizes(StackInd(j),2));
-                Tile(ind) = 0;
+                if paramsRERemoveBlack
+                    Tile(ind) = 0;
+                end
                 Tile(ind)=max(Tile(ind),X(ind2(ind)));
             end
             
@@ -401,7 +413,9 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
             end
             
             Tile=zeros(paramsBigTileSize,StackClass);
-            Tile(:,:,:) = 111;
+            if paramsRERemoveBlack
+                Tile(:,:,:) = 111;
+            end
             for j=1:length(StackInd)
                 
                 if paramsREuseHDF5
@@ -424,7 +438,9 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 
                 ind=(xx2>=1 & xx2<=StackSizes(StackInd(j),1) & yy2>=1 & yy2<=StackSizes(StackInd(j),2) & zz2>=1 & zz2<=StackSizes(StackInd(j),3));
                 ind2=xx2+(yy2-1).*StackSizes(StackInd(j),1)+(zz2-1).*(StackSizes(StackInd(j),1)*StackSizes(StackInd(j),2));
-                Tile(ind) = 0;
+                if paramsRERemoveBlack
+                    Tile(ind) = 0;
+                end
                 Tile(ind)=max(Tile(ind),X(ind2(ind)));
             end
             
