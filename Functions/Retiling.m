@@ -4,7 +4,7 @@ function Retiling(StackList,StackPositions,StackSizes,T,DataFolder,usedDB,Seq_Pa
 % addpath('../Functions');
 parameters
 paramsREuseHDF5=paramsREuseHDF5;
-
+paramsRERemoveBlack = paramsRERemoveBlack;
 paramsBigTileSize=paramsBigTileSize;
 paramsFinalTileSize=paramsFinalTileSize;
 
