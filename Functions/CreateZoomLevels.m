@@ -91,7 +91,7 @@ for i=1:prod(N_tiles_new)
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
-            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),1:paramsFinalTileSize(3)) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(1),paramsFinalTileSize(3));
+            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),1:paramsFinalTileSize(3)) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
