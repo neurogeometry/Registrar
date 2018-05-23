@@ -81,8 +81,7 @@ NewTilePositions=1+[xx(:).*paramsFinalTileSize(1),yy(:).*paramsFinalTileSize(2),
 BigTilePositions=NewTilePositions.*2-1;
 NumTiles = prod(N_tiles_new);
 for i=1:prod(N_tiles_new)
-    Tile=zeros(2*paramsFinalTileSize,StackClass);
-    Tile(:,:,:) = 111;
+    Tile=paramsEmptyVoxelsValue.*ones(2*paramsFinalTileSize,StackClass);
     temp_x=BigTilePositions(i,1);
     temp_y=BigTilePositions(i,2);
     temp_z=BigTilePositions(i,3);
@@ -91,7 +90,7 @@ for i=1:prod(N_tiles_new)
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
-            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),1:paramsFinalTileSize(3)) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),1:paramsFinalTileSize(3)) = reshape(typecast(result{1},StackClass),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
@@ -107,7 +106,7 @@ for i=1:prod(N_tiles_new)
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
-            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),1:paramsFinalTileSize(3)) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),1:paramsFinalTileSize(3)) = reshape(typecast(result{1},StackClass),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
@@ -122,7 +121,7 @@ for i=1:prod(N_tiles_new)
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
-            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3)) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3)) = reshape(typecast(result{1},StackClass),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
@@ -137,7 +136,7 @@ for i=1:prod(N_tiles_new)
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
-            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3)) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3)) = reshape(typecast(result{1},StackClass),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
@@ -152,7 +151,7 @@ for i=1:prod(N_tiles_new)
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
-            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},StackClass),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
@@ -167,7 +166,7 @@ for i=1:prod(N_tiles_new)
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
-            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},StackClass),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
@@ -182,7 +181,7 @@ for i=1:prod(N_tiles_new)
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
-            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},StackClass),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
@@ -197,7 +196,7 @@ for i=1:prod(N_tiles_new)
         SqlStr = ['SELECT pixels FROM pix where x = ',num2str(temp_x-1),' and y = ',num2str(temp_y-1),' and z = ',num2str(temp_z-1),' and zoom_out = ',prevZoomLevel,' and image_id = ',num2str(image_id)];
         result = fetch(conn,SqlStr);
         if ~isempty(result)
-            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},'uint8'),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
+            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end) = reshape(typecast(result{1},StackClass),paramsFinalTileSize(1),paramsFinalTileSize(2),paramsFinalTileSize(3));
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
@@ -205,14 +204,17 @@ for i=1:prod(N_tiles_new)
         end
     end
     
-    
-    Tile=max(Tile(1:2:end-1,:,:),Tile(2:2:end,:,:));
-    Tile=max(Tile(:,1:2:end-1,:),Tile(:,2:2:end,:));
-    Tile=max(Tile(:,:,1:2:end-1),Tile(:,:,2:2:end));
+    Tile=double(Tile);
+    Tile(Tile==paramsEmptyVoxelsValue)=nan;
+    Tile=nanmax(Tile(1:2:end-1,:,:),Tile(2:2:end,:,:));
+    Tile=nanmax(Tile(:,1:2:end-1,:),Tile(:,2:2:end,:));
+    Tile=nanmax(Tile(:,:,1:2:end-1),Tile(:,:,2:2:end));
+    Tile(isnan(Tile))=paramsEmptyVoxelsValue;
+    Tile=typecast(Tile,StackClass);
     
 %     Tile(all(all(Tile == 0,3),2),:,:) = 111;
 %     Tile(:,all(all(Tile == 0,3),1),:) = 111;
-    if ~isempty(find(Tile(:),1,'first'))
+    if ~isempty(find(Tile(:)~=paramsEmptyVoxelsValue,1,'first'))
         % save the tile
         TileName=[num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,2)),'_',num2str(NewTilePositions(i,3))];
         if OutMethod == 1

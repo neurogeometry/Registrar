@@ -8,7 +8,7 @@ paramsRERemoveBlack = paramsRERemoveBlack;
 paramsBigTileSize=paramsBigTileSize;
 paramsFinalTileSize=paramsFinalTileSize;
 
-gray_value=111;
+paramsEmptyVoxelsValue = paramsEmptyVoxelsValue;
 options.overwrite = 1;
 % InfoImage=imfinfo(char(StackList(1,1)));
 % M_tiles = ceil(InfoImage(1).Height/paramsBigTileSize(1));
@@ -285,24 +285,23 @@ if strcmp(T.transform,'Translation')
                 if Trimimage
                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
                         X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3));
-                else
-                    if paramsRERemoveBlack
-                        Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),:) = 0;
-                    end
+                else                   
                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
-                        max(Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3)),...
-                        X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3)));
+                        nanmax(Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3)),...
+                        double(X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3))));
                 end
                 
             end
             
-            Tile = uint8(double(Tile)./double(MaxIntensityValue)*255);
+            Tile=Tile./double(MaxIntensityValue)*255;
+            Tile(isnan(Tile))=paramsEmptyVoxelsValue;
+            Tile = uint8(Tile);
             FinalTilePositions=TilePositions(i,:)+([xx,yy,zz]-1).*(ones(prod(reduction),1)*paramsFinalTileSize);
             for jj=1:prod(reduction)
                 if (FinalTilePositions(jj,1)<=Max(1) && FinalTilePositions(jj,2)<=Max(2) && FinalTilePositions(jj,3)<=Max(3))
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
-                    if ~isempty(find(FinalTile(:),1,'first'))
+                    if ~isempty(find(FinalTile(:)~=paramsEmptyVoxelsValue,1,'first'))
                         SaveTile(usedDB,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end

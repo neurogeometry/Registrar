@@ -8,7 +8,7 @@ paramsRERemoveBlack = paramsRERemoveBlack;
 paramsBigTileSize=paramsBigTileSize;
 paramsFinalTileSize=paramsFinalTileSize;
 
-gray_value=111;
+paramsEmptyVoxelsValue = paramsEmptyVoxelsValue;
 options.overwrite = 1;
 % InfoImage=imfinfo(char(StackList(1,1)));
 % M_tiles = ceil(InfoImage(1).Height/paramsBigTileSize(1));
@@ -294,14 +294,14 @@ if strcmp(T.transform,'Translation')
             end
             
             Tile=Tile./double(MaxIntensityValue)*255;
-            Tile(isnan(Tile))=gray_value;
+            Tile(isnan(Tile))=paramsEmptyVoxelsValue;
             Tile = uint8(Tile);
             FinalTilePositions=TilePositions(i,:)+([xx,yy,zz]-1).*(ones(prod(reduction),1)*paramsFinalTileSize);
             for jj=1:prod(reduction)
                 if (FinalTilePositions(jj,1)<=Max(1) && FinalTilePositions(jj,2)<=Max(2) && FinalTilePositions(jj,3)<=Max(3))
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
-                    if ~isempty(find(FinalTile(:),1,'first'))
+                    if ~isempty(find(FinalTile(:)~=paramsEmptyVoxelsValue,1,'first'))
                         SaveTile(usedDB,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end

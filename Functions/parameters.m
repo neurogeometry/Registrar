@@ -129,5 +129,6 @@ paramsREuseHDF5 = 0;
 paramsRERemoveBlack = 1;
 paramsBigTileSize = [1024 1024 256]; % powers of 2 only
 paramsFinalTileSize = [128 128 64]; % powers of 2 only
+paramsEmptyVoxelsValue=111;
                          
                          
