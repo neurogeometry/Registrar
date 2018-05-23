@@ -202,9 +202,11 @@ if strcmp(T.transform,'Translation')
             x = conn.Handle;
             TileCenter=TilePositions(i,:)+(paramsBigTileSize-1)./2;
             StackInd=find(abs(StackCentersTransformed(:,1)-TileCenter(1))<StackHW(:,1)+TileHW(1) & abs(StackCentersTransformed(:,2)-TileCenter(2))<StackHW(:,2)+TileHW(2) & abs(StackCentersTransformed(:,3)-TileCenter(3))<StackHW(:,3)+TileHW(3));
-            Tile=zeros(paramsBigTileSize,StackClass);
+            
             if paramsRERemoveBlack
-                Tile(:,:,:) = 111;
+                Tile=ones(paramsBigTileSize,StackClass)*111;
+            else
+                Tile=zeros(paramsBigTileSize,StackClass);
             end
             for j=1:length(StackInd)
                 if paramsREuseHDF5
@@ -257,9 +259,10 @@ if strcmp(T.transform,'Translation')
         for i=1:prod(N_tiles)
             TileCenter=TilePositions(i,:)+(paramsBigTileSize-1)./2;
             StackInd=find(abs(StackCentersTransformed(:,1)-TileCenter(1))<StackHW(:,1)+TileHW(1) & abs(StackCentersTransformed(:,2)-TileCenter(2))<StackHW(:,2)+TileHW(2) & abs(StackCentersTransformed(:,3)-TileCenter(3))<StackHW(:,3)+TileHW(3));
-            Tile=zeros(paramsBigTileSize,StackClass);
             if paramsRERemoveBlack
-                Tile(:,:,:) = 111;
+                Tile=ones(paramsBigTileSize,StackClass)*111;
+            else
+                Tile=zeros(paramsBigTileSize,StackClass);
             end
             for j=1:length(StackInd)
                 if paramsREuseHDF5
@@ -356,9 +359,10 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 end
             end
             
-            Tile=zeros(paramsBigTileSize,StackClass);
             if paramsRERemoveBlack
-                Tile(:,:,:) = 111;
+                Tile=ones(paramsBigTileSize,StackClass)*111;
+            else
+                Tile=zeros(paramsBigTileSize,StackClass);
             end
             for j=1:length(StackInd)
                 
@@ -412,9 +416,10 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 end
             end
             
-            Tile=zeros(paramsBigTileSize,StackClass);
             if paramsRERemoveBlack
-                Tile(:,:,:) = 111;
+                Tile=ones(paramsBigTileSize,StackClass)*111;
+            else
+                Tile=zeros(paramsBigTileSize,StackClass);
             end
             for j=1:length(StackInd)
                 
