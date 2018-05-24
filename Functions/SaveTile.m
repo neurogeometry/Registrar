@@ -95,4 +95,11 @@ elseif usedDB == 6 % CATMAID - TrackEM
         
     end
     
+elseif usedDB == 7
+    %                 TileName=num2str(i,['%0',num2str(fix(log10(prod(N_tiles)))+1),'.0f']);
+    mkdir([SaveFolder,'HDF5']);
+    
+    hdf5write([SaveFolder,'HDF5','temp_',TileName,'.h5'], '/dataset1', Tile);
+    disp(['Tile ',TileName,' created.']);
+    
 end
