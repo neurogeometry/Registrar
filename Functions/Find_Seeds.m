@@ -67,11 +67,17 @@ clear Orig
 x=x(ind);
 y=y(ind);
 z=z(ind);
+% x = gpuArray(x);
+% y = gpuArray(y);
+% z = gpuArray(z);
 count=0;
 temp_ind=1;
 SVx=zeros(2*params.FE.MaxN_Features,1);
 SVy=zeros(2*params.FE.MaxN_Features,1);
 SVz=zeros(2*params.FE.MaxN_Features,1);
+% SVx = gpuArray(SVx);
+% SVy = gpuArray(SVy);
+% SVz = gpuArray(SVz);
 while ~isempty(temp_ind) && count<=params.FE.MaxN_Features
     count=count+1;
     SVx(count)=x(temp_ind);
