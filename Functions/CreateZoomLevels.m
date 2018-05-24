@@ -81,7 +81,7 @@ NewTilePositions=1+[xx(:).*paramsFinalTileSize(1),yy(:).*paramsFinalTileSize(2),
 BigTilePositions=NewTilePositions.*2-1;
 NumTiles = prod(N_tiles_new);
 for i=1:prod(N_tiles_new)
-    Tile=paramsEmptyVoxelsValue.*ones(2*paramsFinalTileSize,StackClass);
+    Tile=double(paramsEmptyVoxelsValue.*ones(2*paramsFinalTileSize,StackClass));
     temp_x=BigTilePositions(i,1);
     temp_y=BigTilePositions(i,2);
     temp_z=BigTilePositions(i,3);
@@ -210,7 +210,9 @@ for i=1:prod(N_tiles_new)
     Tile=nanmax(Tile(:,1:2:end-1,:),Tile(:,2:2:end,:));
     Tile=nanmax(Tile(:,:,1:2:end-1),Tile(:,:,2:2:end));
     Tile(isnan(Tile))=paramsEmptyVoxelsValue;
-    Tile=typecast(Tile,StackClass);
+	Tile=uint8(Tile);
+%     Tile=typecast(Tile,StackClass);
+    
     
 %     Tile(all(all(Tile == 0,3),2),:,:) = 111;
 %     Tile(:,all(all(Tile == 0,3),1),:) = 111;
@@ -219,7 +221,7 @@ for i=1:prod(N_tiles_new)
         TileName=[num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,2)),'_',num2str(NewTilePositions(i,3))];
         if OutMethod == 1
 %             raw_im = typecast(reshape(im2uint8(Tile),1,[]),'uint8');
-              raw_im = reshape(Tile,1,[]);
+              raw_im = typecast(reshape(Tile,1,[]),StackClass);
             %            raw_im = reshape(Tile,1,[]);
             
             %             insertcommand = ['INSERT INTO pix (image_id,x,y,z,x_dim,y_dim,z_dim,pixels,z_level) values (?,?,?,?,?,?,?,?,?)'];
