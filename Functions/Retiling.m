@@ -261,7 +261,8 @@ if strcmp(T.transform,'Translation')
             TileCenter=TilePositions(i,:)+(paramsBigTileSize-1)./2;
             StackInd=find(abs(StackCentersTransformed(:,1)-TileCenter(1))<StackHW(:,1)+TileHW(1) & abs(StackCentersTransformed(:,2)-TileCenter(2))<StackHW(:,2)+TileHW(2) & abs(StackCentersTransformed(:,3)-TileCenter(3))<StackHW(:,3)+TileHW(3));
 
-            Tile=nan(paramsBigTileSize);
+%             Tile=nan(paramsBigTileSize);
+            Tile=ones(paramsBigTileSize,StackClass)*111;
             for j=1:length(StackInd)
                 if paramsREuseHDF5
                     X = hdf5read([DataFolder,'\tmp\temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
@@ -285,17 +286,26 @@ if strcmp(T.transform,'Translation')
                 if Trimimage
                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
                         X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3));
-                else                   
-                    Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
-                        nanmax(Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3)),...
-                        double(X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3))));
+                else          
+%                     Tile(Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))==paramsEmptyVoxelsValue) = 0;
+                        temp = Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3));
+                        temp(temp==paramsEmptyVoxelsValue)=0;
+                        Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=temp;
+                        Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
+                        max(Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3)),...
+                        X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3)));
+%                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
+%                         nanmax(Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3)),...
+%                         double(X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3))));
                 end
                 
             end
             
-            Tile=Tile./double(MaxIntensityValue)*255;
-            Tile(isnan(Tile))=paramsEmptyVoxelsValue;
-            Tile = uint8(Tile);
+%             Tile=Tile./double(MaxIntensityValue)*255;
+%             Tile(isnan(Tile))=paramsEmptyVoxelsValue;
+%             Tile = uint8(Tile);
+%             Tile(Tile==2)=paramsEmptyVoxelsValue;
+            Tile = uint8(double(Tile)./double(MaxIntensityValue)*255);
             FinalTilePositions=TilePositions(i,:)+([xx,yy,zz]-1).*(ones(prod(reduction),1)*paramsFinalTileSize);
             for jj=1:prod(reduction)
                 if (FinalTilePositions(jj,1)<=Max(1) && FinalTilePositions(jj,2)<=Max(2) && FinalTilePositions(jj,3)<=Max(3))
