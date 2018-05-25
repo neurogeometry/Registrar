@@ -166,30 +166,31 @@ matchLoc_Source = [x_Source,y_Source,z_Source];
 
 i=1;
 Match_Indexes=[];
-
 Transformation_T = [];
 b = [];
 Global_Matched_Source = matchLoc_Source'+Source_StackPositions'-1;
 Global_Matched_Target = matchLoc_Target'+Target_StackPositions'-1;
-if size(matchLoc_Source,1) > paramsFMRansacMin && size(matchLoc_Target,1)> paramsFMRansacMin
-    while isempty(Match_Indexes) && i<paramsFMmaxiter
-        if get(tb11,'userdata') || stop% stop condition
-            disp(num2str(tb11.UserData));
-            stop = 1;
-            listboxItems{v}  = 'Process Stopped ';
-            v = v + 1;
-            tb = findobj(NCT_Registration,'Tag', 'listbox1');
-            set(tb, 'String', listboxItems);drawnow
-            tb.Value = v-1;drawnow
-            break;
-        end
-        [Match_Indexes] = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
-        if isempty(Match_Indexes)
-            disp('Trying again iteration ');
-            i=i+1;
-        end
+while numel(Match_Indexes)<paramsFMminmatches && i<paramsFMmaxiter
+    if get(tb11,'userdata') || stop% stop condition
+        disp(num2str(tb11.UserData));
+        stop = 1;
+        listboxItems{v}  = 'Process Stopped ';
+        v = v + 1;
+        tb = findobj(NCT_Registration,'Tag', 'listbox1');
+        set(tb, 'String', listboxItems);drawnow
+        tb.Value = v-1;drawnow
+        break;
+    end
+    Match_Indexes_temp = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
+    if numel(Match_Indexes_temp)<paramsFMminmatches
+        disp('Trying again iteration ');
+        i=i+1;
+    end
+    if numel(Match_Indexes)<numel(Match_Indexes_temp)
+        Match_Indexes=Match_Indexes_temp;
     end
 end
+
 toc
 
 if Seq_Par ~= 2

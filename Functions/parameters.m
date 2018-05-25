@@ -59,6 +59,9 @@ paramsFMmaxiter=1000;           %default:	paramsFMmaxiter = 1000;
 % Parameter to control the debug mode
 % paramsFMdebug=0;
 
+% Minimum number of desired final matches
+paramsFMminmatches = 10; 
+
     % Use Hessian-Eigen
 paramsFMEigen=0;                %default:	paramsFMEigen = 0;
 
@@ -127,7 +130,7 @@ params.BP.remove_pad = 0;
 params.RE.savefolder = '\Tiles\';
 paramsREuseHDF5 = 0;
 paramsRERemoveBlack = 1;
-paramsBigTileSize = [1024 1024 256]; % powers of 2 only
+paramsBigTileSize = [512 512 128]; % powers of 2 only
 paramsFinalTileSize = [128 128 64]; % powers of 2 only
 paramsEmptyVoxelsValue=111;
                          

@@ -30,10 +30,8 @@ InlierRatio = 0.20;
 
 NumAllMatches = size(TargetLocations,2);
 NumCorrectHungarian = ceil(InlierRatio*NumAllMatches);
-FailLimit = 10*nchoosek(NumAllMatches,NumRandPoints)/nchoosek(NumCorrectHungarian,NumRandPoints);%10000;%
-if FailLimit < 50000
-    FailLimit = 50000;
-elseif FailLimit > 10^5
+FailLimit = 100*nchoosek(NumAllMatches,NumRandPoints)/nchoosek(NumCorrectHungarian,NumRandPoints);
+if FailLimit > 10^5
     disp('The Probability of Success in Ransac is to Low');
     FailLimit = 10^5;
 end

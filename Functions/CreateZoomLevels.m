@@ -81,7 +81,7 @@ NewTilePositions=1+[xx(:).*paramsFinalTileSize(1),yy(:).*paramsFinalTileSize(2),
 BigTilePositions=NewTilePositions.*2-1;
 NumTiles = prod(N_tiles_new);
 for i=1:prod(N_tiles_new)
-    Tile=double(paramsEmptyVoxelsValue.*ones(2*paramsFinalTileSize,StackClass));
+    Tile=paramsEmptyVoxelsValue.*ones(2*paramsFinalTileSize,StackClass);
     temp_x=BigTilePositions(i,1);
     temp_y=BigTilePositions(i,2);
     temp_z=BigTilePositions(i,3);
@@ -204,18 +204,10 @@ for i=1:prod(N_tiles_new)
         end
     end
     
-    Tile=double(Tile);
-    Tile(Tile==paramsEmptyVoxelsValue)=nan;
-    Tile=nanmax(Tile(1:2:end-1,:,:),Tile(2:2:end,:,:));
-    Tile=nanmax(Tile(:,1:2:end-1,:),Tile(:,2:2:end,:));
-    Tile=nanmax(Tile(:,:,1:2:end-1),Tile(:,:,2:2:end));
-    Tile(isnan(Tile))=paramsEmptyVoxelsValue;
-	Tile=uint8(Tile);
-%     Tile=typecast(Tile,StackClass);
+    Tile=max(Tile(1:2:end-1,:,:),Tile(2:2:end,:,:));
+    Tile=max(Tile(:,1:2:end-1,:),Tile(:,2:2:end,:));
+    Tile=max(Tile(:,:,1:2:end-1),Tile(:,:,2:2:end));
     
-    
-%     Tile(all(all(Tile == 0,3),2),:,:) = 111;
-%     Tile(:,all(all(Tile == 0,3),1),:) = 111;
     if ~isempty(find(Tile(:)~=paramsEmptyVoxelsValue,1,'first'))
         % save the tile
         TileName=[num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,2)),'_',num2str(NewTilePositions(i,3))];

@@ -20,10 +20,10 @@ if usedDB == 1
     disp(['Tile ',TileName,' inserted.']);
 elseif usedDB == 2
     %                 TileName=num2str(i,['%0',num2str(fix(log10(prod(N_tiles)))+1),'.0f']);
-    mkdir([SaveFolder]);
+    mkdir([SaveFolder,TileName]);
 %     saveastiff(im2uint8(Tile), [SaveFolder,TileName,'\',TileName,'.tif']);
     options.overwrite = 1;
-    saveastiff(Tile, [SaveFolder,'\',TileName,'.tif'],options);
+    saveastiff(Tile, [SaveFolder,TileName,'\',TileName,'.tif'],options);
     disp(['Tile ',TileName,' created.']);
 elseif usedDB == 3 % Neuroglancer
     %                 TileName=num2str(i,['%0',num2str(fix(log10(prod(N_tiles)))+1),'.0f']);
