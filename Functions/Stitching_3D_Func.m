@@ -53,97 +53,92 @@ end
 
 
 
-if exist([DataFolder,'\hungarian_',SourceID,'_',TargetID,'.h5'])
-    [idx] = hdf5read([DataFolder,'\hungarian.h5'], '/dataset1');
-    idx1 = idx(:,1);
-    idx2 = idx(:,2);
+
+
+
+
+hungInput = zeros(size(Source_seed,1),size(Target_seed,1));
+
+% ZMAD = ZeroMeanAbsoluteDifferences
+% MSE: MeanSquareError
+% AD = AverageDifferences
+% NAE = NormalizedAbsoluteError
+% NCC= NormalizedCrossCorrelation
+% ZNCC= Zero mean NormalizedCrossCorrelation
+% SAD = Sum of Absolute Differences
+% SAD =  Sum of Squared Differences
+% RMSD = Root Mean Square Distance
+% SSIM = StructuralSimilarity
+% SSD = Sum of Square Differences (SSD)
+if strcmp(paramsFMMetric,'ZMAD')
+    nTargetFeatures=bsxfun(@rdivide,TargetFeatures,mean(TargetFeatures,2));
+    nSourceFeatures=bsxfun(@rdivide,SourceFeatures,mean(SourceFeatures,2));
+    for i=1:size(SourceFeatures,2)
+        hungInput=hungInput+abs(bsxfun(@minus,nTargetFeatures(:,i)',nSourceFeatures(:,i)));
+    end
+    hungInput=hungInput./size(SourceFeatures,2);
+    
+    TempDisp=zeros(size(SourceFeatures,1),size(TargetFeatures,1));
+    for i=1:size(Target_seed,2)
+        TempDisp=TempDisp+(bsxfun(@minus,Target_seed(:,i)',Source_seed(:,i))).^2;
+    end
+    Dthr=(sum(Displacement.^2))^0.5;
+    hungInput(isnan(hungInput)) = 10^12;
+    hungInput(abs(TempDisp.^0.5-Dthr)>paramsFMDT)=10^12;
 else
     
-    
-    
-    hungInput = zeros(size(Source_seed,1),size(Target_seed,1));
-    
-    % ZMAD = ZeroMeanAbsoluteDifferences
-    % MSE: MeanSquareError
-    % AD = AverageDifferences
-    % NAE = NormalizedAbsoluteError
-    % NCC= NormalizedCrossCorrelation
-    % ZNCC= Zero mean NormalizedCrossCorrelation
-    % SAD = Sum of Absolute Differences
-    % SAD =  Sum of Squared Differences
-    % RMSD = Root Mean Square Distance
-    % SSIM = StructuralSimilarity
-    % SSD = Sum of Square Differences (SSD)
-    if strcmp(paramsFMMetric,'ZMAD')
-        nTargetFeatures=bsxfun(@rdivide,TargetFeatures,mean(TargetFeatures,2));
-        nSourceFeatures=bsxfun(@rdivide,SourceFeatures,mean(SourceFeatures,2));
-        for i=1:size(SourceFeatures,2)
-            hungInput=hungInput+abs(bsxfun(@minus,nTargetFeatures(:,i)',nSourceFeatures(:,i)));
-        end
-        hungInput=hungInput./size(SourceFeatures,2);
-        
-        TempDisp=zeros(size(SourceFeatures,1),size(TargetFeatures,1));
-        for i=1:size(Target_seed,2)
-            TempDisp=TempDisp+(bsxfun(@minus,Target_seed(:,i)',Source_seed(:,i))).^2;
-        end
-        Dthr=(sum(Displacement.^2))^0.5;
-        hungInput(isnan(hungInput)) = 10^12;
-        hungInput(abs(TempDisp.^0.5-Dthr)>paramsFMDT)=10^12;
-    else
-        
-        for i = 1 : size(Source_seed,1)
-            for j = 1 : size(Target_seed,1)
-                if get(tb11,'userdata') || stop% stop condition
-                    disp(num2str(tb11.UserData));
-                    stop = 1;
-                    listboxItems{v}  = 'Process Stopped ';
-                    v = v + 1;
-                    tb = findobj(NCT_Registration,'Tag', 'listbox1');
-                    set(tb, 'String', listboxItems);drawnow
-                    tb.Value = v-1;drawnow
-                    break;
+    for i = 1 : size(Source_seed,1)
+        for j = 1 : size(Target_seed,1)
+            if get(tb11,'userdata') || stop% stop condition
+                disp(num2str(tb11.UserData));
+                stop = 1;
+                listboxItems{v}  = 'Process Stopped ';
+                v = v + 1;
+                tb = findobj(NCT_Registration,'Tag', 'listbox1');
+                set(tb, 'String', listboxItems);drawnow
+                tb.Value = v-1;drawnow
+                break;
+            end
+            TempDisp = sum((Target_seed(j,:)-Source_seed(i,:))-Displacement);
+            
+            if  TempDisp > paramsFMDT
+                hungInput(i,j) = 10^12;
+            else
+                switch  paramsFMMetric
+                    case 'ZMAD'
+                        hungInput(i,j) = mean(abs(TargetFeatures(j,:)./mean(TargetFeatures(j,:))-SourceFeatures(i,:)./mean(SourceFeatures(i,:))));
+                    case 'MSE'
+                        %                     error = TargetFeatures(j,:) - SourceFeatures(i,:);
+                        %                     hungInput(i,j) = sum(error .* error) / (size(TargetFeatures(j,:),1) * size(TargetFeatures(j,:),2));
+                        hungInput(i,j) = immse(TargetFeatures(j,:),SourceFeatures(i,:));
+                    case 'AD'
+                        hungInput(i,j) = (sum(TargetFeatures(j,:) - SourceFeatures(i,:)))/(size(TargetFeatures(j,:),1) * size(TargetFeatures(j,:),2));
+                    case 'NAE'
+                        error = TargetFeatures(j,:) - SourceFeatures(i,:);
+                        hungInput(i,j) = sum(abs(error))/ sum(TargetFeatures(j,:));
+                    case 'NCC' % https://en.wikipedia.org/wiki/Cross-correlation
+                        hungInput(i,j) = (sum(TargetFeatures(j,:) .* SourceFeatures(i,:)) / sum(std(TargetFeatures(j,:)) .* std(TargetFeatures(j,:))))/size(TargetFeatures(j,:),2);
+                        %                     hungInput(i,j) = normxcorr2(TargetFeatures(j,:),SourceFeatures(i,:))
+                    case 'ZNCC' % https://en.wikipedia.org/wiki/Cross-correlation
+                        hungInput(i,j) = (sum((TargetFeatures(j,:)-mean(TargetFeatures(j,:))) .* (SourceFeatures(i,:)-mean(SourceFeatures(i,:)))) / sum(std(TargetFeatures(j,:)) .* std(TargetFeatures(j,:))))/size(TargetFeatures(j,:),2);
+                    case 'SAD'
+                        hungInput(i,j) = sum(abs(TargetFeatures(j,:)-SourceFeatures(i,:)));
+                    case 'ZSAD'
+                        hungInput(i,j) = sum(abs((TargetFeatures(j,:)-mean(TargetFeatures(j,:)))-(SourceFeatures(i,:)-mean(SourceFeatures(i,:)))));
+                    otherwise % ZMAD
+                        hungInput(i,j) = mean(abs(TargetFeatures(j,:)./mean(TargetFeatures(j,:))-SourceFeatures(i,:)./mean(SourceFeatures(i,:))));
                 end
-                TempDisp = sum((Target_seed(j,:)-Source_seed(i,:))-Displacement);
                 
-                if  TempDisp > paramsFMDT
-                    hungInput(i,j) = 10^12;
-                else
-                    switch  paramsFMMetric
-                        case 'ZMAD'
-                            hungInput(i,j) = mean(abs(TargetFeatures(j,:)./mean(TargetFeatures(j,:))-SourceFeatures(i,:)./mean(SourceFeatures(i,:))));
-                        case 'MSE'
-                            %                     error = TargetFeatures(j,:) - SourceFeatures(i,:);
-                            %                     hungInput(i,j) = sum(error .* error) / (size(TargetFeatures(j,:),1) * size(TargetFeatures(j,:),2));
-                            hungInput(i,j) = immse(TargetFeatures(j,:),SourceFeatures(i,:));
-                        case 'AD'
-                            hungInput(i,j) = (sum(TargetFeatures(j,:) - SourceFeatures(i,:)))/(size(TargetFeatures(j,:),1) * size(TargetFeatures(j,:),2));
-                        case 'NAE'
-                            error = TargetFeatures(j,:) - SourceFeatures(i,:);
-                            hungInput(i,j) = sum(abs(error))/ sum(TargetFeatures(j,:));
-                        case 'NCC' % https://en.wikipedia.org/wiki/Cross-correlation
-                            hungInput(i,j) = (sum(TargetFeatures(j,:) .* SourceFeatures(i,:)) / sum(std(TargetFeatures(j,:)) .* std(TargetFeatures(j,:))))/size(TargetFeatures(j,:),2);
-                            %                     hungInput(i,j) = normxcorr2(TargetFeatures(j,:),SourceFeatures(i,:))
-                        case 'ZNCC' % https://en.wikipedia.org/wiki/Cross-correlation
-                            hungInput(i,j) = (sum((TargetFeatures(j,:)-mean(TargetFeatures(j,:))) .* (SourceFeatures(i,:)-mean(SourceFeatures(i,:)))) / sum(std(TargetFeatures(j,:)) .* std(TargetFeatures(j,:))))/size(TargetFeatures(j,:),2);
-                        case 'SAD'
-                            hungInput(i,j) = sum(abs(TargetFeatures(j,:)-SourceFeatures(i,:)));
-                        case 'ZSAD'
-                            hungInput(i,j) = sum(abs((TargetFeatures(j,:)-mean(TargetFeatures(j,:)))-(SourceFeatures(i,:)-mean(SourceFeatures(i,:)))));
-                        otherwise % ZMAD
-                            hungInput(i,j) = mean(abs(TargetFeatures(j,:)./mean(TargetFeatures(j,:))-SourceFeatures(i,:)./mean(SourceFeatures(i,:))));
-                    end
-                    
-                end
             end
         end
-        
     end
     
-    Am = Hungarian_fast(hungInput);
-    Am(hungInput==10^12)=0;
-    [idx1,idx2]=find(Am);
-    hdf5write([DataFolder,'\hungarian_',SourceID,'_',TargetID,'.h5'], '/dataset1', [idx1,idx2]);
 end
+
+Am = Hungarian_fast(hungInput);
+Am(hungInput==10^12)=0;
+[idx1,idx2]=find(Am);
+
 
 if Seq_Par ~= 2
     tb = findobj(NCT_Registration,'Tag', 'listbox1');
