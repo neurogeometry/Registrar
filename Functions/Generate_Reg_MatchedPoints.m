@@ -95,7 +95,7 @@ if Seq_Par > 1
                         
                         Source_StackPositions = StackPositions_pixels(SourceID,:);
                         Target_StackPositions = StackPositions_pixels(TargetID,:);
-                        [~,MatchLocations,~,~,~,~,~] = Stitching_3D_Func(StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),listboxItems,v,StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug);
+                        [~,MatchLocations,~,~,~,~,~] = Stitching_3D_Func(StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),listboxItems,v,StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder);
                         
                         sourceCol = zeros(size(MatchLocations,1),1);
                         sourceCol(:,1) = SourceID;
@@ -181,7 +181,7 @@ else
                         tb.Value = v-1;drawnow
                         Source_StackPositions = StackPositions_pixels(SourceID,:);
                         Target_StackPositions = StackPositions_pixels(TargetID,:);
-                        [Registrationtime,MatchLocations,listboxItems,v,~,~,stop] = Stitching_3D_Func(StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),listboxItems,v,StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug);
+                        [Registrationtime,MatchLocations,listboxItems,v,~,~,stop] = Stitching_3D_Func(StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),listboxItems,v,StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder);
                         
                         Matched(SourceID,TargetID) = {MatchLocations};
                         %                     end
