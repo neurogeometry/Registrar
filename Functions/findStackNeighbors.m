@@ -20,7 +20,7 @@ N=size(StackPositions,1);
 StackCenters=StackPositions+StackSizes_mm./2;
 StackCenters0=StackCenters(InputStackNumber,:);
 StackSizes_mm0=StackSizes_mm(InputStackNumber,:);
-ind=(abs(StackCenters-ones(N,1)*StackCenters0)<(StackSizes_mm+StackSizes_mm0)./2);
+ind=(abs(StackCenters-ones(N,1)*StackCenters0)<(StackSizes_mm+ones(N,1)*StackSizes_mm0)./2);
 ind(InputStackNumber,1)=0;
 NeighInd=find(sum(ind,2)==3);
 end

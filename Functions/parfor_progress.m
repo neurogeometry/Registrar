@@ -1,4 +1,4 @@
-function percent = parfor_progress(N)
+function percent = parfor_progress(N,v)
 %PARFOR_PROGRESS Progress monitor (progress bar) that works with parfor.
 %   PARFOR_PROGRESS works by creating a file called parfor_progress.txt in
 %   your working directory, and then keeping track of the parfor loop's
@@ -33,7 +33,7 @@ function percent = parfor_progress(N)
 
 % By Jeremy Scheff - jdscheff@gmail.com - http://www.jeremyscheff.com/
 
-error(nargchk(0, 1, nargin, 'struct'));
+% error(nargchk(0, 1, nargin, 'struct'));
 
 if nargin < 1
     N = -1;
@@ -52,9 +52,11 @@ if N > 0
     
     if nargout == 0
         disp(['  0%[>', repmat(' ', 1, w), ']']);
-        tb9 = findobj(NCT_Registration,'Tag', 'axes3');
-        patch('XData',[0,0,50,50],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
-        drawnow;
+        if v ~= 0
+            tb9 = findobj(NCT_Registration,'Tag', 'axes3');
+            patch('XData',[0,0,50,50],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
+            drawnow;
+        end
     end
 elseif N == 0
     delete('parfor_progress.txt');
@@ -62,9 +64,11 @@ elseif N == 0
     
     if nargout == 0
         disp([repmat(char(8), 1, (w+9)), char(10), '100%[', repmat('=', 1, w+1), ']']);
-        tb9 = findobj(NCT_Registration,'Tag', 'axes3');
-        patch('XData',[0,0,100,100],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
-        drawnow;
+        if v ~= 0
+            tb9 = findobj(NCT_Registration,'Tag', 'axes3');
+            patch('XData',[0,0,100,100],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
+            drawnow;
+        end
     end
 else
     if ~exist('parfor_progress.txt', 'file')
@@ -82,9 +86,11 @@ else
     
     if nargout == 0
         perc = sprintf('%3.0f%%', percent); % 4 characters wide, percentage
-        tb9 = findobj(NCT_Registration,'Tag', 'axes3');
-        patch('XData',[0,0,90,90],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
-        drawnow;
+        if v ~= 0
+            tb9 = findobj(NCT_Registration,'Tag', 'axes3');
+            patch('XData',[0,0,90,90],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
+            drawnow;
+        end
         disp([repmat(char(8), 1, (w+9)), char(10), perc, '[', repmat('=', 1, round(percent*w/100)), '>', repmat(' ', 1, w - round(percent*w/100)), ']']);
     end
 end

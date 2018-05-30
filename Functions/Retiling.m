@@ -1,6 +1,6 @@
 % This function creates seamless image tiles from the dataset of original image stacks and stack transformations.
 
-function Retiling(StackList,StackPositions,StackSizes,T,DataFolder,usedDB,Seq_Par,Par_workers)
+function Retiling(StackList,StackPositions,StackSizes,T,DataFolder,outputType,Seq_Par,Par_workers)
 % addpath('../Functions');
 parameters
 paramsREuseHDF5=paramsREuseHDF5;
@@ -42,7 +42,7 @@ else
 end
 
 SpecimenName = extractBefore(extractAfter(DataFolder,"MicroscopeFiles\Results-"),'_StackList');
-if usedDB == 1
+if outputType == 1
     %     DBFile = [pwd,'\',DataFolder,'\nctracer.db'];
     DBFile = 'E:\TilesCreation\NCTracerWeb\New\NCtracerWeb-master\NCtracerWeb-master\NCT-Web\data\db\nctracer.db';
     % for connection help: https://www.mathworks.com/help/database/ug/sqlite-jdbc-windows.html#bt8kopj-1
@@ -151,13 +151,13 @@ SaveFolder=[DataFolder,params.RE.savefolder,'Zoom1\'];
 % SaveFolder = 'E:\TilesCreation\Data\MouselightFull_Neuroglancer\';
 
 N_stacks=length(StackList);
-if usedDB == 3
+if outputType == 3
     mkdir([SaveFolder,'image']);
-elseif usedDB == 4
+elseif outputType == 4
     mkdir([SaveFolder,'Nifti']);
-elseif usedDB == 5
+elseif outputType == 5
     mkdir([SaveFolder,'HDF5']);
-elseif usedDB == 6
+elseif outputType == 6
     mkdir([SaveFolder,'CATMAID']);
 end
 StackHW=StackSizes./2;
@@ -250,7 +250,7 @@ if strcmp(T.transform,'Translation')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:),1,'first'))
-                        SaveTile(usedDB,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
+                        SaveTile(outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end
             end
@@ -309,7 +309,7 @@ if strcmp(T.transform,'Translation')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:)~=paramsEmptyVoxelsValue,1,'first'))
-                        SaveTile(usedDB,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
+                        SaveTile(outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end
             end
@@ -403,7 +403,7 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:),1,'first'))
-                        SaveTile(usedDB,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
+                        SaveTile(outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end
             end
@@ -460,7 +460,7 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:),1,'first'))
-                        SaveTile(usedDB,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
+                        SaveTile(outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end
             end
@@ -470,13 +470,13 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
 elseif strcmp(T.transform,'Nonrigid')
 end
 
-if usedDB ==1
+if outputType ==1
     close(conn)
     clear conn
     disp("Done with DB");
 end
 
-if usedDB ==1 || usedDB ==2 || usedDB ==4
+if outputType ==1 || outputType ==2 || outputType ==4
     %     TileInfo.N_tiles=N_tiles;
     %     TileInfo.TileNames=num2cell(num2str(FinalTile_name(~remove_FinalTile_ind),['%0',num2str(fix(log10(prod(FinalN_tiles)))+1),'.0f']),2);
     %     TileInfo.TilePositions=FinalTilePositions(~remove_FinalTile_ind,:);
@@ -488,7 +488,7 @@ if usedDB ==1 || usedDB ==2 || usedDB ==4
     %     save([SaveFolder,'TileInfo.mat'],'TileInfo')
     %     T = table(TileInfo.TileNames,TileInfo.TilePositions,TileInfo.paramsBigTileSizes,TileInfo.ZoomLevels);
     %     writetable(T,[SaveFolder,'TileInfo.csv'],'WriteVariableNames',false)
-elseif usedDB ==3
+elseif outputType ==3
     
     json_string = ['{"data_type": "uint8", "num_channels": 1, "scales": [{"chunk_sizes": [[',num2str(paramsFinalTileSize(1)),',',num2str(paramsFinalTileSize(2)),',',num2str(paramsFinalTileSize(3)),']], "encoding": "jpeg", "key": "image", "resolution": [128, 128, 128], "size": [',num2str(TilePositions(end,2)+paramsFinalTileSize(2)),',',num2str(TilePositions(end,1)+paramsFinalTileSize(1)),',',num2str(TilePositions(end,3)+paramsFinalTileSize(3)),'], "voxel_offset": [0, 0, 0]}], "type": "image"}'];
     
@@ -497,7 +497,7 @@ elseif usedDB ==3
     fileID = fopen([SaveFolder,'/info'],'w');
     nbytes = fprintf(fileID,json_string);
     fclose(fileID);
-elseif usedDB == 5
+elseif outputType == 5
     createXML(FinalTilePositions(~remove_FinalTile_ind),paramsFinalparamsBigTileSize,SaveFolder);
 end
 

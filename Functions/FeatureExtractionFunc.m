@@ -21,47 +21,50 @@ ImportTime = 0;
 numberofFeatures = 0;
 FeatureExtractionTime =0;
 parameters;
-
-tb = findobj(NCT_Registration,'Tag', 'listbox1');
+if v ~= 0
+    tb = findobj(NCT_Registration,'Tag', 'listbox1');
+end
 tic
 
 
 IM_Original=ImportStack(char(File),StackSizes_pixels(1,:));
 if paramsREuseHDF5
-    tic, 
+    tic,
     hdf5write([DataFolder,'\tmp\temp_',num2str(stackID),'.h5'], '/dataset1', IM_Original);
     toc
-%     
-%     tic,
-%     X = hdf5read([DataFolder,'\tmp\temp_',num2str(stackID),'.h5'], '/dataset1');
-%     toc
-%     
-%     IM_Original2D = reshape(IM_Original,[11*512 7*512]);
-%     tic,
-%     imwrite(IM_Original2D,[DataFolder,'\test.jpg'],'jpg');
-%     toc
-%     
-%     tic,imread([DataFolder,'\test.jpg']);toc
-
-
-
-
+    %
+    %     tic,
+    %     X = hdf5read([DataFolder,'\tmp\temp_',num2str(stackID),'.h5'], '/dataset1');
+    %     toc
+    %
+    %     IM_Original2D = reshape(IM_Original,[11*512 7*512]);
+    %     tic,
+    %     imwrite(IM_Original2D,[DataFolder,'\test.jpg'],'jpg');
+    %     toc
+    %
+    %     tic,imread([DataFolder,'\test.jpg']);toc
+    
+    
+    
+    
 end
 
 ImportTime = toc;
-listboxItems{v}  = ['End Reading the file ',char(File),' - Import Time:',num2str(ImportTime)];
-v = v + 1;
-set(tb, 'String', listboxItems);drawnow
-tb.Value = v-1;drawnow
-
+if v ~= 0
+    listboxItems{v}  = ['End Reading the file ',char(File),' - Import Time:',num2str(ImportTime)];
+    v = v + 1;
+    set(tb, 'String', listboxItems);drawnow
+    tb.Value = v-1;drawnow
+end
 tic
 r_seed=Find_Seeds(IM_Original,StackPositions_pixels,StackSizes_pixels);
 SeedsTime = toc;
-listboxItems{v}  = ['End Finding the Seeds for ',char(File),' - Finding Seeds Time:',num2str(SeedsTime)];
-v = v + 1;
-set(tb, 'String', listboxItems);drawnow
-tb.Value = v-1;drawnow
-
+if v ~= 0
+    listboxItems{v}  = ['End Finding the Seeds for ',char(File),' - Finding Seeds Time:',num2str(SeedsTime)];
+    v = v + 1;
+    set(tb, 'String', listboxItems);drawnow
+    tb.Value = v-1;drawnow
+end
 
 [X1,Y1,Z1]=size(IM_Original);
 if Z1 < params.FE.windowsize(3)
@@ -121,27 +124,29 @@ if debug
     plot(r_seed(:,2),r_seed(:,1),'r*','Parent',tb1,'Tag','Fpoints');hold on
     
 end
-
-listboxItems{v}  = ['End of Extracting Features for the file ',char(File),' - ',num2str(size(r_seed,1)), ' Features are Detected'];
-v = v + 1;
-set(tb, 'String', listboxItems);drawnow
-tb.Value = v-1;drawnow
-
+if v ~= 0
+    listboxItems{v}  = ['End of Extracting Features for the file ',char(File),' - ',num2str(size(r_seed,1)), ' Features are Detected'];
+    v = v + 1;
+    set(tb, 'String', listboxItems);drawnow
+    tb.Value = v-1;drawnow
+end
 FeatureVector=[];%zeros(size(r_seed,1),(2*w+1)^3);
 
 tic
 FeatureVector = zeros(size(r_seed,1),prod(2*params.FE.windowsize+1));
 for i=1:size(r_seed,1)
     temp = double(IM_Original(r_seed(i,1)-params.FE.windowsize(1):r_seed(i,1)+params.FE.windowsize(1),r_seed(i,2)-params.FE.windowsize(2):r_seed(i,2)+params.FE.windowsize(2),r_seed(i,3)-params.FE.windowsize(3):r_seed(i,3)+params.FE.windowsize(3)));
-    if get(tb11,'userdata') || stop% stop condition
-        disp(num2str(tb11.UserData));
-        stop = 1;
-        listboxItems{v}  = 'Process Stopped ';
-        v = v + 1;
-        tb = findobj(NCT_Registration,'Tag', 'listbox1');
-        set(tb, 'String', listboxItems);drawnow
-        tb.Value = v-1;drawnow
-        break;
+    if v ~= 0
+        if get(tb11,'userdata') || stop% stop condition
+            disp(num2str(tb11.UserData));
+            stop = 1;
+            listboxItems{v}  = 'Process Stopped ';
+            v = v + 1;
+            tb = findobj(NCT_Registration,'Tag', 'listbox1');
+            set(tb, 'String', listboxItems);drawnow
+            tb.Value = v-1;drawnow
+            break;
+        end
     end
     %Hessian Matrix
     if paramsFMEigen
@@ -172,18 +177,20 @@ end
 %     end
 
 NeighborExtractionTime = toc;
-listboxItems{v}  = ['End of Reading the Features Neighbor of the file ',char(File),' - extracting neighbors time: ',num2str(NeighborExtractionTime) ];
-v = v + 1;
-set(tb, 'String', listboxItems);drawnow
-tb.Value = v-1;drawnow
-
+if v ~= 0
+    listboxItems{v}  = ['End of Reading the Features Neighbor of the file ',char(File),' - extracting neighbors time: ',num2str(NeighborExtractionTime) ];
+    v = v + 1;
+    set(tb, 'String', listboxItems);drawnow
+    tb.Value = v-1;drawnow
+end
 FeatureExtractionTime = toc;
 numberofFeatures = size(r_seed);
-
-listboxItems{v}  = [num2str(numberofFeatures(1)),' Features are extracted for the file ',char(File)];
-v = v + 1;
-set(tb, 'String', listboxItems);drawnow
-tb.Value = v-1;drawnow
+if v ~= 0
+    listboxItems{v}  = [num2str(numberofFeatures(1)),' Features are extracted for the file ',char(File)];
+    v = v + 1;
+    set(tb, 'String', listboxItems);drawnow
+    tb.Value = v-1;drawnow
+end
 
 % save([featuresFolder,File{1}(1:5),'_seeds'],'r_seed','FeatureVector','-v7.3')
 % [PathStr,seedsFileName]=fileparts(File{1});
@@ -196,9 +203,10 @@ hdf5write([DataFolder,'\tmp\Feature_vector',num2str(stackID),'.h5'], '/dataset1'
 seedsFile = [DataFolder,'\tmp\Feature_',num2str(stackID),'.h5'];
 % save([featuresFolder,char(seedsFileName),'_seeds.mat'],'r_seed','FeatureVector','-v7.3')
 % seedsFile = [featuresFolder,char(seedsFileName),'_seeds.mat'];
-
-listboxItems{v}  = ['Seeds are saved as: ',seedsFile];
-v = v + 1;
-set(tb, 'String', listboxItems);drawnow
-tb.Value = v-1;drawnow
+if v ~= 0
+    listboxItems{v}  = ['Seeds are saved as: ',seedsFile];
+    v = v + 1;
+    set(tb, 'String', listboxItems);drawnow
+    tb.Value = v-1;drawnow
+end
 end

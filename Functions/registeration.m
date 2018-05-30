@@ -1,4 +1,4 @@
-function registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles)
+function registeration (varargin)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 %
@@ -19,11 +19,43 @@ function registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_worker
 % kahaki@neu.edu, a.stepanyants.neu.edu
 % =========================================================================
 % -------------------------------------------------------------------------
+% blendingSID,handles
+
+StackList_csv_pth = varargin{1};
+TransformationValue = varargin{2};
+Seq_Par = varargin{3};
+Par_workers = varargin{4};
+if size(varargin,2) > 4
+    blendingSID = varargin{5};
+    handles = varargin{6};
+    runFeatureExtraction = handles.checkbox3.Value;
+    runFeatureMatching = handles.checkbox4.Value;
+    runGlobalOpt = handles.checkbox5.Value;
+    TyoeOfRegistration = handles.v.Value;
+    runBlending = handles.checkbox6.Value;
+    runRetilling = handles.chkretilling.Value;
+    outputType = handles.popupretilling.Value;
+    debug = handles.chkdebug.Value;
+    AllGUI = NCT_Registration;
+    v = 1;
+else
+    runFeatureExtraction = 1;
+    runFeatureMatching = 1;
+    runGlobalOpt = 1;
+    TyoeOfRegistration = 1; %MouseLight
+    outputType = 1; % use NCTracerDB
+    runBlending = 0;
+    runRetilling = 1;
+    debug = 0;
+    
+    v = 0;
+    listbox_log = 0;
+end
 addpath('../Functions');
 parameters;
 stop = 0;
 tic
-AllGUI = NCT_Registration;
+
 
 if exist(StackList_csv_pth,'file') > 0
     StackList = table2cell(readtable(StackList_csv_pth,'Delimiter',','));
@@ -31,21 +63,23 @@ if exist(StackList_csv_pth,'file') > 0
     [PathStr,FolderName]=fileparts(StackList_csv_pth);
     DataFolder=[PathStr,'\Results-',FolderName];
     
-    handles.axes1.YLabel.String = '';
-    handles.axes1.XLabel.String='';
-    handles.axes1.Title.String = '';
-    handles.axes5.YLabel.String = '';
-    handles.axes5.XLabel.String='';
-    handles.axes5.Title.String = '';
-    handles.axes6.YLabel.String = '';
-    handles.axes6.XLabel.String='';
-    handles.axes6.Title.String = '';
-    handles.slider2.set('Visible','off');
-    cla(handles.axes5);
-    cla(handles.axes6);
-    axes_main = findall(AllGUI,'Tag','axes1');
-    axes_main = axes_main(1);
-    debug = handles.chkdebug.Value;
+    if size(varargin,2) > 4
+        handles.axes1.YLabel.String = '';
+        handles.axes1.XLabel.String='';
+        handles.axes1.Title.String = '';
+        handles.axes5.YLabel.String = '';
+        handles.axes5.XLabel.String='';
+        handles.axes5.Title.String = '';
+        handles.axes6.YLabel.String = '';
+        handles.axes6.XLabel.String='';
+        handles.axes6.Title.String = '';
+        handles.slider2.set('Visible','off');
+        cla(handles.axes5);
+        cla(handles.axes6);
+        axes_main = findall(AllGUI,'Tag','axes1');
+        axes_main = axes_main(1);
+        
+    end
     
     % index to remove invalid files
     errIndxs = [];
@@ -97,18 +131,26 @@ if exist(StackList_csv_pth,'file') > 0
     
     % Find stacks overlap
     % overlap = round((params.FE.overlap/100) * StackSizes_pixels(1,:));
-    handles.axes2.Visible = 'on';
+    if size(varargin,2) > 4
+        handles.axes2.Visible = 'on';
+    end
     All_overlaps = FindOverlaps(StackPositions_pixels,StackSizes_pixels,StackList,debug);
     
-    % variable 'v' is handling the log
-    v = 1;
-    listbox_log{v}  = 'Registration Process Started';
-    handles.listbox1.String = listbox_log;drawnow
-    v = v + 1;
-    handles.listbox1.Value = v-1;
-    handles.axes1.Children.delete
-    
-    if handles.checkbox3.Value
+    if TyoeOfRegistration == 8 || TyoeOfRegistration == 7
+        All_overlaps = zeros(size(All_overlaps));
+        All_overlaps(2:size(All_overlaps,1)+1:end) = 1;
+        All_overlaps = All_overlaps';
+    end
+    if size(varargin,2) > 4
+        % variable 'v' is handling the log
+        
+        listbox_log{v}  = 'Registration Process Started';
+        handles.listbox1.String = listbox_log;drawnow
+        v = v + 1;
+        handles.listbox1.Value = v-1;
+        handles.axes1.Children.delete
+    end
+    if runFeatureExtraction
         if(exist(DataFolder, 'dir')>0 )
             if(exist([DataFolder,'/features/'], 'dir')>0 )
                 if ispc
@@ -127,12 +169,14 @@ if exist(StackList_csv_pth,'file') > 0
         featureExtractionTime = toc
     end
     
-    if handles.checkbox4.Value && ~stop
+    if runFeatureMatching && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
-            listbox_log{v}  = 'Feature Matchig Started';
-            handles.listbox1.String = listbox_log;drawnow
-            v = v + 1;
-            handles.listbox1.Value = v-1;drawnow
+            if size(varargin,2) > 4
+                listbox_log{v}  = 'Feature Matchig Started';
+                handles.listbox1.String = listbox_log;drawnow
+                v = v + 1;
+                handles.listbox1.Value = v-1;drawnow
+            end
             [~,Matched,listbox_log,v,stop]=Generate_Reg_MatchedPoints(listbox_log,v,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,debug);
         else
             warndlg('The Features Folder is not Exists! Please run Feature Extraction.','!! Warning !!');
@@ -140,13 +184,14 @@ if exist(StackList_csv_pth,'file') > 0
         
     end
     runGlobal = 0;
-    if handles.checkbox5.Value && ~stop
+    if runGlobalOpt && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
-            listbox_log{v}  = 'Global Optimization Started';
-            handles.listbox1.String = listbox_log;drawnow
-            v = v + 1;
-            handles.listbox1.Value = v-1;drawnow
-            
+            if size(varargin,2) > 4
+                listbox_log{v}  = 'Global Optimization Started';
+                handles.listbox1.String = listbox_log;drawnow
+                v = v + 1;
+                handles.listbox1.Value = v-1;drawnow
+            end
             switch TransformationValue
                 case 1
                     if exist([DataFolder,params.FM.MatchedLocationsFile_Translation],'file')
@@ -187,7 +232,7 @@ if exist(StackList_csv_pth,'file') > 0
             end
             
             if runGlobal && ~stop
-                if handles.v.Value == 8
+                if TyoeOfRegistration == 8
                     StackPositions_pixels(:,3) = 0;
                 end
                 switch TransformationValue
@@ -217,10 +262,12 @@ if exist(StackList_csv_pth,'file') > 0
                 end
                 
                 globaltime  = toc;
-                listbox_log{v}  = ['Global Regis. Time=',num2str(globaltime),'s, Registered Positions Data saved as: ',SaveLocation];
-                handles.listbox1.String = listbox_log;drawnow
-                v = v + 1;
-                handles.listbox1.Value = v-1;drawnow
+                if size(varargin,2) > 4
+                    listbox_log{v}  = ['Global Regis. Time=',num2str(globaltime),'s, Registered Positions Data saved as: ',SaveLocation];
+                    handles.listbox1.String = listbox_log;drawnow
+                    v = v + 1;
+                    handles.listbox1.Value = v-1;drawnow
+                end
             else
                 warndlg('Global Optimization can not be run.','!! Warning !!');
             end
@@ -229,7 +276,7 @@ if exist(StackList_csv_pth,'file') > 0
         end
     end
     
-    if handles.checkbox6.Value && ~stop
+    if runBlending && ~stop
         %         if exist([DataFolder,params.GT.StackPositions_Registered]) > 0 || exist([DataFolder,params.GA.StackPositions_Registered]) > 0 || exist([DataFolder,params.GR.StackPositions_Registered]) > 0
         listbox_log{v}  = 'Blending Started';
         handles.listbox1.String = listbox_log;drawnow
@@ -238,7 +285,7 @@ if exist(StackList_csv_pth,'file') > 0
         tic
         
         % 8 for Allignement of Stacks
-        if handles.v.Value == 8
+        if TyoeOfRegistration == 8 && size(varargin,2) > 4
             %             StackPositions_Registered(:,3) = 0;
             [Tile3D_org,Tile3D,stop] = blending_stackreg(StackPositions_Registered,StackSizes_pixels,StackList,T.L,T.b,DataFolder);
         else
@@ -290,14 +337,14 @@ if exist(StackList_csv_pth,'file') > 0
     end
     
     % if Retilling checkbox is checked
-    if handles.chkretilling.Value && ~stop
+    if runRetilling && ~stop
         
-%         TSize = strsplit(handles.editTilesSize.String,',');
-%         TilesSize = [str2double(TSize{1}),str2double(TSize{2}),str2double(TSize{3})];
+        %         TSize = strsplit(handles.editTilesSize.String,',');
+        %         TilesSize = [str2double(TSize{1}),str2double(TSize{2}),str2double(TSize{3})];
         switch TransformationValue
-            case 1 
+            case 1
                 load([DataFolder,params.GT.Transformation],'T');
-            case 2  
+            case 2
                 load([DataFolder,params.GR.Transformation],'T');
             case 3
                 load([DataFolder,params.GA.Transformation],'T');
@@ -306,22 +353,22 @@ if exist(StackList_csv_pth,'file') > 0
         end
         
         tic
-        Retiling({StackList{:,1}},StackPositions_pixels,StackSizes_pixels,T,DataFolder,handles.popupretilling.Value,Seq_Par,Par_workers);
+        Retiling({StackList{:,1}},StackPositions_pixels,StackSizes_pixels,T,DataFolder,outputType,Seq_Par,Par_workers);
         RetilingTime = toc
         
     end
     
-    if handles.chkretilling.Value && ~stop && (handles.popupretilling.Value == 1 || handles.popupretilling.Value == 2)
+    if runRetilling && ~stop && (outputType == 1 || outputType == 2)
         ZL = 2;
         NumTiles = inf;
         
         while NumTiles > 1
-            NumTiles = CreateZoomLevels(ZL,DataFolder,handles.popupretilling.Value);
+            NumTiles = CreateZoomLevels(ZL,DataFolder,outputType);
             ZL = ZL * 2;
         end
     end
     
-    if runGlobal && ~stop
+    if size(varargin,2) > 4 && ~stop
         listbox_log{v}  = 'Done!';
         handles.listbox1.String = listbox_log;drawnow
         v = v + 1;

@@ -40,7 +40,8 @@ paramsFMRansacMin =15;             %default:   params.FM.RansacLimit=15
     % Parameter controling the maximum distance of features to be consider in Hungarian Algorithm in Stitching_3D_Func.m 
 paramsFMDT = 60;                   %default:	params.FM.DT = 60;       
 
-
+paramsFMPad = 0; % used in OverlapRegion1 to pad the features
+paramsFMminReqFeatures = 15; % minimum features to run feature matching
     % Parameter to selec the similarity metric for feature matching
 % available metrics includes:
 % ZMAD = ZeroMeanAbsoluteDifferences
@@ -130,7 +131,7 @@ params.BP.remove_pad = 0;
 params.RE.savefolder = '\Tiles\';
 paramsREuseHDF5 = 0;
 paramsRERemoveBlack = 1;
-paramsBigTileSize = [512 512 128]; % powers of 2 only
+paramsBigTileSize = [512 512 64]; % powers of 2 only
 paramsFinalTileSize = [128 128 64]; % powers of 2 only
 paramsEmptyVoxelsValue=111;
                          

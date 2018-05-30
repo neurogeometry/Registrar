@@ -89,6 +89,7 @@ else
     
     for i = 1 : size(Source_seed,1)
         for j = 1 : size(Target_seed,1)
+            if v ~= 0
             if get(tb11,'userdata') || stop% stop condition
                 disp(num2str(tb11.UserData));
                 stop = 1;
@@ -98,6 +99,7 @@ else
                 set(tb, 'String', listboxItems);drawnow
                 tb.Value = v-1;drawnow
                 break;
+            end
             end
             TempDisp = sum((Target_seed(j,:)-Source_seed(i,:))-Displacement);
             
@@ -140,7 +142,7 @@ Am(hungInput==10^12)=0;
 [idx1,idx2]=find(Am);
 
 
-if Seq_Par ~= 2
+if Seq_Par ~= 2 && v ~= 0
     tb = findobj(NCT_Registration,'Tag', 'listbox1');
     listboxItems{v}  = ['Number of Hungarian Matches:',num2str(size(idx1,1))];
     set(tb, 'String', listboxItems);drawnow
@@ -154,7 +156,7 @@ y_Target = Target_seed(idx2,2);
 z_Source = Source_seed(idx1,3);
 z_Target = Target_seed(idx2,3);
 
-if debug ==1 && Seq_Par ~= 2
+if debug ==1 && Seq_Par ~= 2 && v ~= 0
     if strcmp(Direction,'horizontal')
         if Displacement(2)<0
             stitched = appendimages(IM_source_max,IM_target_max,Direction);
@@ -180,6 +182,7 @@ b = [];
 Global_Matched_Source = matchLoc_Source'+Source_StackPositions'-1;
 Global_Matched_Target = matchLoc_Target'+Target_StackPositions'-1;
 while numel(Match_Indexes)<paramsFMminmatches && i<paramsFMmaxiter
+    if v ~= 0
     if get(tb11,'userdata') || stop% stop condition
         disp(num2str(tb11.UserData));
         stop = 1;
@@ -189,6 +192,7 @@ while numel(Match_Indexes)<paramsFMminmatches && i<paramsFMmaxiter
         set(tb, 'String', listboxItems);drawnow
         tb.Value = v-1;drawnow
         break;
+    end
     end
     Match_Indexes_temp = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
     if numel(Match_Indexes_temp)<paramsFMminmatches
@@ -202,14 +206,14 @@ end
 
 toc
 
-if Seq_Par ~= 2
+if Seq_Par ~= 2 && v ~= 0
     tb = findobj(NCT_Registration,'Tag', 'listbox1');
     listboxItems{v}  = ['Number of Final Matches:',num2str(size(Match_Indexes,2))];
     set(tb, 'String', listboxItems);drawnow
     v = v + 1;
     tb.Value = v-1;drawnow
 end
-if debug ==1 && Seq_Par ~= 2
+if debug ==1 && Seq_Par ~= 2 && v ~= 0
     
     tb2 = findobj(NCT_Registration,'Tag', 'axes1');
     
@@ -284,7 +288,7 @@ if ~isempty(Match_Indexes)
 end
 
 Registrationtime=toc;
-if Seq_Par ~= 2
+if Seq_Par ~= 2 && v ~= 0
     tb = findobj(NCT_Registration,'Tag', 'listbox1');
     listboxItems{v}  = ['Correspondence Finding Time:',num2str(Registrationtime)];
     set(tb, 'String', listboxItems);drawnow
