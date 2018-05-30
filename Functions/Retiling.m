@@ -25,9 +25,9 @@ end
 [filepath,~,ext] = fileparts(char(StackList(1,1)));
 
 if paramsREuseHDF5
-    X = hdf5read([DataFolder,'\tmp\temp_',num2str(1),'.h5'], '/dataset1');
+    X = hdf5read([DataFolder,'/tmp/temp_',num2str(1),'.h5'], '/dataset1');
     MaxIntensityValue = max(X(:));
-    StackClass = class(hdf5read([DataFolder,'\tmp\temp_',num2str(1),'.h5'], '/dataset1'));
+    StackClass = class(hdf5read([DataFolder,'/tmp/temp_',num2str(1),'.h5'], '/dataset1'));
 else
     if size(ext,2)>1
         InfoImage=imfinfo(char(StackList(1,1)));
@@ -35,16 +35,16 @@ else
         StackClass = class(imread(char(StackList(1,1))));
     else
         allfiles = dir(filepath);
-        InfoImage=imfinfo(char([allfiles(3).folder,'\',allfiles(3).name]));
+        InfoImage=imfinfo(char([allfiles(3).folder,'/',allfiles(3).name]));
         MaxIntensityValue = InfoImage(1).MaxSampleValue;
-        StackClass = class(imread(char([allfiles(3).folder,'\',allfiles(3).name])));
+        StackClass = class(imread(char([allfiles(3).folder,'/',allfiles(3).name])));
     end
 end
 
 SpecimenName = extractBefore(extractAfter(DataFolder,"MicroscopeFiles/Results-"),'_StackList');
 if outputType == 1
-    %     DBFile = [pwd,'\',DataFolder,'\nctracer.db'];
-    DBFile = 'E:\TilesCreation\NCTracerWeb\New\NCtracerWeb-master\NCtracerWeb-master\NCT-Web\data\db\nctracer.db';
+    %     DBFile = [pwd,'/',DataFolder,'/nctracer.db'];
+    DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/db/nctracer.db';
     % for connection help: https://www.mathworks.com/help/database/ug/sqlite-jdbc-windows.html#bt8kopj-1
     %     delete(DBFile);
     if exist(DBFile) > 0
@@ -146,9 +146,9 @@ if outputType == 1
     z_level = 1;
 end
 
-SaveFolder=[DataFolder,params.RE.savefolder,'Zoom1\'];
+SaveFolder=[DataFolder,params.RE.savefolder,'Zoom1/'];
 % for test
-% SaveFolder = 'E:\TilesCreation\Data\MouselightFull_Neuroglancer\';
+% SaveFolder = 'E:/TilesCreation/Data/MouselightFull_Neuroglancer/';
 
 N_stacks=length(StackList);
 if outputType == 3
@@ -171,7 +171,8 @@ if strcmp(T.transform,'Translation')
     for i=1:N_stacks
         Verts(:,:,i)=ones(8,1)*StackPositions(i,:)-1+[1,1,1;StackSizes(i,1),1,1;1,StackSizes(i,2),1;StackSizes(i,1),StackSizes(i,2),1;...
             1,1,StackSizes(i,3);StackSizes(i,1),1,StackSizes(i,3);1,StackSizes(i,2),StackSizes(i,3);StackSizes(i,1),StackSizes(i,2),StackSizes(i,3)];
-        Verts_transformed(:,:,i)=Verts(:,:,i)+b(i,:);
+%         Verts_transformed(:,:,i)=Verts(:,:,i)+b(i,:);
+        Verts_transformed(:,:,i)=Verts(:,:,i)+ones(size(Verts(:,:,i),1),1)*b(i,:);
     end
     
     % Find the extent of the transformed brain space
@@ -211,13 +212,13 @@ if strcmp(T.transform,'Translation')
             end
             for j=1:length(StackInd)
                 if paramsREuseHDF5
-                    X = hdf5read([DataFolder,'\tmp\temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
+                    X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
                     %                     if Trimimage
                     %                         X=X(h:end-h,w:end-w,:);
                     %                     end
                 else
-                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='\',1,'last'));
-                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='\',1,'last')+1:end);
+                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
+                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
                     X=ImportStack([pth,file_list],StackSizes(StackInd(j),:));
                     %                     if Trimimage
                     %                         X=X(h:end-h,w:end-w,:);
@@ -267,13 +268,13 @@ if strcmp(T.transform,'Translation')
             Tile_logical=false(paramsBigTileSize);
             for j=1:length(StackInd)
                 if paramsREuseHDF5
-                    X = hdf5read([DataFolder,'\tmp\temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
+                    X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
                     if Trimimage
                         X=X(h:end-h,w:end-w,:);
                     end
                 else
-                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='\',1,'last'));
-                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='\',1,'last')+1:end);
+                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
+                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
                     X=ImportStack([pth,file_list],StackSizes(StackInd(j),:));
                     if Trimimage
                         X=X(h:end-h,w:end-w,:);
@@ -303,7 +304,7 @@ if strcmp(T.transform,'Translation')
             end
             Tile(Tile_logical==false)=paramsEmptyVoxelsValue;
             
-            FinalTilePositions=TilePositions(i,:)+([xx,yy,zz]-1).*(ones(prod(reduction),1)*paramsFinalTileSize);
+            FinalTilePositions=ones(prod(reduction),1)*TilePositions(i,:)+([xx,yy,zz]-1).*(ones(prod(reduction),1)*paramsFinalTileSize);
             for jj=1:prod(reduction)
                 if (FinalTilePositions(jj,1)<=Max(1) && FinalTilePositions(jj,2)<=Max(2) && FinalTilePositions(jj,3)<=Max(3))
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
@@ -371,10 +372,10 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
             for j=1:length(StackInd)
                 
                 if paramsREuseHDF5
-                    X = hdf5read([DataFolder,'\tmp\temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
+                    X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
                 else
-                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='\',1,'last'));
-                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='\',1,'last')+1:end);
+                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
+                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
                     X=ImportStack([pth,file_list],StackSizes(StackInd(j),:));
                 end
                 
@@ -428,10 +429,10 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
             for j=1:length(StackInd)
                 
                 if paramsREuseHDF5
-                    X = hdf5read([DataFolder,'\tmp\temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
+                    X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
                 else
-                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='\',1,'last'));
-                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='\',1,'last')+1:end);
+                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
+                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
                     X=ImportStack([pth,file_list],StackSizes(StackInd(j),:));
                 end
                 
