@@ -24,7 +24,7 @@ if strcmp(Transform_Type,'Translation')
     
     L=[];
 %     SaveLocation = [DataFolder,params.GT.StackPositions_Registered];
-    TSaveLocation = [DataFolder,'\T_Translation.mat'];
+    TSaveLocation = [DataFolder,'/T_Translation.mat'];
 elseif strcmp(Transform_Type,'Rigid')
     alpha=0.1; % overall regularization on Ls
     betta=0.1; % individual regularizations on Ls
@@ -38,7 +38,7 @@ elseif strcmp(Transform_Type,'Rigid')
     Conn_tol=3;
     n_dist=10;
 %     SaveLocation = [DataFolder,params.GR.StackPositions_Registered];
-    TSaveLocation = [DataFolder,'\T_Rigid.mat'];
+    TSaveLocation = [DataFolder,'/T_Rigid.mat'];
 elseif strcmp(Transform_Type,'Affine')
     alpha=0.1; % overall regularization on Ls
     betta=0.1; % individual regularizations on Ls
@@ -51,7 +51,7 @@ elseif strcmp(Transform_Type,'Affine')
     Conn_tol=3;
     n_dist=10;
 %     SaveLocation = [DataFolder,params.GA.StackPositions_Registered];
-    TSaveLocation = [DataFolder,'\T_Affine.mat'];
+    TSaveLocation = [DataFolder,'/T_Affine.mat'];
 else
     error('Transform_Type has to be Translation, Rigid, or Affine')
 end

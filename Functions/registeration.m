@@ -43,7 +43,7 @@ else
     runFeatureMatching = 1;
     runGlobalOpt = 1;
     TyoeOfRegistration = 1; %MouseLight
-    outputType = 1; % use NCTracerDB
+    outputType = 2; % use NCTracerDB
     runBlending = 0;
     runRetilling = 1;
     debug = 0;

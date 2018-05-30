@@ -179,8 +179,8 @@ i=1;
 Match_Indexes=[];
 Transformation_T = [];
 b = [];
-Global_Matched_Source = matchLoc_Source'+Source_StackPositions'-1;
-Global_Matched_Target = matchLoc_Target'+Target_StackPositions'-1;
+Global_Matched_Source = matchLoc_Source'+(ones(size(matchLoc_Source,1),1)*Source_StackPositions)'-1;
+Global_Matched_Target = matchLoc_Target'+(ones(size(matchLoc_Source,1),1)*Target_StackPositions)'-1;
 while numel(Match_Indexes)<paramsFMminmatches && i<paramsFMmaxiter
     if v ~= 0
     if get(tb11,'userdata') || stop% stop condition

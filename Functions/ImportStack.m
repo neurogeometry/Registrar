@@ -15,12 +15,12 @@ if size(ext,2)>1
     TifLink.close();
 else
     allfiles = dir(filepath);
-    InfoImage=imfinfo([File,'\',allfiles(3).name]);
+    InfoImage=imfinfo([File,'/',allfiles(3).name]);
     FinalImage=zeros(StackSizes_pixels,['uint',num2str(InfoImage(1).BitsPerSample)]);
     for i = 1:StackSizes_pixels(3)
         [~,~,ext] = fileparts(allfiles(i).name);
         if strcmp(ext,'.tif') || strcmp(ext,'.jp2') || strcmp(ext,'.png') || strcmp(ext,'.jpeg')
-            FinalImage(:,:,i) = imread(char([allfiles(i).folder,'\',allfiles(i).name]));
+            FinalImage(:,:,i) = imread(char([allfiles(i).folder,'/',allfiles(i).name]));
         end
     end
 end

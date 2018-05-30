@@ -41,7 +41,7 @@ else
     end
 end
 
-SpecimenName = extractBefore(extractAfter(DataFolder,"MicroscopeFiles\Results-"),'_StackList');
+SpecimenName = extractBefore(extractAfter(DataFolder,"MicroscopeFiles/Results-"),'_StackList');
 if outputType == 1
     %     DBFile = [pwd,'\',DataFolder,'\nctracer.db'];
     DBFile = 'E:\TilesCreation\NCTracerWeb\New\NCtracerWeb-master\NCtracerWeb-master\NCT-Web\data\db\nctracer.db';
