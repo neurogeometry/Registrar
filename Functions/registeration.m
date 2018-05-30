@@ -25,7 +25,8 @@ StackList_csv_pth = varargin{1};
 TransformationValue = varargin{2};
 Seq_Par = varargin{3};
 Par_workers = varargin{4};
-if size(varargin,2) > 4
+if size(varargin,2)==6
+    GUI=true;
     blendingSID = varargin{5};
     handles = varargin{6};
     runFeatureExtraction = handles.checkbox3.Value;
@@ -38,7 +39,8 @@ if size(varargin,2) > 4
     debug = handles.chkdebug.Value;
     AllGUI = NCT_Registration;
     v = 1;
-else
+elseif size(varargin,2)==4
+    GUI=false;
     runFeatureExtraction = 1;
     runFeatureMatching = 1;
     runGlobalOpt = 1;
@@ -50,6 +52,8 @@ else
     
     v = 0;
     listbox_log = 0;
+else
+    error('Number of inputs to the registration function must equal 4 or 6.')
 end
 addpath('../Functions');
 parameters;
@@ -63,7 +67,7 @@ if exist(StackList_csv_pth,'file') > 0
     [PathStr,FolderName]=fileparts(StackList_csv_pth);
     DataFolder=[PathStr,'/Results-',FolderName];
     
-    if size(varargin,2) > 4
+    if GUI
         handles.axes1.YLabel.String = '';
         handles.axes1.XLabel.String='';
         handles.axes1.Title.String = '';
@@ -131,7 +135,7 @@ if exist(StackList_csv_pth,'file') > 0
     
     % Find stacks overlap
     % overlap = round((params.FE.overlap/100) * StackSizes_pixels(1,:));
-    if size(varargin,2) > 4
+    if GUI
         handles.axes2.Visible = 'on';
     end
     All_overlaps = FindOverlaps(StackPositions_pixels,StackSizes_pixels,StackList,debug);
@@ -141,7 +145,7 @@ if exist(StackList_csv_pth,'file') > 0
         All_overlaps(2:size(All_overlaps,1)+1:end) = 1;
         All_overlaps = All_overlaps';
     end
-    if size(varargin,2) > 4
+    if GUI
         % variable 'v' is handling the log
         
         listbox_log{v}  = 'Registration Process Started';
@@ -171,7 +175,7 @@ if exist(StackList_csv_pth,'file') > 0
     
     if runFeatureMatching && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
-            if size(varargin,2) > 4
+            if GUI
                 listbox_log{v}  = 'Feature Matchig Started';
                 handles.listbox1.String = listbox_log;drawnow
                 v = v + 1;
@@ -186,7 +190,7 @@ if exist(StackList_csv_pth,'file') > 0
     runGlobal = 0;
     if runGlobalOpt && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
-            if size(varargin,2) > 4
+            if GUI
                 listbox_log{v}  = 'Global Optimization Started';
                 handles.listbox1.String = listbox_log;drawnow
                 v = v + 1;
@@ -262,7 +266,7 @@ if exist(StackList_csv_pth,'file') > 0
                 end
                 
                 globaltime  = toc;
-                if size(varargin,2) > 4
+                if GUI
                     listbox_log{v}  = ['Global Regis. Time=',num2str(globaltime),'s, Registered Positions Data saved as: ',SaveLocation];
                     handles.listbox1.String = listbox_log;drawnow
                     v = v + 1;
@@ -285,7 +289,7 @@ if exist(StackList_csv_pth,'file') > 0
         tic
         
         % 8 for Allignement of Stacks
-        if TyoeOfRegistration == 8 && size(varargin,2) > 4
+        if TyoeOfRegistration == 8 && GUI
             %             StackPositions_Registered(:,3) = 0;
             [Tile3D_org,Tile3D,stop] = blending_stackreg(StackPositions_Registered,StackSizes_pixels,StackList,T.L,T.b,DataFolder);
         else
@@ -368,7 +372,7 @@ if exist(StackList_csv_pth,'file') > 0
         end
     end
     
-    if size(varargin,2) > 4 && ~stop
+    if GUI && ~stop
         listbox_log{v}  = 'Done!';
         handles.listbox1.String = listbox_log;drawnow
         v = v + 1;

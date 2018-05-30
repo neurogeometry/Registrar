@@ -217,9 +217,9 @@ if strcmp(T.transform,'Translation')
                     %                         X=X(h:end-h,w:end-w,:);
                     %                     end
                 else
-                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
-                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
-                    X=ImportStack([pth,file_list],StackSizes(StackInd(j),:));
+%                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
+%                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
+                    X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                     %                     if Trimimage
                     %                         X=X(h:end-h,w:end-w,:);
                     %                     end
@@ -273,9 +273,9 @@ if strcmp(T.transform,'Translation')
                         X=X(h:end-h,w:end-w,:);
                     end
                 else
-                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
-                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
-                    X=ImportStack([pth,file_list],StackSizes(StackInd(j),:));
+                    %pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='\',1,'last'));
+                    %file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
+                    X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                     if Trimimage
                         X=X(h:end-h,w:end-w,:);
                     end
@@ -374,9 +374,9 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 if paramsREuseHDF5
                     X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
                 else
-                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
-                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
-                    X=ImportStack([pth,file_list],StackSizes(StackInd(j),:));
+%                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
+%                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
+                    X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                 end
                 
                 Linv=inv(L(:,(StackInd(j)-1)*3+1:StackInd(j)*3)');
@@ -431,9 +431,9 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 if paramsREuseHDF5
                     X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
                 else
-                    pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
-                    file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
-                    X=ImportStack([pth,file_list],StackSizes(StackInd(j),:));
+%                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
+%                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
+                    X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                 end
                 
                 Linv=inv(L(:,(StackInd(j)-1)*3+1:StackInd(j)*3)');

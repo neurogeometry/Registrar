@@ -52,7 +52,7 @@ paramsFMminReqFeatures = 15; % minimum features to run feature matching
 % ZNCC= Zero mean NormalizedCrossCorrelation
 % SAD = Sum of Absolute Differences
 % SAD =  Sum of Squared Differences
-paramsFMMetric = 'ZMAD';        %default:	paramsFMMetric = 'ZMAD';
+paramsFMMetric = 'EigenVector';        %default:	paramsFMMetric = 'ZMAD'  EigenVector;
 
     % Parameter to control the maximum iteration of Ransac
 paramsFMmaxiter=1000;           %default:	paramsFMmaxiter = 1000;

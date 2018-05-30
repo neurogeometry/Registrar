@@ -149,23 +149,23 @@ for i=1:size(r_seed,1)
         end
     end
     %Hessian Matrix
-    if paramsFMEigen
-        w=params.FE.windowsize;
-        Hxx=temp(w(1)+1,w(2),w(3))+temp(w(1)-1,w(2),w(3))-2.*temp(w(1),w(2),w(3));
-        Hyy=temp(w(1),w(2)+1,w(3))+temp(w(1),w(2)-1,w(3))-2.*temp(w(1),w(2),w(3));
-        Hzz=temp(w(1),w(2),w(3)+1)+temp(w(1),w(2),w(3)-1)-2.*temp(w(1),w(2),w(3));
-        Hxy=(temp(w(1)+1,w(2)+1,w(3))+temp(w(1)-1,w(2)-1,w(3))-temp(w(1)+1,w(2)-1,w(3))-temp(w(1)-1,w(2)+1,w(3)))./4;
-        Hxz=(temp(w(1)+1,w(2),w(3)+1)+temp(w(1)-1,w(2),w(3)-1)-temp(w(1)+1,w(2),w(3)-1)-temp(w(1)-1,w(2),w(3)+1))./4;
-        Hyz=(temp(w(1),w(2)+1,w(3)+1)+temp(w(1),w(2)-1,w(3)-1)-temp(w(1),w(2)+1,w(3)-1)-temp(w(1),w(2)-1,w(3)+1))./4;
-        H=[Hxx,Hxy,Hxz;Hxy,Hyy,Hyz;Hxz,Hyz,Hzz];
-        [vec,l] = eig(H);
-        FeatureVector =  [FeatureVector;vec(:)',l(:)'];
-        %         [Lambda1i,Lambda2i,Lambda3i]=eig3volume(Hxx,Hxy,Hxz,Hyy,Hyz,Hzz);
-        %             FeatureVector =  [FeatureVector;H(:)'];
-        
-    else
+%     if paramsFMEigen
+%         w=params.FE.windowsize;
+%         Hxx=temp(w(1)+1,w(2),w(3))+temp(w(1)-1,w(2),w(3))-2.*temp(w(1),w(2),w(3));
+%         Hyy=temp(w(1),w(2)+1,w(3))+temp(w(1),w(2)-1,w(3))-2.*temp(w(1),w(2),w(3));
+%         Hzz=temp(w(1),w(2),w(3)+1)+temp(w(1),w(2),w(3)-1)-2.*temp(w(1),w(2),w(3));
+%         Hxy=(temp(w(1)+1,w(2)+1,w(3))+temp(w(1)-1,w(2)-1,w(3))-temp(w(1)+1,w(2)-1,w(3))-temp(w(1)-1,w(2)+1,w(3)))./4;
+%         Hxz=(temp(w(1)+1,w(2),w(3)+1)+temp(w(1)-1,w(2),w(3)-1)-temp(w(1)+1,w(2),w(3)-1)-temp(w(1)-1,w(2),w(3)+1))./4;
+%         Hyz=(temp(w(1),w(2)+1,w(3)+1)+temp(w(1),w(2)-1,w(3)-1)-temp(w(1),w(2)+1,w(3)-1)-temp(w(1),w(2)-1,w(3)+1))./4;
+%         H=[Hxx,Hxy,Hxz;Hxy,Hyy,Hyz;Hxz,Hyz,Hzz];
+%         [vec,l] = eig(H);
+%         FeatureVector =  [FeatureVector;vec(:)',l(:)'];
+%         %         [Lambda1i,Lambda2i,Lambda3i]=eig3volume(Hxx,Hxy,Hxz,Hyy,Hyz,Hzz);
+%         %             FeatureVector =  [FeatureVector;H(:)'];
+%         
+%     else
         FeatureVector(i,:) =  temp(:)';
-    end
+%     end
     
 end
 
