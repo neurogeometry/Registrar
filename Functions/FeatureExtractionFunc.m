@@ -30,19 +30,19 @@ tic
 IM_Original=ImportStack(char(File),StackSizes_pixels(1,:));
 if paramsREuseHDF5
     tic,
-    hdf5write([DataFolder,'\tmp\temp_',num2str(stackID),'.h5'], '/dataset1', IM_Original);
+    hdf5write([DataFolder,'/tmp/temp_',num2str(stackID),'.h5'], '/dataset1', IM_Original);
     toc
     %
     %     tic,
-    %     X = hdf5read([DataFolder,'\tmp\temp_',num2str(stackID),'.h5'], '/dataset1');
+    %     X = hdf5read([DataFolder,'/tmp/temp_',num2str(stackID),'.h5'], '/dataset1');
     %     toc
     %
     %     IM_Original2D = reshape(IM_Original,[11*512 7*512]);
     %     tic,
-    %     imwrite(IM_Original2D,[DataFolder,'\test.jpg'],'jpg');
+    %     imwrite(IM_Original2D,[DataFolder,'/test.jpg'],'jpg');
     %     toc
     %
-    %     tic,imread([DataFolder,'\test.jpg']);toc
+    %     tic,imread([DataFolder,'/test.jpg']);toc
     
     
     
@@ -197,10 +197,10 @@ end
 % if isempty(seedsFileName)
 %     seedsFileName = num2str(stackID);
 % end
-% seedsFileName = regexp(File{1},'\\([^\\]*)$','tokens','once');
-hdf5write([DataFolder,'\tmp\Feature_seeds',num2str(stackID),'.h5'], '/dataset1', r_seed);
-hdf5write([DataFolder,'\tmp\Feature_vector',num2str(stackID),'.h5'], '/dataset1', FeatureVector);
-seedsFile = [DataFolder,'\tmp\Feature_',num2str(stackID),'.h5'];
+% seedsFileName = regexp(File{1},'//([^//]*)$','tokens','once');
+hdf5write([DataFolder,'/tmp/Feature_seeds',num2str(stackID),'.h5'], '/dataset1', r_seed);
+hdf5write([DataFolder,'/tmp/Feature_vector',num2str(stackID),'.h5'], '/dataset1', FeatureVector);
+seedsFile = [DataFolder,'/tmp/Feature_',num2str(stackID),'.h5'];
 % save([featuresFolder,char(seedsFileName),'_seeds.mat'],'r_seed','FeatureVector','-v7.3')
 % seedsFile = [featuresFolder,char(seedsFileName),'_seeds.mat'];
 if v ~= 0

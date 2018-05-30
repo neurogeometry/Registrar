@@ -61,7 +61,7 @@ if exist(StackList_csv_pth,'file') > 0
     StackList = table2cell(readtable(StackList_csv_pth,'Delimiter',','));
     
     [PathStr,FolderName]=fileparts(StackList_csv_pth);
-    DataFolder=[PathStr,'\Results-',FolderName];
+    DataFolder=[PathStr,'/Results-',FolderName];
     
     if size(varargin,2) > 4
         handles.axes1.YLabel.String = '';
