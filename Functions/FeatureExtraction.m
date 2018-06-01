@@ -21,6 +21,7 @@ function [FeatureExtractionLog,listboxItems,v,stop]=FeatureExtraction(v,StackLis
 % -------------------------------------------------------------------------
 
 mkdir([DataFolder,'/tmp/']);
+discovery = 1;
 if v ~= 0
     AllGUI = findobj(NCT_Registration);
     log_ctrl = findall(AllGUI,'Tag','listbox1');
@@ -43,6 +44,8 @@ if v ~= 0
     if ~isempty(tb9)
         tb9.Tag='axes3';
     end
+else
+    tb11 = 0;
 end
 stop = 0;
 FeatureExtractionLog = [];
@@ -50,17 +53,22 @@ FeatureExtractionLog = [];
 
 parfor_progress(size(StackList,1),v);
 if Seq_Par > 1 % do parallel
-    parpool(Par_workers)
+    if ~discovery
+        parpool(Par_workers)
+    end
     parfor i=1:size(StackList,1)
-        parfor_progress;
-        
+        if ~discovery
+            parfor_progress;
+        end
         tifFile = StackList(i,1);
         overlap_ind=[i,find(All_overlaps(i,:)),find(All_overlaps(:,i))'];
         [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,~,~,~] = FeatureExtractionFunc(v,tifFile,i,listboxItems,tb11,stop,debug,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
         
     end
-    parfor_progress(0);
-    delete(gcp)
+    if ~discovery
+        parfor_progress(0);
+        delete(gcp)
+    end
 else % do sequential
     for i=1:size(StackList,1)
         TifFileExist = 1;%any(size(dir([Folders{i} '/*.tif' ]),1));

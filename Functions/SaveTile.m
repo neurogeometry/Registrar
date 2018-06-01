@@ -21,9 +21,9 @@ if usedDB == 1
 elseif usedDB == 2
     %                 TileName=num2str(i,['%0',num2str(fix(log10(prod(N_tiles)))+1),'.0f']);
     mkdir([SaveFolder,TileName]);
-%     saveastiff(im2uint8(Tile), [SaveFolder,TileName,'\',TileName,'.tif']);
+%     saveastiff(im2uint8(Tile), [SaveFolder,TileName,'/',TileName,'.tif']);
     options.overwrite = 1;
-    saveastiff(Tile, [SaveFolder,TileName,'\',TileName,'.tif'],options);
+    saveastiff(Tile, [SaveFolder,TileName,'/',TileName,'.tif'],options);
     disp(['Tile ',TileName,' created.']);
 elseif usedDB == 3 % Neuroglancer
     %                 TileName=num2str(i,['%0',num2str(fix(log10(prod(N_tiles)))+1),'.0f']);
@@ -41,22 +41,22 @@ elseif usedDB == 3 % Neuroglancer
     zend = zstart+size(Tile,3);
     
     TileName = [num2str(xstart),'-',num2str(xend),'_',num2str(ystart),'-',num2str(yend),'_',num2str(zstart),'-',num2str(zend)];
-    %                 saveastiff(im2uint8(Tile_glancer), [SaveFolder,'image\',TileName]);
-    imwrite(Tile_glancer,[SaveFolder,'image\',TileName],'jpg');
+    %                 saveastiff(im2uint8(Tile_glancer), [SaveFolder,'image/',TileName]);
+    imwrite(Tile_glancer,[SaveFolder,'image/',TileName],'jpg');
     %Tile_glancer = [];
     disp(['Tile ',TileName,' created.']);
 elseif usedDB == 4 % Nifti
     xstart = TilePositions(2)-2;
     ystart = TilePositions(1)-2;
     zstart = TilePositions(3)-2;
-    mkdir([SaveFolder,'Nifti\',TileName]);
+    mkdir([SaveFolder,'Nifti/',TileName]);
     Nifti_Save(Tile,xstart,ystart,zstart,TileName,[SaveFolder,TileName]);
     
 elseif usedDB == 5 % HDF5 - Big Data Viewer (Fiji)
     
     resolutions =  ones(N_tiles,1);
     subdivisions = repmat(16,N_tiles,1);
-    DbName = [SaveFolder,'HDf5\export1.h5'];
+    DbName = [SaveFolder,'HDf5/export1.h5'];
     if namecount < 11
         S =num2str(namecount-1,['%0',num2str(2),'.0f']);
     else
@@ -84,13 +84,13 @@ elseif usedDB == 6 % CATMAID - TrackEM
     
     for z = 0:size(Tile,3)-1
         folder = zstart+z;
-        if ~exist([SaveFolder,'CATMAID\',num2str(folder)],'dir')
-            mkdir([SaveFolder,'CATMAID\',num2str(folder)]);
+        if ~exist([SaveFolder,'CATMAID/',num2str(folder)],'dir')
+            mkdir([SaveFolder,'CATMAID/',num2str(folder)]);
         end
         TileName = [num2str(xstart),'_',num2str(ystart),'_0.jpg'];
         
         SubtileTile_CATMAID = Tile(:,:,z+1);
-        imwrite(SubtileTile_CATMAID,[SaveFolder,'CATMAID\',num2str(folder),'\',TileName],'jpg');
+        imwrite(SubtileTile_CATMAID,[SaveFolder,'CATMAID/',num2str(folder),'/',TileName],'jpg');
         
         
     end

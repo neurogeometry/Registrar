@@ -1,9 +1,10 @@
 close all;
 clear all;
 clc
-
+addpath('Functions');
 % Input CSV file
-StackList_csv_pth = '../../MicroscopeFiles\Neocortical2_StackList.csv';
+% StackList_csv_pth = '../../MicroscopeFiles\Neocortical2_StackList.csv';
+StackList_csv_pth = '/home/kahaki/Matlab/FinalRegistration/MicroscopeFiles/Neocortical2_StackList.csv';
 % Transformation Type, 1: Translation, 2: Rigid, 3: Affine, 4:Non-Rigid
 TransformationValue = 1;
 % Run in 1: Sequential or 2: Parallel

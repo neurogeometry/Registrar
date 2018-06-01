@@ -23,7 +23,7 @@ addpath('../Functions');
 parameters;
 paramsFMPad = paramsFMPad;
 paramsFMminReqFeatures = paramsFMminReqFeatures;
-
+discovery = 1;
 stop = 0;
 
 matchedLocationFile_Translation = [DataFolder,params.FM.MatchedLocationsFile_Translation];
@@ -60,15 +60,17 @@ end
 % all_comp = size(All_overlaps(All_overlaps>0),1);
 match = zeros(1,8);
 if Seq_Par > 1
+    if ~discovery
     parpool(Par_workers)
+    end
     parfor SourceID=1:size(All_overlaps,1)
         %         [~,SseedsFileName]=fileparts(char(StackList(SourceID,1)));
         %         if isempty(SseedsFileName)
         %             SseedsFileName = num2str(SourceID);
         %         end
         %         Source_seed = load([featuresFolder,SseedsFileName, '_seeds.mat' ]);
-        Source_seed_r_seed = hdf5read([DataFolder,'\tmp\Feature_seeds',num2str(SourceID),'.h5'], '/dataset1');
-        Source_seed_FeatureVector = hdf5read([DataFolder,'\tmp\Feature_vector',num2str(SourceID),'.h5'], '/dataset1');
+        Source_seed_r_seed = hdf5read([DataFolder,'/tmp/Feature_seeds',num2str(SourceID),'.h5'], '/dataset1');
+        Source_seed_FeatureVector = hdf5read([DataFolder,'/tmp/Feature_vector',num2str(SourceID),'.h5'], '/dataset1');
         if ~isempty(Source_seed_r_seed)
             j_ind=find(All_overlaps(SourceID,:));
             for jj=1:length(j_ind)
@@ -79,8 +81,8 @@ if Seq_Par > 1
                 %                     TseedsFileName = num2str(TargetID);
                 %                 end
                 %                 Target_seed = load([featuresFolder,TseedsFileName, '_seeds.mat' ]);
-                Target_seed_r_seed = hdf5read([DataFolder,'\tmp\Feature_seeds',num2str(TargetID),'.h5'], '/dataset1');
-                Target_seed_FeatureVector = hdf5read([DataFolder,'\tmp\Feature_vector',num2str(TargetID),'.h5'], '/dataset1');
+                Target_seed_r_seed = hdf5read([DataFolder,'/tmp/Feature_seeds',num2str(TargetID),'.h5'], '/dataset1');
+                Target_seed_FeatureVector = hdf5read([DataFolder,'/tmp/Feature_vector',num2str(TargetID),'.h5'], '/dataset1');
                 
                 if ~isempty(Target_seed_r_seed)
                     
@@ -107,8 +109,10 @@ if Seq_Par > 1
         end
         
     end
+    if ~discovery
     parfor_progress(0,v);
     delete(gcp)
+    end
     
     for SourceID=1:size(All_overlaps,1)
         j_ind=find(All_overlaps(SourceID,:));
@@ -137,8 +141,8 @@ else
         %             SseedsFileName = num2str(SourceID);
         %         end
         %         Source_seed = load([featuresFolder,SseedsFileName, '_seeds.mat' ]);
-        Source_seed_r_seed = hdf5read([DataFolder,'\tmp\Feature_seeds',num2str(SourceID),'.h5'], '/dataset1');
-        Source_seed_FeatureVector = hdf5read([DataFolder,'\tmp\Feature_vector',num2str(SourceID),'.h5'], '/dataset1');
+        Source_seed_r_seed = hdf5read([DataFolder,'/tmp/Feature_seeds',num2str(SourceID),'.h5'], '/dataset1');
+        Source_seed_FeatureVector = hdf5read([DataFolder,'/tmp/Feature_vector',num2str(SourceID),'.h5'], '/dataset1');
         if ~isempty(Source_seed_r_seed)
             j_ind=find(All_overlaps(SourceID,:));
             for jj=1:length(j_ind)
@@ -163,8 +167,8 @@ else
                 %                     TseedsFileName = num2str(TargetID);
                 %                 end
                 %                 Target_seed = load([featuresFolder,TseedsFileName, '_seeds.mat' ]);
-                Target_seed_r_seed = hdf5read([DataFolder,'\tmp\Feature_seeds',num2str(TargetID),'.h5'], '/dataset1');
-                Target_seed_FeatureVector = hdf5read([DataFolder,'\tmp\Feature_vector',num2str(TargetID),'.h5'], '/dataset1');
+                Target_seed_r_seed = hdf5read([DataFolder,'/tmp/Feature_seeds',num2str(TargetID),'.h5'], '/dataset1');
+                Target_seed_FeatureVector = hdf5read([DataFolder,'/tmp/Feature_vector',num2str(TargetID),'.h5'], '/dataset1');
                 if ~isempty(Target_seed_r_seed)
                     
                     [SourceSubFeatures,SourceSubFeaturesVectors] = OverlapRegion1(SourceID,TargetID,Source_seed_r_seed,Source_seed_FeatureVector,StackPositions_pixels,StackSizes_pixels,paramsFMPad);

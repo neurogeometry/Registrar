@@ -7,7 +7,11 @@ paramsREuseHDF5=paramsREuseHDF5;
 paramsRERemoveBlack = paramsRERemoveBlack;
 paramsBigTileSize=paramsBigTileSize;
 paramsFinalTileSize=paramsFinalTileSize;
-
+discovery = 1;
+DBFile = [];
+% if discovery
+%     DBFile = 0;
+% end
 paramsEmptyVoxelsValue = paramsEmptyVoxelsValue;
 options.overwrite = 1;
 % InfoImage=imfinfo(char(StackList(1,1)));
@@ -41,8 +45,9 @@ else
     end
 end
 
-SpecimenName = extractBefore(extractAfter(DataFolder,"MicroscopeFiles/Results-"),'_StackList');
+
 if outputType == 1
+    SpecimenName = extractBefore(extractAfter(DataFolder,'MicroscopeFiles/Results-'),'_StackList');
     %     DBFile = [pwd,'/',DataFolder,'/nctracer.db'];
     DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/db/nctracer.db';
     % for connection help: https://www.mathworks.com/help/database/ug/sqlite-jdbc-windows.html#bt8kopj-1
@@ -138,8 +143,7 @@ if outputType == 1
     StatementObject.setObject(1,SpecimenName);
     StatementObject.execute
     close(StatementObject);
-    
-    q2 = ("select seq from sqlite_sequence where name='image'");
+    q2 = 'select seq from sqlite_sequence where name=''image''';
     curs = exec(conn, q2);
     curs = fetch(curs);
     image_id = curs.Data{1}
@@ -171,7 +175,7 @@ if strcmp(T.transform,'Translation')
     for i=1:N_stacks
         Verts(:,:,i)=ones(8,1)*StackPositions(i,:)-1+[1,1,1;StackSizes(i,1),1,1;1,StackSizes(i,2),1;StackSizes(i,1),StackSizes(i,2),1;...
             1,1,StackSizes(i,3);StackSizes(i,1),1,StackSizes(i,3);1,StackSizes(i,2),StackSizes(i,3);StackSizes(i,1),StackSizes(i,2),StackSizes(i,3)];
-%         Verts_transformed(:,:,i)=Verts(:,:,i)+b(i,:);
+        %         Verts_transformed(:,:,i)=Verts(:,:,i)+b(i,:);
         Verts_transformed(:,:,i)=Verts(:,:,i)+ones(size(Verts(:,:,i),1),1)*b(i,:);
     end
     
@@ -197,19 +201,23 @@ if strcmp(T.transform,'Translation')
     
     FinalTilePositions =[];
     if Seq_Par > 1
-        parpool(Par_workers)
+        if ~discovery
+            parpool(Par_workers)
+        end
         parfor i=1:prod(N_tiles)
-            
-            conn = database('','','','org.sqlite.JDBC',['jdbc:sqlite:',DBFile]);
-            x = conn.Handle;
+            if outputType ==1
+                conn = database('','','','org.sqlite.JDBC',['jdbc:sqlite:',DBFile]);
+                x = conn.Handle;
+            else
+                x = [];
+            end
             TileCenter=TilePositions(i,:)+(paramsBigTileSize-1)./2;
             StackInd=find(abs(StackCentersTransformed(:,1)-TileCenter(1))<StackHW(:,1)+TileHW(1) & abs(StackCentersTransformed(:,2)-TileCenter(2))<StackHW(:,2)+TileHW(2) & abs(StackCentersTransformed(:,3)-TileCenter(3))<StackHW(:,3)+TileHW(3));
+            %            StackInd=find(abs(StackCentersTransformed(:,1)-ones(N_stacks,1)*TileCenter(1))<StackHW(:,1)+ones(N_stacks,1)*TileHW(1) & abs(StackCentersTransformed(:,2)-ones(N_stacks,1)*TileCenter(2))<StackHW(:,2)+ones(N_stacks,1)*TileHW(2) & abs(StackCentersTransformed(:,3)-ones(N_stacks,1)*TileCenter(3))<StackHW(:,3)+ones(N_stacks,1)*TileHW(3));
+            Tile=zeros(paramsBigTileSize,'uint8');
+            Tile_logical=false(paramsBigTileSize);
             
-            if paramsRERemoveBlack
-                Tile=ones(paramsBigTileSize,'uint8')*paramsEmptyVoxelsValue;
-            else
-                Tile=zeros(paramsBigTileSize,'uint8');
-            end
+            
             for j=1:length(StackInd)
                 if paramsREuseHDF5
                     X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
@@ -217,13 +225,14 @@ if strcmp(T.transform,'Translation')
                     %                         X=X(h:end-h,w:end-w,:);
                     %                     end
                 else
-%                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
-%                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
+                    %                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
+                    %                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
                     X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                     %                     if Trimimage
                     %                         X=X(h:end-h,w:end-w,:);
                     %                     end
                 end
+                X = uint8(double(X)./double(MaxIntensityValue)*255);
                 
                 TileStart=max(StackPositionsTransformed(StackInd(j),:)-TilePositions(i,:)+1,1);
                 TileEnd=min(StackPositionsTransformed(StackInd(j),:)+StackSizes(StackInd(j),:)-TilePositions(i,:),paramsBigTileSize);
@@ -234,35 +243,37 @@ if strcmp(T.transform,'Translation')
                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
                         X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3));
                 else
-                    if paramsRERemoveBlack
-                        Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),:) = 0;
-                    end
                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
                         max(Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3)),...
                         X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3)));
+                    Tile_logical(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=true;
                 end
                 
             end
             
             Tile = uint8(double(Tile)./double(MaxIntensityValue)*255);
-            FinalTilePositions=TilePositions(i,:)+([xx,yy,zz]-1).*(ones(prod(reduction),1)*paramsFinalTileSize);
+            Tile(Tile_logical==false)=paramsEmptyVoxelsValue;
+            FinalTilePositions=ones(prod(reduction),1)*TilePositions(i,:)+([xx,yy,zz]-1).*(ones(prod(reduction),1)*paramsFinalTileSize);
             for jj=1:prod(reduction)
                 if (FinalTilePositions(jj,1)<=Max(1) && FinalTilePositions(jj,2)<=Max(2) && FinalTilePositions(jj,3)<=Max(3))
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
-                    if ~isempty(find(FinalTile(:),1,'first'))
+                    if ~isempty(find(FinalTile(:)~=paramsEmptyVoxelsValue,1,'first'))
                         SaveTile(outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end
             end
         end
-        delete(gcp)
+        if ~discovery
+            delete(gcp)
+        end
     else
         for i=1:prod(N_tiles)
             TileCenter=TilePositions(i,:)+(paramsBigTileSize-1)./2;
             StackInd=find(abs(StackCentersTransformed(:,1)-TileCenter(1))<StackHW(:,1)+TileHW(1) & abs(StackCentersTransformed(:,2)-TileCenter(2))<StackHW(:,2)+TileHW(2) & abs(StackCentersTransformed(:,3)-TileCenter(3))<StackHW(:,3)+TileHW(3));
-
-%             Tile=nan(paramsBigTileSize);
+            %           StackInd=find(abs(StackCentersTransformed(:,1)-ones(N_stacks,1)*TileCenter(1))<StackHW(:,1)+ones(N_stacks,1)*TileHW(1) & abs(StackCentersTransformed(:,2)-ones(N_stacks,1)*TileCenter(2))<StackHW(:,2)+ones(N_stacks,1)*TileHW(2) & abs(StackCentersTransformed(:,3)-ones(N_stacks,1)*TileCenter(3))<StackHW(:,3)+ones(N_stacks,1)*TileHW(3));
+            
+            %             Tile=nan(paramsBigTileSize);
             %Tile=ones(paramsBigTileSize,'uint8')*paramsEmptyVoxelsValue;
             Tile=zeros(paramsBigTileSize,'uint8');
             Tile_logical=false(paramsBigTileSize);
@@ -273,7 +284,7 @@ if strcmp(T.transform,'Translation')
                         X=X(h:end-h,w:end-w,:);
                     end
                 else
-                    %pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='\',1,'last'));
+                    %pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
                     %file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
                     X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                     if Trimimage
@@ -352,11 +363,15 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
     [xx,yy,zz]=ndgrid(1:paramsBigTileSize(1),1:paramsBigTileSize(2),1:paramsBigTileSize(3));
     
     if Seq_Par > 1
-        parpool(Par_workers)
+        if ~discovery
+            parpool(Par_workers)
+        end
         parfor i=1:prod(N_tiles)
             % Find stacks that overlap the tile after the transform
-            conn = database('','','','org.sqlite.JDBC',['jdbc:sqlite:',DBFile]);
-            x = conn.Handle;
+            if outputType ==1
+                conn = database('','','','org.sqlite.JDBC',['jdbc:sqlite:',DBFile]);
+                x = conn.Handle;
+            end
             StackInd=[];
             for j=1:N_stacks
                 if Overlap(Verts_transformed(:,:,j),TileVerts(:,:,i)-ones(8,1)*Global_shift)
@@ -374,8 +389,8 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 if paramsREuseHDF5
                     X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
                 else
-%                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
-%                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
+                    %                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
+                    %                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
                     X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                 end
                 
@@ -410,7 +425,9 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
             end
             
         end
-        delete(gcp)
+        if ~discovery
+            delete(gcp)
+        end
     else
         for i=1:prod(N_tiles)
             % Find stacks that overlap the tile after the transform
@@ -431,8 +448,8 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 if paramsREuseHDF5
                     X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
                 else
-%                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
-%                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
+                    %                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
+                    %                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
                     X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                 end
                 
@@ -474,7 +491,7 @@ end
 if outputType ==1
     close(conn)
     clear conn
-    disp("Done with DB");
+    disp('Done with DB');
 end
 
 if outputType ==1 || outputType ==2 || outputType ==4

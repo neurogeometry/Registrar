@@ -52,7 +52,7 @@ paramsFMminReqFeatures = 15; % minimum features to run feature matching
 % ZNCC= Zero mean NormalizedCrossCorrelation
 % SAD = Sum of Absolute Differences
 % SAD =  Sum of Squared Differences
-paramsFMMetric = 'EigenVector';        %default:	paramsFMMetric = 'ZMAD'  EigenVector;
+paramsFMMetric = 'ZMAD';        %default:	paramsFMMetric = 'ZMAD'  EigenVector;
 
     % Parameter to control the maximum iteration of Ransac
 paramsFMmaxiter=1000;           %default:	paramsFMmaxiter = 1000;
@@ -102,21 +102,21 @@ params.GA.nu = 1;
 params.GA.mu=10^-1;
 
     % Registratio Results save file GT = Global Translation, GA = Global Affine
-params.G.StackPositions_Registered = '\StackPositions_Registered';
-params.G.StackPositions_RegisteredCSV = '\StackPositions_Registered.csv';
+params.G.StackPositions_Registered = '/StackPositions_Registered';
+params.G.StackPositions_RegisteredCSV = '/StackPositions_Registered.csv';
 
-params.GT.StackPositions_Registered = '\StackPositions_Registered_Translation.mat';
-params.GA.StackPositions_Registered = '\StackPositions_Registered_Affine.mat';
-params.GR.StackPositions_Registered = '\StackPositions_Registered_Rigid.mat';
-params.GN.StackPositions_Registered = '\StackPositions_Registered_nonrigid.mat';
-params.GT.StackPositions_RegisteredCSV = '\StackPositions_Registered_Translation.csv';
-params.GA.StackPositions_RegisteredCSV = '\StackPositions_Registered_Affine.csv';
-params.GR.StackPositions_RegisteredCSV = '\StackPositions_Registered_Rigid.csv';
-params.GN.StackPositions_RegisteredCSV = '\StackPositions_Registered_nonrigid.csv';
+params.GT.StackPositions_Registered = '/StackPositions_Registered_Translation.mat';
+params.GA.StackPositions_Registered = '/StackPositions_Registered_Affine.mat';
+params.GR.StackPositions_Registered = '/StackPositions_Registered_Rigid.mat';
+params.GN.StackPositions_Registered = '/StackPositions_Registered_nonrigid.mat';
+params.GT.StackPositions_RegisteredCSV = '/StackPositions_Registered_Translation.csv';
+params.GA.StackPositions_RegisteredCSV = '/StackPositions_Registered_Affine.csv';
+params.GR.StackPositions_RegisteredCSV = '/StackPositions_Registered_Rigid.csv';
+params.GN.StackPositions_RegisteredCSV = '/StackPositions_Registered_nonrigid.csv';
 
-params.GT.Transformation = '\T_Translation.mat';
-params.GR.Transformation = '\T_Rigid.mat';
-params.GA.Transformation = '\T_Affine.mat';
+params.GT.Transformation = '/T_Translation.mat';
+params.GR.Transformation = '/T_Rigid.mat';
+params.GA.Transformation = '/T_Affine.mat';
 
 
                          %% Blending for Preview Parameters
@@ -128,11 +128,11 @@ params.BP.saveImages = 0;
 params.BP.remove_pad = 0;
 
                          %% Resampling Parameters
-params.RE.savefolder = '\Tiles\';
+params.RE.savefolder = '/Tiles/';
 paramsREuseHDF5 = 0;
 paramsRERemoveBlack = 1;
 paramsBigTileSize = [512 512 64]; % powers of 2 only
-paramsFinalTileSize = [128 128 64]; % powers of 2 only
+paramsFinalTileSize = [512 512 64]; % powers of 2 only
 paramsEmptyVoxelsValue=111;
                          
                          

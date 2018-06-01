@@ -8,14 +8,14 @@ StackClass='uint8';
 SaveFolder=[DataFolder,params.RE.savefolder];
 options.overwrite = 1;
 prevZoomLevel = num2str(ZoomLevel/2);
-PrevZoomLevelFolder=[SaveFolder,'Zoom',prevZoomLevel,'\'];
+PrevZoomLevelFolder=[SaveFolder,'Zoom',prevZoomLevel,'/'];
 
-SaveFolder=[SaveFolder,'Zoom',num2str(ZoomLevel),'\'];
+SaveFolder=[SaveFolder,'Zoom',num2str(ZoomLevel),'/'];
 if OutMethod == 1
-    %     DBFile = [pwd,'\',DataFolder,'\nctracer.db'];
-%     SpecimenName = [extractBefore(extractAfter(DataFolder,"MicroscopeFiles\Results-"),'_StackList'),'_Z_',num2str(ZoomLevel)];
+    %     DBFile = [pwd,'/',DataFolder,'/nctracer.db'];
+%     SpecimenName = [extractBefore(extractAfter(DataFolder,"MicroscopeFiles/Results-"),'_StackList'),'_Z_',num2str(ZoomLevel)];
     
-    DBFile = 'E:\TilesCreation\NCTracerWeb\New\NCtracerWeb-master\NCtracerWeb-master\NCT-Web\data\db\nctracer.db';
+    DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/db/nctracer.db';
     conn = database('','','','org.sqlite.JDBC',['jdbc:sqlite:',DBFile]);
     conn.Message
     x = conn.Handle;
@@ -25,7 +25,7 @@ if OutMethod == 1
     %     StatementObject.setObject(1,SpecimenName);
     %     StatementObject.execute
     %     close(StatementObject);
-    q2 = ("select seq from sqlite_sequence where name='image'");
+    q2 = 'select seq from sqlite_sequence where name=''image''';
     % execute the query and retrieve the results
     curs = exec(conn, q2);
     curs = fetch(curs);
@@ -94,7 +94,7 @@ for i=1:prod(N_tiles_new)
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
-            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'/',temp_name,'.tif'],paramsFinalTileSize);
         end
     end
     
@@ -110,7 +110,7 @@ for i=1:prod(N_tiles_new)
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
-            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'/',temp_name,'.tif'],paramsFinalTileSize);
         end
     end
     temp_x=BigTilePositions(i,1);
@@ -125,7 +125,7 @@ for i=1:prod(N_tiles_new)
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
-            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'/',temp_name,'.tif'],paramsFinalTileSize);
         end
     end
     temp_x=BigTilePositions(i,1)+paramsFinalTileSize(1);
@@ -140,7 +140,7 @@ for i=1:prod(N_tiles_new)
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
-            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,1:paramsFinalTileSize(3))=ImportStack([PrevZoomLevelFolder,temp_name,'/',temp_name,'.tif'],paramsFinalTileSize);
         end
     end
     temp_x=BigTilePositions(i,1);
@@ -155,7 +155,7 @@ for i=1:prod(N_tiles_new)
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
-            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+            Tile(1:paramsFinalTileSize(1),1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'/',temp_name,'.tif'],paramsFinalTileSize);
         end
     end
     temp_x=BigTilePositions(i,1)+paramsFinalTileSize(1);
@@ -170,7 +170,7 @@ for i=1:prod(N_tiles_new)
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
-            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+            Tile(paramsFinalTileSize(1)+1:end,1:paramsFinalTileSize(2),paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'/',temp_name,'.tif'],paramsFinalTileSize);
         end
     end
     temp_x=BigTilePositions(i,1);
@@ -185,7 +185,7 @@ for i=1:prod(N_tiles_new)
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
-            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+            Tile(1:paramsFinalTileSize(1),paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'/',temp_name,'.tif'],paramsFinalTileSize);
         end
     end
     temp_x=BigTilePositions(i,1)+paramsFinalTileSize(1);
@@ -200,7 +200,7 @@ for i=1:prod(N_tiles_new)
         end
     else
         if exist([PrevZoomLevelFolder,temp_name],'dir')==7
-            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'\',temp_name,'.tif'],paramsFinalTileSize);
+            Tile(paramsFinalTileSize(1)+1:end,paramsFinalTileSize(2)+1:end,paramsFinalTileSize(3)+1:end)=ImportStack([PrevZoomLevelFolder,temp_name,'/',temp_name,'.tif'],paramsFinalTileSize);
         end
     end
     
@@ -252,7 +252,7 @@ for i=1:prod(N_tiles_new)
             end
         else
             mkdir([SaveFolder,TileName]);
-            saveastiff(Tile, [SaveFolder,TileName,'\',TileName,'.tif'],options);
+            saveastiff(Tile, [SaveFolder,TileName,'/',TileName,'.tif'],options);
             disp(['Tile ',TileName,' created.']);
         end
     end
