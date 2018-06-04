@@ -39,14 +39,17 @@ else
         StackClass = class(imread(char(StackList(1,1))));
     else
         allfiles = dir(filepath);
-        InfoImage=imfinfo(char([allfiles(3).folder,'/',allfiles(3).name]));
+        %         InfoImage=imfinfo(char([allfiles(3).folder,'/',allfiles(3).name]));
+        InfoImage=imfinfo(char([filepath,'/',allfiles(3).name]));
         if strcmp(InfoImage.Format,'jpg')
-            FinalImage=ImportStack([allfiles(3).folder,'/'],StackSizes(1,:));
+%             FinalImage=ImportStack([allfiles(3).folder,'/'],StackSizes(1,:));
+            FinalImage=ImportStack([filepath,'/'],StackSizes(1,:));
             MaxIntensityValue = max(FinalImage(:));
         else
             MaxIntensityValue = InfoImage(1).MaxSampleValue;
         end
-        StackClass = class(imread(char([allfiles(3).folder,'/',allfiles(3).name])));
+%         StackClass = class(imread(char([allfiles(3).folder,'/',allfiles(3).name])));
+        StackClass = class(imread(char([filepath,'/',allfiles(3).name])));
     end
 end
 
