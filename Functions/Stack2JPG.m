@@ -1,7 +1,7 @@
 function Stack2JPG()
 
-% StackList_csv_pth='C:\Armen\Publications\Paper35 (Registration Seyed)\MicroscopeFiles\Neocortical2_StackList.csv';
-StackList_csv_pth='C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\MouseLight_StackList.csv';
+ StackList_csv_pth='C:\Armen\Publications\Paper35 (Registration Seyed)\MicroscopeFiles\Neocortical2_StackList.csv';
+%StackList_csv_pth='C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\MouseLight_StackList.csv';
 
 StackList = table2cell(readtable(StackList_csv_pth,'Delimiter',','));
 
@@ -42,11 +42,11 @@ for i = 1:size(StackList,1)
     M{i,6}=StackSizes_pixels(2);
     M{i,7}=StackSizes_pixels(3);
     mkdir([SaveFolder,'\JPG\',StackName]);
-    %         IM_Original=ImportStack(filepath,StackSizes_pixels);
-    IM_Original=ImportStack([filepath,'\',filename,'.tif'],StackSizes_pixels);
+            IM_Original=ImportStack(filepath,StackSizes_pixels);
+    % IM_Original=ImportStack([filepath,'\',filename,'.tif'],StackSizes_pixels);
     IM_Original = uint8(double(IM_Original)./double(MaxIntensityValue)*255);
 %     figure,imshow(max(IM_Original,[],3));
-    N_planes=fix(65535/StackSizes_pixels(2));
+    N_planes=fix(8192/StackSizes_pixels(2));%65535
     Nfiles=ceil(StackSizes_pixels(3)/N_planes);
     for j=1:Nfiles-1
         temp=reshape(IM_Original(:,:,N_planes*(j-1)+1:N_planes*j),StackSizes_pixels(1),StackSizes_pixels(2)*N_planes);
