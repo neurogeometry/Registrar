@@ -40,7 +40,12 @@ else
     else
         allfiles = dir(filepath);
         InfoImage=imfinfo(char([allfiles(3).folder,'/',allfiles(3).name]));
-        MaxIntensityValue = InfoImage(1).MaxSampleValue;
+        if strcmp(InfoImage.Format,'jpg')
+            FinalImage=ImportStack([allfiles(3).folder,'/'],StackSizes(1,:));
+            MaxIntensityValue = max(FinalImage(:));
+        else
+            MaxIntensityValue = InfoImage(1).MaxSampleValue;
+        end
         StackClass = class(imread(char([allfiles(3).folder,'/',allfiles(3).name])));
     end
 end

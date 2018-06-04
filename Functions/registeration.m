@@ -116,8 +116,11 @@ if exist(StackList_csv_pth,'file') > 0
             errIndxs = [errIndxs, i];
         end
     end
-    StackList (errIndxs,:) = [];
+    StackList (errIndxs,:) = []; 
     StackSizes_pixels (errIndxs,:) = [];
+    if size(StackList,2) == 7
+        StackSizes_pixels = cell2mat(StackList(:,5:7));
+    end
     
     % Get positions from the list
     StackPositions_pixels = cell2mat(StackList(:,2:4));%xlsread(StackPositions_pixels_csv_pth);

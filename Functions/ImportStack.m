@@ -1,12 +1,12 @@
-function FinalImage=ImportStack(File,StackSizes_pixels)
+function FinalImage=ImportStack(Path,StackSizes_pixels)
 warning('off','all');
 
 
 
-[filepath,~,ext] = fileparts(char(File));
+[filepath,~,ext] = fileparts(char(Path));
 if size(ext,2)>1
-    TifLink = Tiff(File, 'r');
-    InfoImage=imfinfo(File);
+    TifLink = Tiff(Path, 'r');
+    InfoImage=imfinfo(Path);
     FinalImage=zeros(StackSizes_pixels,['uint',num2str(InfoImage(1).BitsPerSample)]);
     for i=1:StackSizes_pixels(3)
         TifLink.setDirectory(i);
@@ -15,14 +15,20 @@ if size(ext,2)>1
     TifLink.close();
 else
     allfiles = dir(filepath);
-    InfoImage=imfinfo([File,'/',allfiles(3).name]);
-    FinalImage=zeros(StackSizes_pixels,['uint',num2str(InfoImage(1).BitsPerSample)]);
-    for i = 1:StackSizes_pixels(3)
-        [~,~,ext] = fileparts(allfiles(i).name);
-        if strcmp(ext,'.tif') || strcmp(ext,'.jp2') || strcmp(ext,'.png') || strcmp(ext,'.jpeg')
-            FinalImage(:,:,i) = imread(char([allfiles(i).folder,'/',allfiles(i).name]));
+    InfoImage=imfinfo([Path,'/',allfiles(3).name]);
+    if strcmp(InfoImage.Format,'jpg')
+%         FinalImage=zeros(StackSizes_pixels,['uint',num2str(InfoImage(1).BitDepth)]);
+        FinalImage = JPG2Mat(Path,StackSizes_pixels);
+    else
+        FinalImage=zeros(StackSizes_pixels,['uint',num2str(InfoImage(1).BitsPerSample)]);
+        for i = 1:StackSizes_pixels(3)
+            [~,~,ext] = fileparts(allfiles(i).name);
+            if strcmp(ext,'.tif') || strcmp(ext,'.jp2') || strcmp(ext,'.png') || strcmp(ext,'.jpeg')
+                FinalImage(:,:,i) = imread(char([allfiles(i).folder,'/',allfiles(i).name]));
+            end
         end
     end
+    
 end
 
 end
