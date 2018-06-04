@@ -42,7 +42,9 @@ for i = 1:size(StackList,1)
     M{i,6}=StackSizes_pixels(2);
     M{i,7}=StackSizes_pixels(3);
     mkdir([SaveFolder,'\JPG\',StackName]);
+            tic
             IM_Original=ImportStack(filepath,StackSizes_pixels);
+            toc
     % IM_Original=ImportStack([filepath,'\',filename,'.tif'],StackSizes_pixels);
     IM_Original = uint8(double(IM_Original)./double(MaxIntensityValue)*255);
 %     figure,imshow(max(IM_Original,[],3));

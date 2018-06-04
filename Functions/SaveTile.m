@@ -24,6 +24,7 @@ elseif usedDB == 2
 %     saveastiff(im2uint8(Tile), [SaveFolder,TileName,'/',TileName,'.tif']);
     options.overwrite = 1;
     saveastiff(Tile, [SaveFolder,TileName,'/',TileName,'.tif'],options);
+    
     disp(['Tile ',TileName,' created.']);
 elseif usedDB == 3 % Neuroglancer
     %                 TileName=num2str(i,['%0',num2str(fix(log10(prod(N_tiles)))+1),'.0f']);
