@@ -229,28 +229,29 @@ Transformation_T = [];
 b = [];
 Global_Matched_Source = matchLoc_Source'+(ones(size(matchLoc_Source,1),1)*Source_StackPositions)'-1;
 Global_Matched_Target = matchLoc_Target'+(ones(size(matchLoc_Source,1),1)*Target_StackPositions)'-1;
-while numel(Match_Indexes)<paramsFMminmatches && i<paramsFMmaxiter
-    if v ~= 0
-    if get(tb11,'userdata') || stop% stop condition
-        disp(num2str(tb11.UserData));
-        stop = 1;
-        listboxItems{v}  = 'Process Stopped ';
-        v = v + 1;
-        tb = findobj(NCT_Registration,'Tag', 'listbox1');
-        set(tb, 'String', listboxItems);drawnow
-        tb.Value = v-1;drawnow
-        break;
-    end
-    end
-    Match_Indexes_temp = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
-    if numel(Match_Indexes_temp)<paramsFMminmatches
-        disp('Trying again iteration ');
-        i=i+1;
-    end
-    if numel(Match_Indexes)<numel(Match_Indexes_temp)
-        Match_Indexes=Match_Indexes_temp;
-    end
-end
+% while numel(Match_Indexes)<paramsFMminmatches && i<paramsFMmaxiter
+%     if v ~= 0
+%     if get(tb11,'userdata') || stop% stop condition
+%         disp(num2str(tb11.UserData));
+%         stop = 1;
+%         listboxItems{v}  = 'Process Stopped ';
+%         v = v + 1;
+%         tb = findobj(NCT_Registration,'Tag', 'listbox1');
+%         set(tb, 'String', listboxItems);drawnow
+%         tb.Value = v-1;drawnow
+%         break;
+%     end
+%     end
+    Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
+%     Match_Indexes_temp = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
+%     if numel(Match_Indexes_temp)<paramsFMminmatches
+%         disp('Trying again iteration ');
+%         i=i+1;
+%     end
+%     if numel(Match_Indexes)<numel(Match_Indexes_temp)
+%         Match_Indexes=Match_Indexes_temp;
+%     end
+% end
 
 toc
 

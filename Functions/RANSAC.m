@@ -16,37 +16,52 @@ function [Match_Indexes] = RANSAC(SourceLocations,TargetLocations,Transformation
 % -------------------------------------------------------------------------
 if TransformationValue == 1 % Translation
     NumRandPoints = 1;
+    MaxNumSamples=10^6;
+    MaxNumMatches=inf;
 elseif TransformationValue == 2 % Rigid
     NumRandPoints = 2;
+    MaxNumSamples=10^6;
+    MaxNumMatches=inf;
 elseif TransformationValue == 3 % Affine
     NumRandPoints = 4;
+    MaxNumSamples=10^6;
+    MaxNumMatches=15;
 elseif TransformationValue == 4 % Non-Rigid
     NumRandPoints = 4;
     N_L = 3;
+    MaxNumSamples=10^6;
+    MaxNumMatches=15;
 end
 
-MaxErrorDistance = 2;
 InlierRatio = 0.20;
+MaxErrorDistance = 2;
 
 NumAllMatches = size(TargetLocations,2);
-NumCorrectHungarian = ceil(InlierRatio*NumAllMatches);
-FailLimit = 100*nchoosek(NumAllMatches,NumRandPoints)/nchoosek(NumCorrectHungarian,NumRandPoints);
-if FailLimit > 10^5
-    disp('The Probability of Success in Ransac is to Low');
-    FailLimit = 10^5;
+if nchoosek(NumAllMatches,NumRandPoints)<=MaxNumSamples
+    AllSamples=nchoosek(1:NumAllMatches,NumRandPoints);
+else
+    AllSamples=randi(NumAllMatches,[MaxNumSamples,NumRandPoints]);
 end
+
+NumCorrectHungarian = ceil(InlierRatio*NumAllMatches);
+MaxNumMatches=max(MaxNumMatches,NumCorrectHungarian);
+MaxNumMatches=min(MaxNumMatches,NumAllMatches);
+
+% FailLimit = 100*nchoosek(NumAllMatches,NumRandPoints)/nchoosek(NumCorrectHungarian,NumRandPoints);
+% if FailLimit > 10^5
+%     disp('The Probability of Success in Ransac is to Low');
+%     FailLimit = 10^5;
+% end
 
 i = 1;
 Match_Indexes = [];
-while  i < FailLimit
-    RandomSamples = randi(NumAllMatches,1,NumRandPoints);
-    
+while  i <= size(AllSamples,1) && length(Match_Indexes) <= MaxNumMatches
+    RandomSamples = AllSamples(i,:);
     RandTargetLocations = TargetLocations(:,RandomSamples);
     RandSourceLocations = SourceLocations(:,RandomSamples);
     
     if TransformationValue == 1 % Translation
         b=sum(RandTargetLocations-RandSourceLocations,2)./NumRandPoints;
-        %b=Optimal_Translation_Transform(RandSourceLocations,RandTargetLocations);
         SourceLocations_Translation=SourceLocations+b*ones(1,size(SourceLocations,2));
         AllDistances2 = sum((SourceLocations_Translation-TargetLocations).^2,1);
     elseif TransformationValue == 2 % Rigid
@@ -66,11 +81,10 @@ while  i < FailLimit
     end
     
     CorrectNumbers = (AllDistances2 < MaxErrorDistance^2);
-    %     length(CorrectNumbers)
     i = i+1;
     if sum(CorrectNumbers) > length(Match_Indexes)
         Match_Indexes = find(CorrectNumbers);
     end
-    
 end
+
 end

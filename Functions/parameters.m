@@ -132,7 +132,7 @@ params.RE.savefolder = '/Tiles/';
 paramsREuseHDF5 = 0;
 paramsRERemoveBlack = 1;
 paramsBigTileSize = [512 512 64]; % powers of 2 only
-paramsFinalTileSize = [128 128 64]; % powers of 2 only
+paramsFinalTileSize = [128*2 128*2 64]; % powers of 2 only
 paramsEmptyVoxelsValue=111;
                          
                          

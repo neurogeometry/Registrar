@@ -476,7 +476,8 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 if paramsRERemoveBlack
                     Tile(ind) = 0;
                 end
-                Tile(ind)=max(Tile(ind),X(ind2(ind)));
+                %Tile(ind)=max(Tile(ind),X(ind2(ind)));
+                Tile(ind)=X(ind2(ind));
             end
             
             Tile = uint8(double(Tile)./double(MaxIntensityValue)*255);
