@@ -33,7 +33,7 @@ tb2.Tag='axes1';
 tb3 = findobj(hf.Parent,'-depth',1,'Tag', 'axes5');
 hf3 = tb3;
 IM3 = squeeze(IM(:,:,:));
-h_im3=imshow(squeeze(IM(1,:,:)),'Parent',tb3);hold on
+h_im3=imshow(squeeze(IM(:,1,:)),'Parent',tb3);hold on
 tb3.Units='pixels';
 tb3.Tag='axes5';
 hf3.CLim = [0 max(IM3(:))];
@@ -117,7 +117,7 @@ if ~isempty(hf.UserData)
             
         end
         hi.CData=hf.UserData.IM(:,:,hf.UserData.currplane);
-        hi3.CData=squeeze(hf.UserData.IM(hf.UserData.currplane,:,:));
+        hi3.CData=squeeze(hf.UserData.IM(:,hf.UserData.currplane,:));
         hi4.CData=imrotate(squeeze(hf.UserData.IM(:,hf.UserData.currplane,:)),90);
         hf5.Value = hf.UserData.currplane;
     end
