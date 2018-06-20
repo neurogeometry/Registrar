@@ -1,0 +1,104 @@
+% Terminal branches shorter than MinTerminalBranchLength will be eliminated
+VoxelCoding.MinTerminalBranchLength=8
+
+% Intermediate branches shorter than MinIntermediateBranchLength will be eliminated
+VoxelCoding.MinIntermediateBranchLength=6
+
+% Loops smaller than MinLoopSize will be replaced with single vertices located at 
+% the centers of intensity of the loops
+VoxelCoding.MinLoopSize=15
+
+% Trace will be trimmed distance trim away from the xz and yz faces of the stack
+VoxelCoding.TrimTrace=0
+
+
+
+
+
+% Terminal branches shorter than MinTerminalBranchLength will be eliminated
+FastMarching.MinTerminalBranchLength=10
+
+% Intermediate branches shorter than MinIntermediateBranchLength will be eliminated
+FastMarching.MinIntermediateBranchLength=0
+
+% Loops smaller than MinLoopSize will be replaced with single vertices located at 
+% the centers of intensity of the loops
+FastMarching.MinLoopSize=15
+
+% Trace will be trimmed distance trim away from the xz and yz faces of the stack
+FastMarching.TrimTrace=0
+
+
+
+
+
+% Typical radius of neurites contained in the stack
+Optimization.TypicalRadius=2
+
+% Average number of trace vertices per voxel
+Optimization.PointsPerVoxel=0.25
+
+% Maximum number of trace optimization steps
+Optimization.MaxStepNumber=50
+
+% Trace stiffness parameter used by the optimization function
+Optimization.TraceStiffness=0.1
+
+% Radius stiffness parameter used by the optimization function
+Optimization.RadiusStiffness=0.1
+
+% Step size used by the optimization function
+Optimization.StepSize=1
+
+
+
+
+
+% Branch terminal points located MaxDistance or farther apart will not be merged
+BranchMerger.MaxDistance=8
+
+% Branch portions (in voxels) used to determine branch orientations
+BranchMerger.StepsBack=40
+
+% Minimal distance separating clusters of branch points
+BranchMerger.MinClusterDist=8
+
+% Maximum number of best merger scenarios considered within a cluster of branch points
+BranchMerger.NBestScenarios=100
+
+% Trifurcations are allowed if FourWayMerger=1 and not allowed if FourWayMerger=0
+BranchMerger.FourWayMerger=1
+
+% Loops are permitted if Loops=1 and not permitted if Loops=0
+BranchMerger.AllowLoops=0
+
+% Branch tips distance trim or closer from the xz and yz faces of the stack will not be merged
+BranchMerger.TrimTrace=0
+
+
+
+
+
+% Lagrange multiplier used by the WSVM classifier
+Classification.SVMMultiplierC=1000000
+
+% Robustness parameter used by the WPerceptron classifier
+Classification.PerceptronMargin=1
+
+% Parameter T used in the confidence measure
+Classification.ConfidenceScale=1.5
+
+% Provisional parameter of the fitness function    
+Classification.DistanceWeight=1
+
+% Provisional parameter of the fitness function
+Classification.OverrunWeight=2
+
+% Provisional parameter of the fitness function
+Classification.OffsetWeight=0.3
+
+% Provisional parameter of the fitness function
+Classification.AnglesWeight=8
+
+% Provisional parameter of the fitness function
+Classification.TerminalsWeight=10
