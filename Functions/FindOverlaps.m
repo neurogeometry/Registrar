@@ -60,24 +60,24 @@ if debug
     
     DrawStackMap(StackPositions_pixels, StackSizes_pixels)
     
-%     for j=1:size(StackPositions_pixels,1)
-%         %plot3(StackPositions_pixels(j,1),StackPositions_pixels(j,2),StackPositions_pixels(j,3),'x','Parent',tb3),hold on
-%         
-%         try
-%             boxsize = [StackSizes_pixels(j,1),StackSizes_pixels(j,2),StackSizes_pixels(j,3)];
+    for j=1:size(StackPositions_pixels,1)
+        %plot3(StackPositions_pixels(j,1),StackPositions_pixels(j,2),StackPositions_pixels(j,3),'x','Parent',tb3),hold on
+        
+        try
+            boxsize = [StackSizes_pixels(j,1),StackSizes_pixels(j,2),StackSizes_pixels(j,3)];
 %             DrawCube([StackPositions_pixels(j,1),StackPositions_pixels(j,2),StackPositions_pixels(j,3)], boxsize);
-%             %     ind1=find(StackList{j,1}=='\',1,'last');
-%             %     ind2=find(StackList{j,1}=='.',1,'last');
-%             %     StackName=StackList{j,1}(ind1+1:ind2-1);
-%             [PathStr,StackName]=fileparts(StackList{j,1});
-%             %FileName = regexp(StackList(j,1),'\\([^\\]*)$','tokens','once');
-%             %StackName = regexp(FileName{1},'.([^.]*)$','tokens','once');
-%             text(StackPositions_pixels(j,1)+boxsize(1)/2,StackPositions_pixels(j,2)+boxsize(2)/2,StackPositions_pixels(j,3)+boxsize(3)/2,[num2str(j),'-',StackName],'FontSize',6),hold on
-%             drawnow();
-%         catch
-%             t=0;
-%         end
-%     end
+            %     ind1=find(StackList{j,1}=='\',1,'last');
+            %     ind2=find(StackList{j,1}=='.',1,'last');
+            %     StackName=StackList{j,1}(ind1+1:ind2-1);
+            [PathStr,StackName]=fileparts(StackList{j,1});
+            %FileName = regexp(StackList(j,1),'\\([^\\]*)$','tokens','once');
+            %StackName = regexp(FileName{1},'.([^.]*)$','tokens','once');
+            text(StackPositions_pixels(j,1)+boxsize(1)/2,StackPositions_pixels(j,2)+boxsize(2)/2,StackPositions_pixels(j,3)+boxsize(3)/2,[num2str(j),'-',StackName],'FontSize',6),hold on
+            drawnow();
+        catch
+            t=0;
+        end
+    end
     if ~isempty(tb3)
         tb3.Tag='axes2';
     end

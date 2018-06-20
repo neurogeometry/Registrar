@@ -242,7 +242,14 @@ Global_Matched_Target = matchLoc_Target'+(ones(size(matchLoc_Source,1),1)*Target
 %         break;
 %     end
 %     end
-    Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
+%     if TransformationValue == 4 
+%         TransformationValue = 3;
+%         Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
+%         TransformationValue = 4;
+%         Match_Indexes = RANSAC(Global_Matched_Source(:,Match_Indexes),Global_Matched_Target(:,Match_Indexes),TransformationValue);
+%     else
+        Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
+%     end
 %     Match_Indexes_temp = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
 %     if numel(Match_Indexes_temp)<paramsFMminmatches
 %         disp('Trying again iteration ');
