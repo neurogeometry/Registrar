@@ -2,6 +2,7 @@
 % clc
 % close all;
 ppm = 2;
+affine = 1;
 addpath('NeuronTracerV20');
 % GTpath = 'E:\Datasets\TimeLaps\';
 % GTpath = E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\TimeLaps\';
@@ -16,14 +17,14 @@ resultpath = 'E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\Results-TimeLapse
 addpath([Functionspath,'Functions']);
 % load('../data/StackData_TimeLapse_Holtmaat.mat');
 load([GTpath,'Matches\DL083-001-Matches.mat']);
-useTrace = 0; % 0 = use boutons 1 = use trace
+useTrace = 1; % 0 = use boutons 1 = use trace
 showTranceonImage = 0;
 
 T_Names = {'B','C','D','E','F','G','H','I','J','K','L','M','N'};
 
 % Show Traces
-sourceID = 1;
-targetID = 2;
+sourceID = 2;
+targetID = 3;
 
 fname_First = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
 fname_First={fname_First.name}';
@@ -61,8 +62,8 @@ pixelSize = [0.26 0.26 0.8];
 for i=1:size(fname_First,1)
     if useTrace
         % Using Trace
-        sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083B001-A001.swc';
-        targetPath = [GTpath,'Matches\Traces\',fname_Second{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083C001-A001.swc';
+        sourcePath = [GTpath,'Matches\Traces\',fname_Second{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083B001-A001.swc';
+        targetPath = [GTpath,'Matches\Traces\',fname_First{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083C001-A001.swc';
         %         sourcePath = 'E:\Datasets\TimeLaps\Matches\Traces\DL083B001-A001.swc';
         %         targetPath = 'E:\Datasets\TimeLaps\Matches\Traces\DL083C001-A001.swc';
         
@@ -226,10 +227,10 @@ for i=1:size(fname_First,1)
 %     SourcePoints_NR=Perform_Nonrigid_Transform(SourcePoints',XYZlmn,N_L,Min,Max);
     Minimum = min(Global_Matched_Source,[],2);
     Maximum = max(Global_Matched_Source,[],2);
-    nxyz = [1024,1024,312]; %image size
-    Nxyz = ceil((Maximum-Minimum)./nxyz');
-    [~,Cxyz]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,Nxyz,nxyz);
-    [SourcePoints_NR,~]=Perform_Bspline_Transform(SourcePoints',Cxyz,Nxyz,nxyz);
+    nxyz = [1024;1024;312]; %image size
+%     Nxyz = ceil((Maximum-Minimum)./nxyz');
+    [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine);
+    [SourcePoints_NR,~]=Perform_Bspline_Transform(SourcePoints',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
     if useTrace
         [Dis_NonRigid_um,Dis_NonRigid_voxel] = TraceDistance(AM_Source, SourcePoints_NR', AM_Target, TargetPoints,pixelSize,0);
         D_NonRigid_um = mean(Dis_NonRigid_um);
