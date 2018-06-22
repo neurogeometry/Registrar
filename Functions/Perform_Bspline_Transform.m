@@ -6,6 +6,8 @@
 
 function [X_prime,StackPosition_prime,E]=Perform_Bspline_Transform(X,StackPosition,L,b,Cxyz,Nxyz,nxyz,Grid_start,affine)
 
+Dmax=3; %maximum extent of interpolation to close holes resultion from the transform
+
 X_prime=[];
 StackPosition_prime=[];
 E=[];
@@ -25,34 +27,37 @@ elseif length(sizeX)==3 % X is a 2d image or a 3d image stack
     Min=round(min(Verts_prime,[],2));
     Max=round(max(Verts_prime,[],2));
     sizeX_prime=[Max(1)-Min(1)+1,Max(2)-Min(2)+1,Max(3)-Min(3)+1];
-    X_prime=zeros(sizeX_prime,class(X));
+    X_prime=-ones(sizeX_prime,'int16');
     
     [xx,yy,zz]=ndgrid(1:sizeX(1),1:sizeX(2),1:sizeX(3));
-    xyz=[xx(:),yy(:),zz(:)]';
+    [xyz_prime,~]=Perform_Bspline_Transform0([xx(:),yy(:),zz(:)]',L,b,Cxyz,Nxyz,nxyz,Grid_start,affine,0);
     clear xx yy zz
-    [xyz_prime,~]=Perform_Bspline_Transform0(xyz,L,b,Cxyz,Nxyz,nxyz,Grid_start,affine,0);
     xyz_prime=round(xyz_prime);
     xyz_prime=xyz_prime-(Min-1)*ones(1,prod(sizeX));
     
     ind=(xyz_prime(1,:)>=1 & xyz_prime(1,:)<=sizeX_prime(1) & xyz_prime(2,:)>=1 & xyz_prime(2,:)<=sizeX_prime(2) & xyz_prime(3,:)>=1 & xyz_prime(3,:)<=sizeX_prime(3));
     ind2=xyz_prime(1,ind)+(xyz_prime(2,ind)-1).*sizeX_prime(1)+(xyz_prime(3,ind)-1).*(sizeX_prime(1)*sizeX_prime(2));
     X_prime(ind2)=X(ind);
+    clear xyz_prime ind2
     
-    StackPosition_prime=StackPosition+Min-1;
-      
-    %     figure
-    %     imshow(max(X,[],3),[0 max(X(:))])
-    %     figure
-    %     imshow(max(X_prime,[],3),[0 max(X(:))])
-    
-%     xyz_prime0=xyz;
-%     xyz_prime=xyz_prime0;
-%     for i=1:10
-%         [xyz_prime_temp,~]=Perform_Bspline_Transform0(xyz_prime,L,b,Cxyz,Nxyz,nxyz,Grid_start,affine,0);
-%         xyz_prime=xyz_prime-0.01.*(xyz_prime_temp-xyz_prime0);
-%         (mean(sum((xyz_prime-xyz_prime0).^2))).^0.5
+    % fill missing NaN's with neares neighbor values, within Dmax
+    %2D version
+%     for i=1:sizeX_prime(3)
+%         temp=X_prime(:,:,i)+1;
+%         [D,idx] = bwdist(temp);
+%         idx2=(temp==0 & D<=Dmax);
+%         temp(idx2)=temp(idx(idx2));
+%         X_prime(:,:,i)=temp-1;
 %     end
-    
+%     X_prime=cast(X_prime,class(X));
+
+    %3D version
+    [D,idx] = bwdist(X_prime+1);
+    idx2=(D>0 & D<=Dmax);
+    X_prime(idx2)=X_prime(idx(idx2));
+    X_prime=cast(X_prime,class(X));
+
+    StackPosition_prime=StackPosition+Min-1;   
     
 else
     disp('Format of X is incorrect.')
@@ -90,11 +95,12 @@ else
 end
 
 X_prime=X;
+X=X./(nxyz*size(X,2));
 for i=1:length(ii)
-    ind=((ii(i)-1<=X(1,:)./nxyz(1)) & (X(1,:)./nxyz(1)<ii(i)) & (jj(i)-1<=X(2,:)./nxyz(2)) & (X(2,:)./nxyz(2)<jj(i)) & (kk(i)-1<=X(3,:)./nxyz(3)) & (X(3,:)./nxyz(3)<kk(i)));
-    Bx=B(X(1,ind)./nxyz(1)-ii(i)+1);
-    By=B(X(2,ind)./nxyz(2)-jj(i)+1);
-    Bz=B(X(3,ind)./nxyz(3)-kk(i)+1);
+    ind=(ii(i)-1<=X(1,:) & X(1,:)<ii(i) & jj(i)-1<=X(2,:) & X(2,:)<jj(i) & kk(i)-1<=X(3,:) & X(3,:)<kk(i));
+    Bx=B(X(1,ind)-ii(i)+1);
+    By=B(X(2,ind)-jj(i)+1);
+    Bz=B(X(3,ind)-kk(i)+1);
     temp_ind=sub2ind(Nxyz+NB-1,ii(i)-1+ll,jj(i)-1+mm,kk(i)-1+nn);
     CC=Cxyz(:,temp_ind);
     
