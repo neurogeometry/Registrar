@@ -95,7 +95,7 @@ else
 end
 
 X_prime=X;
-X=X./(nxyz*size(X,2));
+X=X./(nxyz*ones(1,size(X,2)));
 for i=1:length(ii)
     ind=(ii(i)-1<=X(1,:) & X(1,:)<ii(i) & jj(i)-1<=X(2,:) & X(2,:)<jj(i) & kk(i)-1<=X(3,:) & X(3,:)<kk(i));
     Bx=B(X(1,ind)-ii(i)+1);
