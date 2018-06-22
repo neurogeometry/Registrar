@@ -23,8 +23,12 @@ showTranceonImage = 0;
 T_Names = {'B','C','D','E','F','G','H','I','J','K','L','M','N'};
 
 % Show Traces
-sourceID = 2;
-targetID = 3;
+% sourceID = 2;
+% targetID = 3;
+for sourceID = 1:4
+    disp(sourceID)
+    targetID = sourceID + 1;
+for useTrace = 0:1
 
 fname_First = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
 fname_First={fname_First.name}';
@@ -246,22 +250,32 @@ for i=1:size(fname_First,1)
 %     D_Before_um
 %     D_NonRigid_um
     
-    
-%     AllDistances_um(i,1) = D_Before_um;
+    if useTrace
+    AllDistances_um(i,1) = D_Before_um;
 %     AllDistances_um(i,2) = D_Translation_um;
 %     AllDistances_um(i,3) = D_Rigid_um;
 %     AllDistances_um(i,4) = D_Affine_um;
 %     AllDistances_um(i,5) = D_NonRigidAffine_um;
-%     AllDistances_um(i,6) = D_NonRigid_um;
-    
-      AllDistances_voxel(i,1) = D_Before_voxel;
+    AllDistances_um(i,6) = D_NonRigid_um;
+    AllDistances_voxel(i,1) = D_Before_voxel;
 %     AllDistances_um(i,2) = D_Translation_um;
 %     AllDistances_um(i,3) = D_Rigid_um;
 %     AllDistances_um(i,4) = D_Affine_um;
 %     AllDistances_um(i,5) = D_NonRigidAffine_um;
-    AllDistances_voxel(i,6) = D_NonRigid_voxel;
-    
+    AllDistances_voxel(i,6) = D_NonRigids_voxel;
+    else
+      AllDistances_bouton(1) = D_Before_voxel;
+%     AllDistances_um(i,2) = D_Translation_um;
+%     AllDistances_um(i,3) = D_Rigid_um;
+%     AllDistances_um(i,4) = D_Affine_um;
+%     AllDistances_um(i,5) = D_NonRigidAffine_um;
+    AllDistances_bouton(6) = D_NonRigid_voxel;
+    end
     if ~useTrace
         break;
     end
+end
+
+end
+save(['E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\test',num2str(sourceID),'.mat'],'AllDistances_um','AllDistances_voxel','AllDistances_bouton')
 end
