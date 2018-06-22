@@ -12,7 +12,7 @@ addpath('NeuronTracerV20');
 
 GTpath = 'E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\TimeLaps\';
 Functionspath = 'E:\Shih-Luen\Lab\Projects\registrar\';
-resultpath = 'E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\Results-TimeLapse_Holtmaat_StackList4\';
+resultpath = 'E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\Results-TimeLapse_Holtmaat_StackList\';
 
 addpath([Functionspath,'Functions']);
 % load('../data/StackData_TimeLapse_Holtmaat.mat');
@@ -25,10 +25,10 @@ T_Names = {'B','C','D','E','F','G','H','I','J','K','L','M','N'};
 % Show Traces
 % sourceID = 2;
 % targetID = 3;
-for sourceID = 1:4
-    disp(sourceID)
-    targetID = sourceID + 1;
-for useTrace = 0:1
+for sourceID = 1:100
+%     disp(sourceID)
+%     targetID = sourceID + 1;
+% for useTrace = 0:1
 
 fname_First = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
 fname_First={fname_First.name}';
@@ -122,7 +122,9 @@ for i=1:size(fname_First,1)
         D_Before_um = mean(Dis_Before_um);
         D_Before_voxel = mean(Dis_Before_voxel);
     else
-        D_Before_voxel = mean(mean((SourcePoints-TargetPoints).^2,1).^0.5);
+%         D_Before_voxel = mean(mean((SourcePoints-TargetPoints).^2,1).^0.5);
+        D_Before_voxel = SourcePoints-TargetPoints;
+
     end
     
     %     Dag_temp=(bsxfun(@minus,SourcePoints(:,1),TargetPoints(:,1)').^2+bsxfun(@minus,SourcePoints(:,2),TargetPoints(:,2)').^2+bsxfun(@minus,SourcePoints(:,3),TargetPoints(:,3)').^2).^0.5;
@@ -231,7 +233,7 @@ for i=1:size(fname_First,1)
 %     SourcePoints_NR=Perform_Nonrigid_Transform(SourcePoints',XYZlmn,N_L,Min,Max);
     Minimum = min(Global_Matched_Source,[],2);
     Maximum = max(Global_Matched_Source,[],2);
-    nxyz = [1024;1024;312]; %image size
+    nxyz = [512;512;156]; %image size
 %     Nxyz = ceil((Maximum-Minimum)./nxyz');
     [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine);
     [SourcePoints_NR,~]=Perform_Bspline_Transform(SourcePoints',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
@@ -240,7 +242,9 @@ for i=1:size(fname_First,1)
         D_NonRigid_um = mean(Dis_NonRigid_um);
         D_NonRigid_voxel = mean(Dis_NonRigid_voxel);
     else
-        D_NonRigid_voxel = mean(mean((SourcePoints_NR'-TargetPoints).^2,1).^0.5);
+%         D_NonRigid_voxel = mean(mean((SourcePoints_NR'-TargetPoints).^2,1).^0.5);
+        D_NonRigid_voxel = SourcePoints_NR'-TargetPoints;
+
     end
     disp('-------------------------------------');
     
@@ -262,14 +266,14 @@ for i=1:size(fname_First,1)
 %     AllDistances_um(i,3) = D_Rigid_um;
 %     AllDistances_um(i,4) = D_Affine_um;
 %     AllDistances_um(i,5) = D_NonRigidAffine_um;
-    AllDistances_voxel(i,6) = D_NonRigids_voxel;
+    AllDistances_voxel(i,6) = D_NonRigid_voxel;
     else
-      AllDistances_bouton(1) = D_Before_voxel;
+      AllDistances_bouton = D_Before_voxel;
 %     AllDistances_um(i,2) = D_Translation_um;
 %     AllDistances_um(i,3) = D_Rigid_um;
 %     AllDistances_um(i,4) = D_Affine_um;
 %     AllDistances_um(i,5) = D_NonRigidAffine_um;
-    AllDistances_bouton(6) = D_NonRigid_voxel;
+    AllDistances_bouton_after = D_NonRigid_voxel;
     end
     if ~useTrace
         break;
@@ -277,5 +281,5 @@ for i=1:size(fname_First,1)
 end
 
 end
-save(['E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\test',num2str(sourceID),'.mat'],'AllDistances_um','AllDistances_voxel','AllDistances_bouton')
-end
+% save(['E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\test',num2str(sourceID),'.mat'],'AllDistances_um','AllDistances_voxel','AllDistances_bouton_before')
+% end

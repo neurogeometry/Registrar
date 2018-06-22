@@ -35,9 +35,9 @@ elseif TransformationValue == 4 % Non-Rigid
     MaxNumSamples=10^3;
     MaxNumMatches=10;
     MaxErrorDistance = 4;
-    Minimum = min(SourceLocations,[],2);
-    Maximum = max(SourceLocations,[],2);
-    nxyz = [512;512;60];
+%     Minimum = min(SourceLocations,[],2);
+%     Maximum = max(SourceLocations,[],2);
+    nxyz = [512;512;156];
 %     Nxyz = ceil((Maximum-Minimum)./nxyz');
     affine = 1;
 end
@@ -90,9 +90,9 @@ while  i <= size(AllSamples,1) && length(Match_Indexes) <= MaxNumMatches
 %         SourceLocations_nonRigid=Perform_Nonrigid_Transform(SourceLocations,XYZlmn,N_L,Min,Max);
 %         AllDistances2 = sum((SourceLocations_nonRigid-TargetLocations).^2,1);
 
-        [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(RandSourceLocations-Minimum*ones(1,NumRandPoints),RandTargetLocations-Minimum*ones(1,NumRandPoints),nxyz,affine);
-        [SourceLocations_nonRigid,~]=Perform_Bspline_Transform(SourceLocations-Minimum*ones(1,size(SourceLocations,2)),[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
-        AllDistances2 = sum((SourceLocations_nonRigid+Minimum*ones(1,size(SourceLocations,2))-TargetLocations).^2,1);
+        [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(RandSourceLocations,RandTargetLocations,nxyz,affine);
+        [SourceLocations_nonRigid,~]=Perform_Bspline_Transform(SourceLocations,[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
+        AllDistances2 = sum((SourceLocations_nonRigid-TargetLocations).^2,1);
     end
     
     CorrectNumbers = (AllDistances2 < MaxErrorDistance^2);
