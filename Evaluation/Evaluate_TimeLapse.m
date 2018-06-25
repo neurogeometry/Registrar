@@ -27,7 +27,7 @@ T_Names = {'B','C','D','E','F','G','H','I','J','K','L','M','N'};
 % targetID = 3;
 for sourceID = 1:100
 %     disp(sourceID)
-%     targetID = sourceID + 1;
+    targetID = sourceID + 1;
 % for useTrace = 0:1
 
 fname_First = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
@@ -281,5 +281,5 @@ for i=1:size(fname_First,1)
 end
 
 end
-% save(['E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\test',num2str(sourceID),'.mat'],'AllDistances_um','AllDistances_voxel','AllDistances_bouton_before')
+save(['E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\test',num2str(sourceID),'.mat'],'AllDistances_um','AllDistances_voxel','AllDistances_bouton_before')
 % end

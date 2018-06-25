@@ -4,7 +4,7 @@
 % L, b, Cxyz, Nxyz, nxyz, and Grid_start defines the transformation
 % affine = 1/0 turns affine transform on/off
 
-function [X_aligned,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(X,Y,nxyz,affine)
+function [X_aligned,L,b,Cxyz,Nxyz,nxyz,Grid_start,affine]=Optimal_Bspline_Transform(X,Y,nxyz,affine)
 
 if affine==1
     [X_affine,L,b]=Optimal_Affine_Transform(X,Y);
