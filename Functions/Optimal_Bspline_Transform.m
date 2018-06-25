@@ -17,6 +17,7 @@ if isnan(X_affine)
     X_affine=X;
     L=[];
     b=[];
+    affine=0;
 end
 
 Min=min(X_affine,[],2);

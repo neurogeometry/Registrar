@@ -25,7 +25,7 @@ if isempty(StackPosition)  % X is a 3xN array of positions
         X_prime=X*L+ones(sizeX(1),1)*b;
     end
     del_X2=sum((X_prime-X).^2,2);
-    disp([mean(del_X2)^0.5, max(del_X2)^0.5])
+%     disp([mean(del_X2)^0.5, max(del_X2)^0.5])
 elseif length(sizeX)==3 % X is a 2d image or a 3d image stack      
     if isempty(L)
         X_prime=X;
