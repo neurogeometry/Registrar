@@ -13,6 +13,11 @@ elseif affine==0
     L=[];
     b=[];
 end
+if isnan(X_affine) 
+    X_affine=X;
+    L=[];
+    b=[];
+end
 
 Min=min(X_affine,[],2);
 Max=max(X_affine,[],2);
