@@ -5,7 +5,7 @@
 function [X_aligned,L,b]=Optimal_Affine_Transform(X,Y)
 
 % regularization parameter
-mu=0;
+mu=0.1;
 
 N=size(X,2);
 X_cm=X-mean(X,2)*ones(1,N);
