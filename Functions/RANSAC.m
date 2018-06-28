@@ -18,7 +18,7 @@ if TransformationValue == 1 % Translation
     NumRandPoints = 1;
     MaxNumSamples=10^6;
     MaxNumMatches=inf;
-    MaxErrorDistance = 2;
+    MaxErrorDistance = 3;
 elseif TransformationValue == 2 % Rigid
     NumRandPoints = 2;
     MaxNumSamples=10^6;
@@ -34,10 +34,10 @@ elseif TransformationValue == 4 % Non-Rigid
 %     N_L = 3;
     MaxNumSamples=10^3;
     MaxNumMatches=10;
-    MaxErrorDistance = 4;
+    MaxErrorDistance = 6;
 %     Minimum = min(SourceLocations,[],2);
 %     Maximum = max(SourceLocations,[],2);
-    nxyz = [512;512;156];
+    nxyz = [256;256;128];
 %     Nxyz = ceil((Maximum-Minimum)./nxyz');
     affine = 1;
 end
