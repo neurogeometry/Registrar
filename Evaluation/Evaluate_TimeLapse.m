@@ -4,7 +4,7 @@
 ppm = 2;
 affine = 1;
 addpath('NeuronTracerV20');
-showDiff = 1;
+showDiff = 0;
 csvPath = '..\..\RegistrationEvaluation\TimeLapse_Holtmaat_StackList.csv';
 StackList = table2cell(readtable(csvPath,'Delimiter',','));
 
@@ -103,28 +103,24 @@ for sourceID = 1:12
         IM_source_max_P(2-MIN(1):1-MIN(1)+size(IM_source_max,1),...
             2-MIN(2):1-MIN(2)+size(IM_source_max,2))=IM_source_max;
         
-        figure(5),imshowpair(IM_Target_NR_max_P,IM_source_max_P,'Scaling','independent')
-        
-        
+        figure(5),imshowpair(IM_Target_NR_max_P,IM_source_max_P,'Scaling','independent')    
         
         %                     IM_source_maxR = imresize(IM_source_max,size(IM_Target_NR_max));
         %                     figure(3),imshowpair(IM_Target_NR_max,IM_source_maxR,'Scaling','independent')
         
-        [IM_Source_NR,~]=Perform_Bspline_Transform(IM_Source,[0,0,0],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
-        IM_Source_NR_max=max(IM_Source_NR,[],3);
-        figure(3)
-        imshowpair(IM_Source_NR_max,IM_target_max,'Scaling','independent')
-        
-        
-        [optimizer, metric] = imregconfig('multimodal');
-        optimizer.InitialRadius = 0.009;
-        optimizer.Epsilon = 1.5e-4;
-        optimizer.GrowthFactor = 1.01;
-        optimizer.MaximumIterations = 300;
-        movingRegistered = imregister(IM_Source, IM_Target, 'affine', optimizer, metric);
-        figure(4)
-        imshowpair(IM_target_max,max(movingRegistered,[],3),'Scaling','independent')
-
+%         [IM_Source_NR,~]=Perform_Bspline_Transform(IM_Source,[0,0,0],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
+%         IM_Source_NR_max=max(IM_Source_NR,[],3);
+%         figure(3)
+%         imshowpair(IM_Source_NR_max,IM_target_max,'Scaling','independent')
+%               
+%         [optimizer, metric] = imregconfig('multimodal');
+%         optimizer.InitialRadius = 0.009;
+%         optimizer.Epsilon = 1.5e-4;
+%         optimizer.GrowthFactor = 1.01;
+%         optimizer.MaximumIterations = 300;
+%         movingRegistered = imregister(IM_Source, IM_Target, 'affine', optimizer, metric);
+%         figure(4)
+%         imshowpair(IM_target_max,max(movingRegistered,[],3),'Scaling','independent')
     end
     
     for i=1:size(fname_First,1)
