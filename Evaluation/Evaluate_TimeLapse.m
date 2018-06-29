@@ -108,6 +108,11 @@ for sourceID = 1:12
     result{sourceID}.Bouton.r2 = TargetPoints;
     
     
+        Affine_L = Affine_Fiji{sourceID}(:,1:3);
+        Affine_b = Affine_Fiji{sourceID}(:,4);
+        SourcePoints_Affine = (Affine_L*(SourcePoints)'+Affine_b)';
+        TargetPoints_Affine = TargetPoints;
+        SourcePoints_Affine'-TargetPoints_Affine
     
     if showDiff
         Source_Stack_File = char(StackList(sourceID,1));
@@ -181,8 +186,7 @@ for sourceID = 1:12
         %----------- Fiji
         
         %Affine
-        Affine_L = Affine_Fiji{sourceID}(:,1:3);
-        Affine_b = Affine_Fiji{sourceID}(:,4);
+        
         SourcePoints_Affine = (Affine_L*(SourcePoints)'+Affine_b)';
         TargetPoints_Affine = TargetPoints;
 % %         [Distances_Affine,~] = TraceDistance(AM_Source, SourcePoints_Affine, AM_Target, TargetPoints_Affine,pixelSize,0);
