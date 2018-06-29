@@ -110,9 +110,9 @@ for sourceID = 1:12
     
         Affine_L = Affine_Fiji{sourceID}(:,1:3);
         Affine_b = Affine_Fiji{sourceID}(:,4);
-        SourcePoints_Affine = (Affine_L*(SourcePoints)'+Affine_b)';
-        TargetPoints_Affine = TargetPoints;
-        SourcePoints_Affine'-TargetPoints_Affine
+        result{sourceID}.Bouton.r1_fiji_Affine = (Affine_L*(SourcePoints)'+Affine_b)';
+%         TargetPoints_Affine = TargetPoints;
+%         SourcePoints_Affine'-TargetPoints_Affine
     
     if showDiff
         Source_Stack_File = char(StackList(sourceID,1));
@@ -183,19 +183,7 @@ for sourceID = 1:12
         
         
         
-        %----------- Fiji
-        
-        %Affine
-        
-        SourcePoints_Affine = (Affine_L*(SourcePoints)'+Affine_b)';
-        TargetPoints_Affine = TargetPoints;
-% %         [Distances_Affine,~] = TraceDistance(AM_Source, SourcePoints_Affine, AM_Target, TargetPoints_Affine,pixelSize,0);
-%         if useTrace
-%             [Distances_Affine,~] = TraceDistance(AM_Source, SourcePoints_Affine', AM_Target, TargetPoints_Affine',pixelSize,0);
-%             D_Affine = mean(Distances_Affine)
-%         else
-%             D_Affine = mean(mean((SourcePoints_Affine-TargetPoints_Affine).^2,1).^0.5)
-%         end
+
          
 
 
@@ -259,6 +247,20 @@ for sourceID = 1:12
         result{sourceID}.Trace.R1{i} = R_Source;
         result{sourceID}.Trace.R2{i} = R_Target;
         
+                %----------- Fiji
+        
+        %Affine
+        
+        result{sourceID}.Trace.r1_fiji_Affine{i} = (Affine_L*(SourcePoints)'+Affine_b)';
+%         TargetPoints_Affine = TargetPoints;
+% %         [Distances_Affine,~] = TraceDistance(AM_Source, SourcePoints_Affine, AM_Target, TargetPoints_Affine,pixelSize,0);
+%         if useTrace
+%             [Distances_Affine,~] = TraceDistance(AM_Source, SourcePoints_Affine', AM_Target, TargetPoints_Affine',pixelSize,0);
+%             D_Affine = mean(Distances_Affine)
+%         else
+%             D_Affine = mean(mean((SourcePoints_Affine-TargetPoints_Affine).^2,1).^0.5)
+%         end
+        
         %     if ~useTrace
         %
         %     end
@@ -291,7 +293,7 @@ for sourceID = 1:12
 end
 
 % save(['E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\test',T_Names{sourceID},'and',T_Names{targetID},'.mat'],'A')
-save(['..\..\RegistrationEvaluation\result_T.mat'],'result','pixelSize')
+save(['..\..\RegistrationEvaluation\result_NR_fiji.mat'],'result','pixelSize')
 toc
 
 
