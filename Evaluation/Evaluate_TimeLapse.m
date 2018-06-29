@@ -178,7 +178,7 @@ for sourceID = 1:12
         [AM_Target,r_Target,~] = AdjustPPM(AM_Target,r_Target,R_Target,ppm);
         SourcePoints = r_Source;
         TargetPoints = r_Target;
-        
+%         [Distances_before,~] = TraceDistance(AM_Source, SourcePoints, AM_Target, TargetPoints,pixelSize,0);
         
         
         
