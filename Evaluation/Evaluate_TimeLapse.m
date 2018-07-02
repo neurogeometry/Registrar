@@ -8,42 +8,18 @@ showDiff = 0;
 csvPath = '..\..\RegistrationEvaluation\TimeLapse_Holtmaat_StackList.csv';
 StackList = table2cell(readtable(csvPath,'Delimiter',','));
 
-Affine_Fiji{1} =  [1.0069332813089047, -0.00854589834317538, -0.03260691097378371, 25.087531465827908; 
-0.005935560672269434, 1.00641289904624, -7.341383252498224E-4, -0.8644961248943994; 
--0.010410748719979171, -4.036321915032448E-4, 1.0052884173593035, -13.772167004564864];
-Affine_Fiji{2} =  [0.9983291029115744, 0.008773565768463169, -0.001373618163566681, -7.140981589639295; 
-    -0.0099040317030493, 1.009027825065207, -0.015988862814655364, 0.4232911614558521; 
-    -0.0019108435254093711, 0.0017134007740634552, 1.0315824267901006, 5.824324365351288];       
-Affine_Fiji{3} =  [1.0157573748738304, 0.00415654503524179, -0.05758314461282188, -3.983125058716479;
-    -0.0024844422778687383, 1.0023028206740348, -0.05773061104034549, -7.283894609986068;
-    -2.4568539617978585E-4, -0.0029588706054060956, 1.0055313704308426, -0.7932550093767929];         
-Affine_Fiji{4} =  [0.9954810548175131, 9.28705942175697E-4, -0.02071482289753468, 0.04078623784920676;
-    0.001797893952538314, 0.9956744162603566, -0.006329119904485814, -3.156202588085548;
-    -0.001888915946940975, -9.880429642617553E-4, 0.993944675667947, 1.654007709967047]; 
-Affine_Fiji{5} =  [1.0026400364341825, -0.01351132543444835, -0.0034545862571120356, 8.423251468402011;
-    0.012552151208417454, 0.9928482947217806, 0.04999547881086985, -3.512752634002786;
-    -6.879998375250163E-4, -0.0018044605030352878, 1.00283949298545, -4.691198095246264]; 
-Affine_Fiji{6} =  [1.0000110899235126, -0.0033838858919999076, -1.9264684199549187E-5, 5.6187768903928115;
-    -4.5456432500028815E-4, 0.9997120138287525, -0.029755361036161165, 4.244980057741089;
-    -0.002278505893924164, -5.063353878100585E-4, 1.0137185236019786, -4.606189806547832]; 
-Affine_Fiji{7} =  [1.0026927764455296, 0.0069590405075884015, -0.02055518045961091, -3.722207026804554;
-    -0.001322915753459289, 1.0031868854742882, 0.014634420090856137, -2.181350452959463;
-    -0.0011290052809648163, 9.111217662877147E-5, 1.0085835186456233, -4.612587163461214];
- Affine_Fiji{8} =  [0.9994495252473322, 0.005602715955703927, 0.010142786923411196, -5.073125721516959;
-     -0.003309083440242014, 0.9985107591039083, 0.03356060956302653, 3.5201961790928458;
-     -0.003021802481539562, -0.00327379981313812, 0.9974418907957041, 2.3091148114248625];
- Affine_Fiji{9} =  [1.004072835731811, 0.0024854782393286395, 0.041581630657794966, -3.173496556765299;
-     -2.804664633419829E-4, 0.9967128858467997, 0.03403311224415906, -3.3139990321841015;
-     -0.0044491647758947706, -0.0027637141205848273, 0.9777999091126199, 5.345392011504245]; 
- Affine_Fiji{10} =  [1.0071443003151253, -0.02349817173098602, 0.0372157383038727, 22.195378410021682;
-     0.019417956473857377, 1.0007603172016564, 0.050720146585283676, -15.661595364287251;
-     0.006939088789655483, 2.0629444192779567E-4, 1.0288819188079352, 1.4087576181626957];
- Affine_Fiji{11} =  [1.0137174032775829, 0.013061027721580418, 0.038120924863384587, -13.802574567119578;
-     0.005150729724184285, 0.9979231639239432, -0.02775927334378541, 7.657849702262158;
-     -0.003404912468337795, 0.001478880608151754, 1.0035055919922646, -2.251670111535077]; 
- Affine_Fiji{12} =  [1.0139986568140658, 0.009573975132356805, -0.01446398825983286, -14.415653029635457;
-     -0.03409538428580029, 0.9901566907991396, -0.07465939906395067, 15.642695011823143;
-     0.010985289730242875, -0.0018223180411751985, 0.980679918183361, 0.48934445024409];
+Affine_Fiji{1} =   [0.9936921821167053, 0.008007812145490931, 0.0315078570167579, -24.27614925202483;-0.0054197055191250315, 0.993164734920597, 9.180206475727926E-4, 0.9227623205139378;0.010330514866540269, 3.326481269751852E-4, 0.9955273091289829, 13.451674407899446];
+Affine_Fiji{2} =   [1.0017279611119831, -0.008739748867177977, 7.598120178636258E-4, 7.201407511322642;0.009988781967444614, 0.9909520362960338, 0.016058198093810594, -0.5843885119905292;0.0019325126371294576, -0.0015279713437594648, 0.9697108879368073, -5.7824216586693495];
+Affine_Fiji{3} =   [0.9844017709049991, -0.004106107397898372, 0.05665728500606049, 4.011870426481522;0.002314511903363372, 0.9976149176091117, 0.05721206380947885, 7.477534636215167;2.0194609914565842E-4, 0.0028578837113763713, 0.9947226573336245, 0.834333092281156];
+Affine_Fiji{4} =   [0.9954810548175131, 9.28705942175697E-4, -0.02071482289753468, 0.04078623784920676;0.001797893952538314, 0.9956744162603566, -0.006329119904485814, -3.156202588085548;-0.001888915946940975, -9.880429642617553E-4, 0.993944675667947, 1.654007709967047];
+Affine_Fiji{5} =   [1.0026400364341825, -0.01351132543444835, -0.0034545862571120356, 8.423251468402011; 0.012552151208417454, 0.9928482947217806, 0.04999547881086985, -3.512752634002786; -6.879998375250163E-4, -0.0018044605030352878, 1.00283949298545, -4.691198095246264];
+Affine_Fiji{6} =   [1.00001500997013, 0.0033570535987453437, 1.655919355156854E-4, -5.623941605866036; 3.151418458432198E-4, 1.0003423716493687, 0.02932621523650758, -4.074664038821975; 0.00231113287979684, 5.64096714365081E-4, 0.9863876661587397, 4.489086279849488];
+Affine_Fiji{7} =   [0.9971674331463407, -0.006928105953497653, 0.02093248610197307, 3.78219629909988; 0.0012900147841593476, 0.9968799828718048, -0.014788309514328968, 2.122652745631963; 0.0012393347579878963, 3.341368993613203E-5, 0.99157193992645, 4.480019454011426];
+Affine_Fiji{8} =   [0.9994495252473322, 0.005602715955703927, 0.010142786923411196, -5.073125721516959; -0.003309083440242014, 0.9985107591039083, 0.03356060956302653, 3.5201961790928458; -0.003021802481539562, -0.00327379981313812, 0.9974418907957041, 2.3091148114248625];
+Affine_Fiji{9} =   [0.9960913049019193, -0.002631490674806336, -0.04185196685120762, 3.2674121530160285; 2.4524281739611575E-4, 1.003278303407285, -0.03460646887457852, 3.3864888411433762; 0.0044193437006529585, 0.002611826289340785, 1.0225941005220958, -5.327124369787498];
+Affine_Fiji{10} =  [0.9927585128466225, 0.02331069556632598, -0.03705097060629248, -21.60857613836826; -0.018675009003586276, 0.9987739155669406, -0.0480350149519263, 16.000861986977647; -0.006566536391762391, -3.921913255836018E-4, 0.9721557587333788, -1.2558925790011557];
+Affine_Fiji{11} =  [0.9863087955784957, -0.013385167092749258, -0.03964070888656113, 14.191123332558618; -0.005094676029152205, 1.0019087385416316, 0.028051602718283688, -7.579518932245131; 0.003347758456653957, -0.0016588264544113145, 0.9960583050214211, 2.3971075801555344];
+Affine_Fiji{12} =  [0.9861824146461196, -0.009038573199904351, 0.014602462685948447, 13.867741740447787; 0.033014489240465995, 1.0094896667987125, 0.07722290456304083, -15.21638104893514; -0.011171966867808941, 0.0020511317808233898, 1.019145093243156, -0.6197985081796844];
 % GTpath = 'E:\Datasets\TimeLaps\';
 % GTpath = E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\TimeLaps\';
 % Functionspath = 'E:\Shih-Luen\Lab\Projects\registrar\Functions\';
@@ -60,7 +36,7 @@ load([GTpath,'Matches\DL083-001-Matches.mat']);
 showTranceonImage = 0;
 
 T_Names = {'B','C','D','E','F','G','H','I','J','K','L','M','N'};
-
+Dis_NonRigid_voxelall = [];
 % Show Traces
 % sourceID = 2;
 % targetID = 3;
@@ -108,11 +84,13 @@ for sourceID = 1:12
     result{sourceID}.Bouton.r2 = TargetPoints;
     
     
-        Affine_L = Affine_Fiji{sourceID}(:,1:3);
-        Affine_b = Affine_Fiji{sourceID}(:,4);
-        result{sourceID}.Bouton.r1_fiji_Affine = (Affine_L*(SourcePoints)'+Affine_b)';
-%         TargetPoints_Affine = TargetPoints;
-%         SourcePoints_Affine'-TargetPoints_Affine
+    Affine_L = Affine_Fiji{sourceID}(:,1:3);
+    Affine_b = Affine_Fiji{sourceID}(:,4);
+    %         Affine_b = -Affine_b_temp([2,1,3])
+    %         b
+    result{sourceID}.Bouton.r1_fiji_Affine = (Affine_L*(SourcePoints)'+Affine_b)';
+    %         TargetPoints_Affine = TargetPoints;
+    %         SourcePoints_Affine'-TargetPoints_Affine
     
     if showDiff
         Source_Stack_File = char(StackList(sourceID,1));
@@ -145,24 +123,24 @@ for sourceID = 1:12
         IM_source_max_P(2-MIN(1):1-MIN(1)+size(IM_source_max,1),...
             2-MIN(2):1-MIN(2)+size(IM_source_max,2))=IM_source_max;
         
-        figure(5),imshowpair(IM_Target_NR_max_P,IM_source_max_P,'Scaling','independent')    
+        figure(5),imshowpair(IM_Target_NR_max_P,IM_source_max_P,'Scaling','independent')
         
         %                     IM_source_maxR = imresize(IM_source_max,size(IM_Target_NR_max));
         %                     figure(3),imshowpair(IM_Target_NR_max,IM_source_maxR,'Scaling','independent')
         
-%         [IM_Source_NR,~]=Perform_Bspline_Transform(IM_Source,[0,0,0],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
-%         IM_Source_NR_max=max(IM_Source_NR,[],3);
-%         figure(3)
-%         imshowpair(IM_Source_NR_max,IM_target_max,'Scaling','independent')
-%               
-%         [optimizer, metric] = imregconfig('multimodal');
-%         optimizer.InitialRadius = 0.009;
-%         optimizer.Epsilon = 1.5e-4;
-%         optimizer.GrowthFactor = 1.01;
-%         optimizer.MaximumIterations = 300;
-%         movingRegistered = imregister(IM_Source, IM_Target, 'affine', optimizer, metric);
-%         figure(4)
-%         imshowpair(IM_target_max,max(movingRegistered,[],3),'Scaling','independent')
+        %         [IM_Source_NR,~]=Perform_Bspline_Transform(IM_Source,[0,0,0],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
+        %         IM_Source_NR_max=max(IM_Source_NR,[],3);
+        %         figure(3)
+        %         imshowpair(IM_Source_NR_max,IM_target_max,'Scaling','independent')
+        %
+        %         [optimizer, metric] = imregconfig('multimodal');
+        %         optimizer.InitialRadius = 0.009;
+        %         optimizer.Epsilon = 1.5e-4;
+        %         optimizer.GrowthFactor = 1.01;
+        %         optimizer.MaximumIterations = 300;
+        %         movingRegistered = imregister(IM_Source, IM_Target, 'affine', optimizer, metric);
+        %         figure(4)
+        %         imshowpair(IM_target_max,max(movingRegistered,[],3),'Scaling','independent')
     end
     
     for i=1:size(fname_First,1)
@@ -178,21 +156,21 @@ for sourceID = 1:12
         [AM_Target,r_Target,~] = AdjustPPM(AM_Target,r_Target,R_Target,ppm);
         SourcePoints = r_Source;
         TargetPoints = r_Target;
-%         [Distances_before,~] = TraceDistance(AM_Source, SourcePoints, AM_Target, TargetPoints,pixelSize,0);
+        %         [Distances_before,~] = TraceDistance(AM_Source, SourcePoints, AM_Target, TargetPoints,pixelSize,0);
         
         
         
         
-
-         
-
-
-
-
-
-
-
-
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         %     sourceID = 1;
         %     targetID = 2;
         
@@ -235,7 +213,7 @@ for sourceID = 1:12
         
         %     [SourcePoints_NR,~]=Perform_Bspline_Transform(SourcePoints',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
         
-        %         [Dis_NonRigid_um,Dis_NonRigid_voxel] = TraceDistance(AM_Source, SourcePoints_NR', AM_Target, TargetPoints,pixelSize,0);
+        
         %         D_NonRigid_um = mean(Dis_NonRigid_um);
         %         D_NonRigid_voxel = mean(Dis_NonRigid_voxel);
         [SourcePoints_NR,~]=Perform_Bspline_Transform(SourcePoints',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
@@ -246,28 +224,45 @@ for sourceID = 1:12
         result{sourceID}.Trace.AM2{i} = AM_Target;
         result{sourceID}.Trace.R1{i} = R_Source;
         result{sourceID}.Trace.R2{i} = R_Target;
-        
-                %----------- Fiji
+        [Dis_NonRigid_um,Dis_NonRigid_voxel] = TraceDistance(AM_Source, SourcePoints_NR', AM_Target, TargetPoints,pixelSize,0);
+        Dis_NonRigid_voxelall(i)=Dis_NonRigid_voxel
+        %----------- Fiji
         
         %Affine
         
-        result{sourceID}.Trace.r1_fiji_Affine{i} = (Affine_L*(SourcePoints)'+Affine_b)';
-%         TargetPoints_Affine = TargetPoints;
-
-        SourcePoints_Affine = (Affine_L*(SourcePoints)'+Affine_b)';
-        TargetPoints_Affine = TargetPoints;
+        SourcePoints_Affine = ((SourcePoints(:,[2,1,3])));
+        TargetPoints_Affine = (Affine_L*TargetPoints(:,[2,1,3])'+Affine_b)';%(Affine_L*(TargetPoints)'-Affine_b)';
         [Affine_Dis_um,Affine_Dis_voxel] = TraceDistance(AM_Source, SourcePoints_Affine, AM_Target, TargetPoints_Affine,pixelSize,0);
-Affine_Dis_voxel
-l=1
-[Before_Dis_um,Before_Dis_voxel] = TraceDistance(AM_Source, SourcePoints, AM_Target, TargetPoints, pixelSize, 0);
-Dis_um
-Dis_voxel
-%         if useTrace
-%             [Distances_Affine,~] = TraceDistance(AM_Source, SourcePoints_Affine', AM_Target, TargetPoints_Affine',pixelSize,0);
-%             D_Affine = mean(Distances_Affine)
-%         else
-%             D_Affine = mean(mean((SourcePoints_Affine-TargetPoints_Affine).^2,1).^0.5)
-%         end
+        Affine_Dis_voxelall(i) = Affine_Dis_voxel
+        
+        result{sourceID}.Trace.r1_fiji_Affine{i} = (Affine_L*(SourcePoints)'+Affine_b)';
+        %         TargetPoints_Affine = TargetPoints;
+        
+        % [Before_Dis_um,Before_Dis_voxel] = TraceDistance(AM_Source, SourcePoints, AM_Target, TargetPoints, pixelSize, 0);
+        % Before_Dis_voxel
+        
+        %         SourcePoints_Affine = ((SourcePoints)+Affine_b');
+        %         TargetPoints_Affine = (Affine_L*TargetPoints(:,[2,1,3])')';%(Affine_L*(TargetPoints)'-Affine_b)';
+        %         TargetPoints_Affine = TargetPoints_Affine(:,[2,1,3]);
+        %         [Affine_Dis_um,Affine_Dis_voxel] = TraceDistance(AM_Source, SourcePoints_Affine, AM_Target, TargetPoints_Affine,pixelSize,0);
+        % Affine_Dis_voxel
+        %          PlotAM(AM_Source,SourcePoints_Affine,'r')
+        %                 axis equal
+        %                 PlotAM(AM_Target,TargetPoints_Affine,'g')
+        %                 axis equal
+        
+        
+        
+        
+        % l=1
+        
+        
+        %         if useTrace
+        %             [Distances_Affine,~] = TraceDistance(AM_Source, SourcePoints_Affine', AM_Target, TargetPoints_Affine',pixelSize,0);
+        %             D_Affine = mean(Distances_Affine)
+        %         else
+        %             D_Affine = mean(mean((SourcePoints_Affine-TargetPoints_Affine).^2,1).^0.5)
+        %         end
         
         %     if ~useTrace
         %
