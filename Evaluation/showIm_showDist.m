@@ -67,6 +67,21 @@ plot(hist3)
 % legend(['trace mismatch before registration:','mean=',num2str(mean(All_Dis_um)),',std=',num2str(std(All_Dis_um))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_NonRigid_um)),',std=',num2str(std(All_Dis_NonRigid_um))])
 legend(['trace mismatch before registration:','mean=',num2str(mean(All_Dis_voxel)),',std=',num2str(std(All_Dis_voxel))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_NonRigid_voxel)),',std=',num2str(std(All_Dis_NonRigid_voxel))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_fiji_Affine_voxel)),',std=',num2str(std(All_Dis_fiji_Affine_voxel))])
 
+
+hist1 = hist(All_Dis_um,[0.5:1:29.5]);
+hist2 = hist(All_Dis_NonRigid_um,[0.5:1:29.5]);
+hist3 = hist(All_Dis_fiji_Affine_um,[0.5:1:29.5]);
+
+
+figure
+plot(hist1)
+hold on
+plot(hist2)
+hold on
+plot(hist3)
+% legend(['trace mismatch before registration:','mean=',num2str(mean(All_Dis_um)),',std=',num2str(std(All_Dis_um))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_NonRigid_um)),',std=',num2str(std(All_Dis_NonRigid_um))])
+legend(['trace mismatch before registration:','mean=',num2str(mean(All_Dis_voxel)),',std=',num2str(std(All_Dis_voxel))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_NonRigid_voxel)),',std=',num2str(std(All_Dis_NonRigid_voxel))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_fiji_Affine_voxel)),',std=',num2str(std(All_Dis_fiji_Affine_voxel))])
+
 figure
 for i = 1:size(result,2)
     d_bouton = result{1,i}.Bouton.r1-result{1,i}.Bouton.r2;
