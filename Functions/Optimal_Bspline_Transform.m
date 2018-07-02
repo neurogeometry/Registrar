@@ -29,7 +29,7 @@ X_affine=X_affine-Grid_start*ones(1,size(X,2));
 Y=Y-Grid_start*ones(1,size(Y,2));
 
 % regularization parameter
-mu=10;
+mu=0; %[0, 2.^[-10:10]]
 learning_rate=1;
 Max_iterations=1000;
 TolCost=10^-6;

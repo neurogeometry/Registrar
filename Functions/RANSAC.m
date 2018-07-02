@@ -37,7 +37,7 @@ elseif TransformationValue == 4 % Non-Rigid
     MaxErrorDistance = 6;
 %     Minimum = min(SourceLocations,[],2);
 %     Maximum = max(SourceLocations,[],2);
-    nxyz = [256;256;128];
+    nxyz = [256;256;156];
 %     Nxyz = ceil((Maximum-Minimum)./nxyz');
     affine = 1;
 end
