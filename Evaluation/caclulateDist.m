@@ -1,6 +1,7 @@
-filename = '..\..\RegistrationEvaluation\result_T';
+filename = '..\..\RegistrationEvaluation\result_NR_fiji';
 load([filename,'.mat'])
 mkdir(filename)
+save([filename,'\result_NR_fiji.mat'])
 tic
 All_Dis_um = [];
 All_Dis_voxel = [];

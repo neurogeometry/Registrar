@@ -1,10 +1,10 @@
-filename = '..\..\RegistrationEvaluation\result_T';
+filename = '..\..\RegistrationEvaluation\result_NR_fiji';
 load([filename,'.mat'])
 load([filename,'\Evaluation.mat'])
 tic
 Functionspath = '..\';
 addpath([Functionspath,'Functions']);
-showDiff = 1;
+showDiff = 0;
 csvPath = '..\..\RegistrationEvaluation\TimeLapse_Holtmaat_StackList.csv';
 StackList = table2cell(readtable(csvPath,'Delimiter',','));
 
@@ -56,11 +56,16 @@ end
 
 hist1 = hist(All_Dis_voxel,[0.5:1:29.5]);
 hist2 = hist(All_Dis_NonRigid_voxel,[0.5:1:29.5]);
+hist3 = hist(All_Dis_fiji_Affine_voxel,[0.5:1:29.5]);
+
 figure
 plot(hist1)
 hold on
 plot(hist2)
-legend(['trace mismatch before registration:','mean=',num2str(mean(All_Dis_um)),',std=',num2str(std(All_Dis_um))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_NonRigid_um)),',std=',num2str(std(All_Dis_NonRigid_um))])
+hold on
+plot(hist3)
+% legend(['trace mismatch before registration:','mean=',num2str(mean(All_Dis_um)),',std=',num2str(std(All_Dis_um))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_NonRigid_um)),',std=',num2str(std(All_Dis_NonRigid_um))])
+legend(['trace mismatch before registration:','mean=',num2str(mean(All_Dis_voxel)),',std=',num2str(std(All_Dis_voxel))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_NonRigid_voxel)),',std=',num2str(std(All_Dis_NonRigid_voxel))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_fiji_Affine_voxel)),',std=',num2str(std(All_Dis_fiji_Affine_voxel))])
 
 figure
 for i = 1:size(result,2)
@@ -76,9 +81,12 @@ legend('before registration','after registration')
 % save([filename,'\Evaluation.mat'],'All_Dis_um','All_Dis_voxel','All_Dis_NonRigid_um','All_Dis_NonRigid_voxel','eucl_bouton','eucl_bouton_NR')
 bhist1 = hist(eucl_bouton,[0.5:1:39.5]);
 bhist2 = hist(eucl_bouton_NR,[0.5:1:39.5]);
+bhist3 = hist(eucl_bouton_fiji_Affine,[0.5:1:39.5]);
 figure,plot(bhist1)
 hold on
 plot(bhist2)
-legend(['bouton mismatch before registration:','mean=',num2str(mean(eucl_bouton)),',std=',num2str(std(eucl_bouton))],['bouton mismatch after registration:','mean=',num2str(mean(eucl_bouton_NR)),',std=',num2str(std(eucl_bouton_NR))])
+hold on
+plot(bhist3)
+legend(['trace mismatch before registration:','mean=',num2str(mean(All_Dis_voxel)),',std=',num2str(std(All_Dis_voxel))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_NonRigid_voxel)),',std=',num2str(std(All_Dis_NonRigid_voxel))],['trace mismatch after registration:','mean=',num2str(mean(All_Dis_fiji_Affine_voxel)),',std=',num2str(std(All_Dis_fiji_Affine_voxel))])
 
 toc

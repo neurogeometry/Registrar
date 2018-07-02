@@ -253,7 +253,15 @@ for sourceID = 1:12
         
         result{sourceID}.Trace.r1_fiji_Affine{i} = (Affine_L*(SourcePoints)'+Affine_b)';
 %         TargetPoints_Affine = TargetPoints;
-% %         [Distances_Affine,~] = TraceDistance(AM_Source, SourcePoints_Affine, AM_Target, TargetPoints_Affine,pixelSize,0);
+
+        SourcePoints_Affine = (Affine_L*(SourcePoints)'+Affine_b)';
+        TargetPoints_Affine = TargetPoints;
+        [Affine_Dis_um,Affine_Dis_voxel] = TraceDistance(AM_Source, SourcePoints_Affine, AM_Target, TargetPoints_Affine,pixelSize,0);
+Affine_Dis_voxel
+l=1
+[Before_Dis_um,Before_Dis_voxel] = TraceDistance(AM_Source, SourcePoints, AM_Target, TargetPoints, pixelSize, 0);
+Dis_um
+Dis_voxel
 %         if useTrace
 %             [Distances_Affine,~] = TraceDistance(AM_Source, SourcePoints_Affine', AM_Target, TargetPoints_Affine',pixelSize,0);
 %             D_Affine = mean(Distances_Affine)
