@@ -39,15 +39,15 @@ if size(varargin,2)==6
     debug = handles.chkdebug.Value;
     AllGUI = NCT_Registration;
     v = 1;
-elseif size(varargin,2)==4
+elseif size(varargin,2)==5
     GUI=false;
     runFeatureExtraction = 1;
     runFeatureMatching = 1;
-    runGlobalOpt = 1;
-    TyoeOfRegistration = 1; %MouseLight
+    runGlobalOpt = 0;
+%     TyoeOfRegistration = 1; %MouseLight
     outputType = 2; % use NCTracerDB
     runBlending = 0;
-    runRetilling = 1;
+    runRetilling = 0;
     debug = 0;
     
     v = 0;

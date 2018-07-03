@@ -3,13 +3,14 @@ clear all;
 clc
 addpath('Functions');
 % Input CSV file
-StackList_csv_pth = '../../MicroscopeFiles\Neocortical2_StackList.csv';
-% StackList_csv_pth = '/home/kahaki/Matlab/FinalRegistration/MicroscopeFiles/Neocortical2_StackList.csv';
+%StackList_csv_pth = '../../MicroscopeFiles\Neocortical2_StackList.csv';
+ StackList_csv_pth = '/home/kahaki/Matlab/FinalRegistration/MicroscopeFiles/Neocortical2_StackList.csv';
 % Transformation Type, 1: Translation, 2: Rigid, 3: Affine, 4:Non-Rigid
-TransformationValue = 1;
+TransformationValue = 4;
 % Run in 1: Sequential or 2: Parallel
 Seq_Par = 1;
 % Number of Workes 
 Par_workers = 6;
+TyoeOfRegistration = 7;
 
-registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers);
+registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,TyoeOfRegistration);

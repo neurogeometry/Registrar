@@ -36,16 +36,17 @@ load([GTpath,'Matches\DL083-001-Matches.mat']);
 showTranceonImage = 0;
 
 T_Names = {'B','C','D','E','F','G','H','I','J','K','L','M','N'};
+mu_Names = {'0','10'};
 Dis_NonRigid_voxelall = [];
 % Show Traces
 % sourceID = 2;
 % targetID = 3;
 tic
-
+for nummu = 1:size(mu_Names,2)
 for sourceID = 1:12
     %     disp(sourceID)
     targetID = sourceID + 1;
-    FeaturePositions_NR = load([resultpath,'MatchedPoints_Non-Rigid.mat']);
+    FeaturePositions_NR = load([resultpath,'MatchedPoints_Non-Rigid_mu',mu_Names{nummu},'.mat']);
     
     % B-Spline-NonRigid
     Global_Matched_Source = FeaturePositions_NR.Matched{sourceID,targetID}(:,4:6)';
@@ -54,7 +55,7 @@ for sourceID = 1:12
     Maximum = max(Global_Matched_Source,[],2);
     nxyz = [512;512;156]; %image size
     %     Nxyz = ceil((Maximum-Minimum)./nxyz');
-    [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine);
+    [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,str2double(mu_Names{nummu}));
     result{sourceID}.T.L = L;
     result{sourceID}.T.b = b;
     result{sourceID}.T.Cxyz = Cxyz;
@@ -76,6 +77,8 @@ for sourceID = 1:12
     B1 = Boutons{sourceID,1};
     SourcePoints = B1.r2;
     TargetPoints = B1.r1;
+    BoutonsBefore = mean(mean((TargetPoints-SourcePoints).^2,1).^0.5)
+    
     %         D_NonRigid_voxel = mean(mean((SourcePoints_NR'-TargetPoints).^2,1).^0.5);
     %         D_NonRigid_voxel = SourcePoints_NR'-TargetPoints;
     [SourcePoints_NR,~]=Perform_Bspline_Transform(SourcePoints',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
@@ -83,7 +86,7 @@ for sourceID = 1:12
     result{sourceID}.Bouton.r1_NR = SourcePoints_NR';
     result{sourceID}.Bouton.r2 = TargetPoints;
     %     mean(mean((TargetPoints-SourcePoints_NR').^2,1).^0.5)
-%     mean(mean((TargetPoints-SourcePoints).^2,1).^0.5)
+    BoutonsNonrigid = mean(mean((TargetPoints-SourcePoints_NR').^2,1).^0.5)
     
     Affine_L = Affine_Fiji{sourceID}(:,1:3);
     Affine_b = Affine_Fiji{sourceID}(:,4);
@@ -93,7 +96,7 @@ for sourceID = 1:12
     TargetPoints_Affine = (Affine_L*TargetPoints(:,[2,1,3])'+Affine_b)';%(Affine_L*(TargetPoints)'-Affine_b)';
     result{sourceID}.Bouton.r1_fiji_Affine = SourcePoints_Affine;
     result{sourceID}.Bouton.r2_fiji_Affine = TargetPoints_Affine;
-%     mean(mean((SourcePoints_Affine-TargetPoints_Affine).^2,1).^0.5)
+    BoutonsFiji = mean(mean((SourcePoints_Affine-TargetPoints_Affine).^2,1).^0.5)
     %         Affine_b = -Affine_b_temp([2,1,3])
     %         b
     %     result{sourceID}.Bouton.r1_fiji_Affine = (Affine_L*(SourcePoints)'+Affine_b)';
@@ -305,7 +308,8 @@ for sourceID = 1:12
 end
 
 % save(['E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\test',T_Names{sourceID},'and',T_Names{targetID},'.mat'],'A')
-save(['..\..\RegistrationEvaluation\result_NR_fiji.mat'],'result','pixelSize')
+save(['..\..\RegistrationEvaluation\result_NR_fiji_',mu_Names{nummu},'.mat'],'result','pixelSize')
+end
 toc
 
 

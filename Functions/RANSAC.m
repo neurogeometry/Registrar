@@ -40,6 +40,7 @@ elseif TransformationValue == 4 % Non-Rigid
     nxyz = [256;256;156];
 %     Nxyz = ceil((Maximum-Minimum)./nxyz');
     affine = 1;
+    mu = 1;
 end
 
 InlierRatio = 0.20;
@@ -90,7 +91,7 @@ while  i <= size(AllSamples,1) && length(Match_Indexes) <= MaxNumMatches
 %         SourceLocations_nonRigid=Perform_Nonrigid_Transform(SourceLocations,XYZlmn,N_L,Min,Max);
 %         AllDistances2 = sum((SourceLocations_nonRigid-TargetLocations).^2,1);
 
-        [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(RandSourceLocations,RandTargetLocations,nxyz,affine);
+        [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(RandSourceLocations,RandTargetLocations,nxyz,affine,mu);
         [SourceLocations_nonRigid,~]=Perform_Bspline_Transform(SourceLocations,[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
         AllDistances2 = sum((SourceLocations_nonRigid-TargetLocations).^2,1);
     end

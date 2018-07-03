@@ -4,7 +4,7 @@
 % L, b, Cxyz, Nxyz, nxyz, and Grid_start defines the transformation
 % affine = 1/0 turns affine transform on/off
 
-function [X_aligned,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(X,Y,nxyz,affine)
+function [X_aligned,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(X,Y,nxyz,affine,mu)
 
 if affine==1
     [X_affine,L,b]=Optimal_Affine_Transform(X,Y);
@@ -29,7 +29,7 @@ X_affine=X_affine-Grid_start*ones(1,size(X,2));
 Y=Y-Grid_start*ones(1,size(Y,2));
 
 % regularization parameter
-mu=0; %[0, 2.^[-10:10]]
+% mu=1; %[0, 2.^[-10:10]]
 learning_rate=1;
 Max_iterations=1000;
 TolCost=10^-6;

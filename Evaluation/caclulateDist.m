@@ -1,4 +1,8 @@
-filename = '..\..\RegistrationEvaluation\result_NR_fiji';
+
+mu_Names = {'0','10'};
+
+for nummu = 1:size(mu_Names,2)
+filename = ['..\..\RegistrationEvaluation\result_NR_fiji',mu_Names{nummu}];
 load([filename,'.mat'])
 mkdir(filename)
 save([filename,'\result_NR_fiji.mat'])
@@ -11,7 +15,7 @@ All_Dis_fiji_Affine_um = [];
 All_Dis_fiji_Affine_voxel = [];
 for i = 1:size(result,2)
 %         for i = 1:1
-    for j = 1:size(result{1,i}.Trace.AM1,2)
+    for j = 1:size(result{1,i}.Trace.AM1,2)-18
 %         for j = 1:2
         disp([i,j])
         [Dis_um,Dis_voxel] = TraceDistance(result{1,i}.Trace.AM1{j}, result{1,i}.Trace.r1{j}, result{1,i}.Trace.AM2{j}, result{1,i}.Trace.r2{j},pixelSize,0);
@@ -72,3 +76,4 @@ hold on
 plot(bhist3)
 legend(['bouton mismatch before registration:','mean=',num2str(mean(eucl_bouton)),',std=',num2str(std(eucl_bouton))],['bouton mismatch after registration:','mean=',num2str(mean(eucl_bouton_NR)),',std=',num2str(std(eucl_bouton_NR))],['bouton mismatch after registration:','mean=',num2str(mean(eucl_bouton_fiji_Affine)),',std=',num2str(std(eucl_bouton_fiji_Affine))])
 toc
+end
