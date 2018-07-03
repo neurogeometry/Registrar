@@ -1,4 +1,4 @@
-function [Registrationtime,MatchLocations,listboxItems,v,Transformation_T,b,stop] = Stitching_3D_Func(SourceStackSize,TargetStackSize,listboxItems,v,StackList,SourceID,TargetID,Source_seed,SourceFeatures,Target_seed,TargetFeatures,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder)
+function [Registrationtime,MatchLocations,listboxItems,v,Transformation_T,b,stop] = Stitching_3D_Func(SourceStackSize,TargetStackSize,listboxItems,v,StackList,SourceID,TargetID,Source_seed,SourceFeatures,Target_seed,TargetFeatures,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder,mu)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 %
@@ -248,7 +248,7 @@ Global_Matched_Target = matchLoc_Target'+(ones(size(matchLoc_Source,1),1)*Target
 %         TransformationValue = 4;
 %         Match_Indexes = RANSAC(Global_Matched_Source(:,Match_Indexes),Global_Matched_Target(:,Match_Indexes),TransformationValue);
 %     else
-        Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
+        Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue,mu);
 %     end
 %     Match_Indexes_temp = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
 %     if numel(Match_Indexes_temp)<paramsFMminmatches

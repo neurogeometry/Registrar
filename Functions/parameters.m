@@ -70,10 +70,10 @@ paramsFMEigen=0;                %default:	paramsFMEigen = 0;
 % paramsFMminReqFeatures = 15;
 
 params.FM.FeaturesFolderName='/features/';
-params.FM.MatchedLocationsFile_Translation='/MatchedPoints_Translation.mat';
-params.FM.MatchedLocationsFile_Rigid = '/MatchedPoints_Rigid.mat';
-params.FM.MatchedLocationsFile_Affine = '/MatchedPoints_Affine.mat';
-params.FM.MatchedLocationsFile_Non_Rigid = '/MatchedPoints_Non-Rigid.mat';
+params.FM.MatchedLocationsFile_Translation='/MatchedPoints_Translation';
+params.FM.MatchedLocationsFile_Rigid = '/MatchedPoints_Rigid';
+params.FM.MatchedLocationsFile_Affine = '/MatchedPoints_Affine';
+params.FM.MatchedLocationsFile_Non_Rigid = '/MatchedPoints_Non-Rigid';
 
 params.FM.MatchedLocationsFile_Translation_Global='/MatchedPoints_Translation_Global.mat';
 params.FM.MatchedLocationsFile_Rigid_Global = '/MatchedPoints_Rigid_Global.mat';

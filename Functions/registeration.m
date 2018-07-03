@@ -39,19 +39,21 @@ if size(varargin,2)==6
     debug = handles.chkdebug.Value;
     AllGUI = NCT_Registration;
     v = 1;
+    mu = 0;
 elseif size(varargin,2)==5
     GUI=false;
-    runFeatureExtraction = 1;
+    runFeatureExtraction = 0;
     runFeatureMatching = 1;
     runGlobalOpt = 0;
-%     TyoeOfRegistration = 1; %MouseLight
+    TyoeOfRegistration = 7; %MouseLight
     outputType = 2; % use NCTracerDB
     runBlending = 0;
     runRetilling = 0;
     debug = 0;
-    
+    mu = varargin{5};
     v = 0;
     listbox_log = 0;
+    Par_workers = 6;
 else
     error('Number of inputs to the registration function must equal 4 or 6.')
 end
@@ -184,7 +186,7 @@ if exist(StackList_csv_pth,'file') > 0
                 v = v + 1;
                 handles.listbox1.Value = v-1;drawnow
             end
-            [~,Matched,listbox_log,v,stop]=Generate_Reg_MatchedPoints(listbox_log,v,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,debug);
+            [~,Matched,listbox_log,v,stop]=Generate_Reg_MatchedPoints(listbox_log,v,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,debug,mu);
         else
             warndlg('The Features Folder is not Exists! Please run Feature Extraction.','!! Warning !!');
         end

@@ -1,4 +1,4 @@
-function [Match_Indexes] = RANSAC(SourceLocations,TargetLocations,TransformationValue)
+function [Match_Indexes] = RANSAC(SourceLocations,TargetLocations,TransformationValue,mu)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 % Purpose: 3D Ransac
