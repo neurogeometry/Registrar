@@ -30,9 +30,9 @@ Y=Y-Grid_start*ones(1,size(Y,2));
 
 % regularization parameter
 % mu=1; %[0, 2.^[-10:10]]
-learning_rate=1;
-Max_iterations=1000;
-TolCost=10^-6;
+learning_rate=20;
+Max_iterations=10000;
+TolCost=10^-5;
 
 N=size(X,2);
 NB=4; % # of B-spline polynomials
@@ -78,7 +78,7 @@ Cxyz=zeros(3,prod(Nxyz + 3));
 X_aligned=X_affine;
 while count<=Max_iterations && abs(delCost)>TolCost
     count=count+1;
-%     disp([E, mean(sum((Y-X_aligned).^2)).^0.5, Cost])
+%      disp([E, mean(sum((Y-X_aligned).^2)).^0.5, Cost])
     
     dEdXYZ=zeros(3,prod(Nxyz+NB-1));
     for i=1:length(il)
@@ -104,42 +104,42 @@ while count<=Max_iterations && abs(delCost)>TolCost
         Cost=Cost_new;    
     else
         learning_rate=learning_rate/2;
-%         disp(learning_rate)
+%          disp(learning_rate)
     end
 end
-
+count
+learning_rate
 X_aligned=X_aligned+Grid_start*ones(1,size(X,2));
 
-%{
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Y=Y+Grid_start*ones(1,size(Y,2));
-figure
-subplot(1,2,1)
-plot3(X(1,:),X(2,:),X(3,:),'r*')
-axis equal, hold on, box on
-plot3(Y(1,:),Y(2,:),Y(3,:),'k*')
-title('Original')
-subplot(1,2,2)
-plot3(X_aligned(1,:),X_aligned(2,:),X_aligned(3,:),'r*')
-axis equal, hold on, box on
-plot3(Y(1,:),Y(2,:),Y(3,:),'k*')
-title('Aligned')
+% Y=Y+Grid_start*ones(1,size(Y,2));
+% figure
+% subplot(1,2,1)
+% plot3(X(1,:),X(2,:),X(3,:),'r*')
+% axis equal, hold on, box on
+% plot3(Y(1,:),Y(2,:),Y(3,:),'k*')
+% title('Original')
+% subplot(1,2,2)
+% plot3(X_aligned(1,:),X_aligned(2,:),X_aligned(3,:),'r*')
+% axis equal, hold on, box on
+% plot3(Y(1,:),Y(2,:),Y(3,:),'k*')
+% title('Aligned')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % visualize transformation
-addpath('C:\Armen\DIADEM\Neuron Tracer V20')
-nx=10; ny=10; nz=10;
-Min=min(X,[],2);
-Max=max(X,[],2);
-[xx,yy,zz]=ndgrid(1:nx,1:ny,1:nz);
-r_grid=[Min(1)+(Max(1)-Min(1)).*(xx(:)-1)./(nx-1),Min(2)+(Max(2)-Min(2)).*(yy(:)-1)./(ny-1),Min(3)+(Max(3)-Min(3)).*(zz(:)-1)./(nz-1)]';
-AM_grid=(abs(bsxfun(@minus,xx(:),xx(:)'))+abs(bsxfun(@minus,yy(:),yy(:)'))+abs(bsxfun(@minus,zz(:),zz(:)')))==1;
-figure
-subplot(1,2,1)
-PlotAM(AM_grid,r_grid')
-title('Original')
-[r_grid_aligned,~,~]=Perform_Bspline_Transform(r_grid,[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
-subplot(1,2,2)
-PlotAM(AM_grid,r_grid_aligned')
-title('Aligned')
-%}
+% % addpath('C:\Armen\DIADEM\Neuron Tracer V20')
+% nx=10; ny=10; nz=10;
+% Min=min(X,[],2);
+% Max=max(X,[],2);
+% [xx,yy,zz]=ndgrid(1:nx,1:ny,1:nz);
+% r_grid=[Min(1)+(Max(1)-Min(1)).*(xx(:)-1)./(nx-1),Min(2)+(Max(2)-Min(2)).*(yy(:)-1)./(ny-1),Min(3)+(Max(3)-Min(3)).*(zz(:)-1)./(nz-1)]';
+% AM_grid=(abs(bsxfun(@minus,xx(:),xx(:)'))+abs(bsxfun(@minus,yy(:),yy(:)'))+abs(bsxfun(@minus,zz(:),zz(:)')))==1;
+% figure
+% subplot(1,2,1)
+% PlotAM(AM_grid,r_grid','k')
+% title('Original')
+% [r_grid_aligned,~,~]=Perform_Bspline_Transform(r_grid,[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
+% subplot(1,2,2)
+% PlotAM(AM_grid,r_grid_aligned','k')
+% title('Aligned')

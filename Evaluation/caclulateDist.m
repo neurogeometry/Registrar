@@ -1,8 +1,10 @@
 clear all;
 close all;
-mu_Names = {'0','0.00097656','0.0078125','0.0039063','0.0039063','0.015625','0.03125','0.0625','0.125','0.25','0.5','1','2','4','8','16','32','64','128','256','512','1024'};
+% mu_Names = {'0','0.00097656','0.0078125','0.0039063','0.0039063','0.015625','0.03125','0.0625','0.125','0.25','0.5','1','2','4','8','16','32','64','128','256','512','1024'};
+mu_Names = {'0','0.001','0.01','0.1','1','10','100','1000'};
 
-Calculate_Trace = 1;
+
+Calculate_Trace = 0;
 NR_mean = zeros(size(mu_Names,2),1);
 NR_std = zeros(size(mu_Names,2),1);
 NR_mean_Trace = zeros(size(mu_Names,2),1);
@@ -19,8 +21,8 @@ for nummu = 1:size(mu_Names,2)
         All_Dis_voxel = [];
         All_Dis_NonRigid_um = [];
         All_Dis_NonRigid_voxel = [];
-        All_Dis_fiji_Affine_um = [];
-        All_Dis_fiji_Affine_voxel = [];
+%         All_Dis_fiji_Affine_um = [];
+%         All_Dis_fiji_Affine_voxel = [];
         for i = 1:size(result,2)
             %                     for i = 1:2
             %             for j = 1:size(result{1,i}.Trace.AM1,2)
@@ -33,8 +35,8 @@ for nummu = 1:size(mu_Names,2)
                 All_Dis_voxel = [All_Dis_voxel,Dis_voxel];
                 All_Dis_NonRigid_um = [All_Dis_NonRigid_um,Dis_NonRigid_um];
                 All_Dis_NonRigid_voxel = [All_Dis_NonRigid_voxel,Dis_NonRigid_voxel];
-                All_Dis_fiji_Affine_um = [All_Dis_fiji_Affine_um,Dis_fiji_Affine_um];
-                All_Dis_fiji_Affine_voxel = [All_Dis_fiji_Affine_voxel,Dis_fiji_Affine_voxel];
+%                 All_Dis_fiji_Affine_um = [All_Dis_fiji_Affine_um,Dis_fiji_Affine_um];
+%                 All_Dis_fiji_Affine_voxel = [All_Dis_fiji_Affine_voxel,Dis_fiji_Affine_voxel];
             end
         end
         NR_mean_Trace(nummu) = mean(All_Dis_NonRigid_voxel);
@@ -68,24 +70,24 @@ for nummu = 1:size(mu_Names,2)
         d_bouton_NR = result{1,i}.Bouton.r1_NR-result{1,i}.Bouton.r2;
         %         plot(d_bouton_NR(:,1),d_bouton_NR(:,2),'.','color','g')
         %         hold on
-        d_bouton_fiji_Affine = result{1,i}.Bouton.r1_fiji_Affine-result{1,i}.Bouton.r2_fiji_Affine;
+%         d_bouton_fiji_Affine = result{1,i}.Bouton.r1_fiji_Affine-result{1,i}.Bouton.r2_fiji_Affine;
         %         plot(d_bouton_fiji_Affine(:,1),d_bouton_fiji_Affine(:,2),'.','color','b')
         %         hold on
         % %         eucl_bouton_NR1(i)=mean(sum((result{1,i}.Bouton.r2-result{1,i}.Bouton.r1_NR).^2,2).^0.5)
         eucl_bouton = [eucl_bouton;sqrt(sum(d_bouton.^2,2))];
         eucl_bouton_NR = [eucl_bouton_NR;sqrt(sum(d_bouton_NR.^2,2))];
-        eucl_bouton_fiji_Affine = [eucl_bouton_fiji_Affine;sqrt(sum(d_bouton_fiji_Affine.^2,2))];
+%         eucl_bouton_fiji_Affine = [eucl_bouton_fiji_Affine;sqrt(sum(d_bouton_fiji_Affine.^2,2))];
     end
     legend('before registration','after Non-Rigid registration','after fiji-Affine registration')
-    if Calculate_Trace == 1
-        save([filename,'\Evaluation.mat'],'All_Dis_um','All_Dis_voxel','All_Dis_NonRigid_um','All_Dis_NonRigid_voxel','All_Dis_fiji_Affine_um','All_Dis_fiji_Affine_voxel','eucl_bouton','eucl_bouton_NR','eucl_bouton_fiji_Affine')
-    else
-        save([filename,'\Evaluation.mat'],'eucl_bouton','eucl_bouton_NR','eucl_bouton_fiji_Affine')
-        
-    end
+%     if Calculate_Trace == 1
+%         save([filename,'\Evaluation.mat'],'All_Dis_um','All_Dis_voxel','All_Dis_NonRigid_um','All_Dis_NonRigid_voxel','All_Dis_fiji_Affine_um','All_Dis_fiji_Affine_voxel','eucl_bouton','eucl_bouton_NR','eucl_bouton_fiji_Affine')
+%     else
+%         save([filename,'\Evaluation.mat'],'eucl_bouton','eucl_bouton_NR','eucl_bouton_fiji_Affine')
+%         
+%     end
     bhist1 = hist(eucl_bouton,[0.5:1:39.5]);
     bhist2 = hist(eucl_bouton_NR,[0.5:1:39.5]);
-    bhist3 = hist(eucl_bouton_fiji_Affine,[0.5:1:39.5]);
+%     bhist3 = hist(eucl_bouton_fiji_Affine,[0.5:1:39.5]);
     %     figure
     %     plot(bhist1)
     %     hold on
@@ -97,5 +99,5 @@ for nummu = 1:size(mu_Names,2)
     NR_mean(nummu) = mean(eucl_bouton_NR);
     NR_std(nummu) = std(eucl_bouton_NR);
 end
-figure,errorbar([-11,-10:10],NR_mean,NR_std)
+figure,errorbar([-4,-3:3],NR_mean,NR_std)
 save(['E:\Shih-Luen\Lab\Projects\RegistrationEvaluation\MatchedPoints_Non-Rigid_Seyed\','stat.mat'],'NR_mean','NR_std','NR_mean_Trace','NR_std_Trace')
