@@ -34,6 +34,7 @@ matchedLocationFile_Non_Rigid = [DataFolder,params.FM.MatchedLocationsFile_Non_R
 FeatureMatchingLog = [];
 tic
 Matched=cell(size(All_overlaps));
+Matched_hung=cell(size(All_overlaps));
 Registrationtime = 0;
 k = 1;
 if v ~= 0
@@ -95,7 +96,7 @@ if Seq_Par > 1
                         
                         Source_StackPositions = StackPositions_pixels(SourceID,:);
                         Target_StackPositions = StackPositions_pixels(TargetID,:);
-                        [~,MatchLocations,~,~,~,~,~] = Stitching_3D_Func(StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),listboxItems,v,StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder,mu);
+                        [~,MatchLocations,~,~,~,~,~,~] = Stitching_3D_Func(StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),listboxItems,v,StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder,mu);
                         
                         sourceCol = zeros(size(MatchLocations,1),1);
                         sourceCol(:,1) = SourceID;
@@ -187,9 +188,10 @@ else
                         end
                         Source_StackPositions = StackPositions_pixels(SourceID,:);
                         Target_StackPositions = StackPositions_pixels(TargetID,:);
-                        [Registrationtime,MatchLocations,listboxItems,v,~,~,stop] = Stitching_3D_Func(StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),listboxItems,v,StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder,mu);
+                        [Registrationtime,MatchLocations,MatchLocationsHang,listboxItems,v,~,~,stop] = Stitching_3D_Func(StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),listboxItems,v,StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder,mu);
                         
                         Matched(SourceID,TargetID) = {MatchLocations};
+                        Matched_hung(SourceID,TargetID) = {MatchLocationsHang};
                         %                     end
                         
                     end
@@ -205,13 +207,13 @@ end
 TotalTime = toc
 
 if TransformationValue ==1
-    save(matchedLocationFile_Translation,'Matched','-v7.3');
+    save(matchedLocationFile_Translation,'Matched','Matched_hung','-v7.3');
 elseif TransformationValue ==2
-    save(matchedLocationFile_Rigid,'Matched','-v7.3');
+    save(matchedLocationFile_Rigid,'Matched','Matched_hung','-v7.3');
 elseif TransformationValue ==3
-    save(matchedLocationFile_Affine,'Matched','-v7.3');
+    save(matchedLocationFile_Affine,'Matched','Matched_hung','-v7.3');
 elseif TransformationValue ==4
-    save(matchedLocationFile_Non_Rigid,'Matched','-v7.3');
+    save(matchedLocationFile_Non_Rigid,'Matched','Matched_hung','-v7.3');
 end
 if v ~= 0
     tb = findobj(NCT_Registration,'Tag', 'listbox1');

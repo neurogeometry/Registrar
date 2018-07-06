@@ -34,10 +34,10 @@ elseif TransformationValue == 4 % Non-Rigid
 %     N_L = 3;
     MaxNumSamples=10^3;
     MaxNumMatches=10;
-    MaxErrorDistance = 6;
+    MaxErrorDistance = 4;
 %     Minimum = min(SourceLocations,[],2);
 %     Maximum = max(SourceLocations,[],2);
-    nxyz = [256;256;156];
+    nxyz = [128;128;64];
 %     Nxyz = ceil((Maximum-Minimum)./nxyz');
     affine = 1;
     mu = 1;

@@ -1,4 +1,4 @@
-function [Registrationtime,MatchLocations,listboxItems,v,Transformation_T,b,stop] = Stitching_3D_Func(SourceStackSize,TargetStackSize,listboxItems,v,StackList,SourceID,TargetID,Source_seed,SourceFeatures,Target_seed,TargetFeatures,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder,mu)
+function [Registrationtime,MatchLocations,MatchLocationsHang,listboxItems,v,Transformation_T,b,stop] = Stitching_3D_Func(SourceStackSize,TargetStackSize,listboxItems,v,StackList,SourceID,TargetID,Source_seed,SourceFeatures,Target_seed,TargetFeatures,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder,mu)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 %
@@ -229,6 +229,8 @@ Transformation_T = [];
 b = [];
 Global_Matched_Source = matchLoc_Source'+(ones(size(matchLoc_Source,1),1)*Source_StackPositions)'-1;
 Global_Matched_Target = matchLoc_Target'+(ones(size(matchLoc_Source,1),1)*Target_StackPositions)'-1;
+
+MatchLocationsHang = [Global_Matched_Source',Global_Matched_Target'];
 % while numel(Match_Indexes)<paramsFMminmatches && i<paramsFMmaxiter
 %     if v ~= 0
 %     if get(tb11,'userdata') || stop% stop condition
