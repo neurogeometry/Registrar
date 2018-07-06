@@ -39,7 +39,7 @@ if size(varargin,2)==6
     debug = handles.chkdebug.Value;
     AllGUI = NCT_Registration;
     v = 1;
-    mu = 0;
+    mu = 2^10;
 elseif size(varargin,2)==5
     GUI=false;
     runFeatureExtraction = 0;
