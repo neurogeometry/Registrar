@@ -30,8 +30,8 @@ Y=Y-Grid_start*ones(1,size(Y,2));
 
 % regularization parameter
 % mu=1; %[0, 2.^[-10:10]]
-learning_rate=20;
-Max_iterations=10000;
+learning_rate=1;
+Max_iterations=100000;
 TolCost=10^-5;
 
 N=size(X,2);
@@ -76,7 +76,7 @@ Cost=mean(sum((Y-X_affine).^2));
 delCost=inf;
 Cxyz=zeros(3,prod(Nxyz + 3));
 X_aligned=X_affine;
-while count<=Max_iterations && abs(delCost)>TolCost
+while count<=Max_iterations && (delCost<-TolCost || delCost>0)
     count=count+1;
 %      disp([E, mean(sum((Y-X_aligned).^2)).^0.5, Cost])
     
@@ -103,7 +103,7 @@ while count<=Max_iterations && abs(delCost)>TolCost
         Cxyz=Cxyz_new;
         Cost=Cost_new;    
     else
-        learning_rate=learning_rate/2;
+        learning_rate=learning_rate/1.1;
 %          disp(learning_rate)
     end
 end

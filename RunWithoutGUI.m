@@ -16,7 +16,7 @@ Seq_Par = 2;
 TyoeOfRegistration = 7;
 % mu = [0,2^2,2^3,2^4,2^5,2^7,2^9,2^10];
 mu = [2^-1,2^-2,2^-3,2^-4,2^-5,2^-6,2^-7,2^-8,2^-9,2^-10,0,2^1,2^2,2^3,2^4,2^5,2^6,2^7,2^8,2^9,2^10];
-for i=1:21
+% for i=1:21
  %   mu(i)
- registeration (StackList_csv_pth,TransformationValue,Seq_Par,TyoeOfRegistration,mu(i));
-end
+ registeration (StackList_csv_pth,TransformationValue,Seq_Par,TyoeOfRegistration,1020);
+% end

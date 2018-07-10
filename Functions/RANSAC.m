@@ -37,10 +37,10 @@ elseif TransformationValue == 4 % Non-Rigid
     MaxErrorDistance = 4;
 %     Minimum = min(SourceLocations,[],2);
 %     Maximum = max(SourceLocations,[],2);
-    nxyz = [128;128;64];
+    nxyz = [256;256;156];
 %     Nxyz = ceil((Maximum-Minimum)./nxyz');
     affine = 1;
-    mu = 1;
+%     mu = 1;
 end
 
 InlierRatio = 0.20;
