@@ -2,10 +2,10 @@
 % assignment Y=L*X+b. X and Y are 3xN
 % Transformation is regularized with energy density of elastic deformation 
 
-function [X_aligned,L,b]=Optimal_Affine_Transform(X,Y)
+function [X_aligned,L,b]=Optimal_Affine_Transform(X,Y,mu)
 
 % regularization parameter
-mu=0.1;
+% mu=0.1;
 
 N=size(X,2);
 X_cm=X-mean(X,2)*ones(1,N);

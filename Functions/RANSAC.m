@@ -34,7 +34,7 @@ elseif TransformationValue == 4 % Non-Rigid
 %     N_L = 3;
     MaxNumSamples=10^3;
     MaxNumMatches=10;
-    MaxErrorDistance = 4;
+    MaxErrorDistance = 6;
 %     Minimum = min(SourceLocations,[],2);
 %     Maximum = max(SourceLocations,[],2);
     nxyz = [256;256;156];
@@ -55,7 +55,7 @@ end
 
 NumCorrectHungarian = ceil(InlierRatio*NumAllMatches);
 MaxNumMatches=max(MaxNumMatches,NumCorrectHungarian);
-MaxNumMatches=min(MaxNumMatches,NumAllMatches);
+MaxNumMatches=min(MaxNumMatches,NumAllMatches)
 
 
 
@@ -81,7 +81,7 @@ while  i <= size(AllSamples,1) && length(Match_Indexes) <= MaxNumMatches
         SourceLocations_Rigid=L*SourceLocations+b*ones(1,size(SourceLocations,2));
         AllDistances2 = sum((SourceLocations_Rigid-TargetLocations).^2,1);
     elseif TransformationValue == 3 % Affine
-        [L,b]=Optimal_Affine_Transform(RandSourceLocations,RandTargetLocations);
+        [~,L,b]=Optimal_Affine_Transform(RandSourceLocations,RandTargetLocations);
         SourceLocations_affine=L*SourceLocations+b*ones(1,size(SourceLocations,2));
         AllDistances2 = sum((SourceLocations_affine-TargetLocations).^2,1);
     elseif TransformationValue == 4 % Non-Rigid
@@ -97,7 +97,7 @@ while  i <= size(AllSamples,1) && length(Match_Indexes) <= MaxNumMatches
     end
     
     CorrectNumbers = (AllDistances2 < MaxErrorDistance^2);
-    i = i+1;
+    i = i+1
     if sum(CorrectNumbers) > length(Match_Indexes)
         Match_Indexes = find(CorrectNumbers);
     end

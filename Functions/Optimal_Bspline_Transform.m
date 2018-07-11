@@ -7,7 +7,7 @@
 function [X_aligned,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(X,Y,nxyz,affine,mu)
 
 if affine==1
-    [X_affine,L,b]=Optimal_Affine_Transform(X,Y);
+    [X_affine,L,b]=Optimal_Affine_Transform(X,Y,mu);
 elseif affine==0
     X_affine=X;
     L=[];
@@ -107,8 +107,8 @@ while count<=Max_iterations && (delCost<-TolCost || delCost>0)
 %          disp(learning_rate)
     end
 end
-count
-learning_rate
+% count
+% learning_rate
 X_aligned=X_aligned+Grid_start*ones(1,size(X,2));
 
 
