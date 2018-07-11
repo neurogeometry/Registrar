@@ -41,9 +41,10 @@ mu = 0:150:10000; %0:20:2000;
 
 Dis_NonRigid_voxelall = [];
 CutLength=100;
-FeaturePositions_NR = load([resultpath,'MatchedPoints_Non-Rigid_mu1.mat']);
+% FeaturePositions_NR = load([resultpath,'MatchedPoints_Non-Rigid_mu1.mat']);
+FeaturePositions_NR = load('MatchedPoints_Non-Rigid_mu1.mat');
 
-nxyz = [256;256;156]; 
+nxyz = [256;256;156];
 Boutons = struct2cell(Matches);
 
 figure(2)
@@ -64,12 +65,12 @@ for sourceID = 1
     fname_Second={fname_Second.name}';
     
     %Use Boutons
-       
-%         B1 = Boutons{sourceID,1};
-%         BSourcePoints = B1.r1;
-%         BTargetPoints = B1.r2;
-%         BoutonsDistanceOriginal = mean(mean((BTargetPoints-BSourcePoints).^2,2).^0.5)
-%     
+    
+    %         B1 = Boutons{sourceID,1};
+    %         BSourcePoints = B1.r1;
+    %         BTargetPoints = B1.r2;
+    %         BoutonsDistanceOriginal = mean(mean((BTargetPoints-BSourcePoints).^2,2).^0.5)
+    %
     
     for i=1:size(fname_First,1)
         sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083B001-A001.swc';
@@ -153,23 +154,23 @@ for sourceID = 1
     plot([mu(1),mu(end)],mean(TraceDistancesTranslation).*[1,1],'m-')
     plot([mu(1),mu(end)],mean(TraceDistancesRigid).*[1,1],'c-')
     plot([mu(1),mu(end)],mean(TraceDistancesAffine).*[1,1],'k-')
-        for nummu = 1:size(mu,2)
- 
-
+    for nummu = 1:size(mu,2)
+        
+        
         [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu(nummu));
-
-% B-Spline-NonRigid 
-%         [SourcePoints_NR,~]=Perform_Bspline_Transform(BSourcePoints',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
-%         SourcePoints_NR = SourcePoints_NR';
-%         D_NonRigid_voxel = mean(mean((BTargetPoints-SourcePoints_NR).^2,2).^0.5);
-%         BoutonsNonrigid(nummu,sourceID) = D_NonRigid_voxel;
-%         figure(1),hold on, plot(mu(nummu),BoutonsNonrigid(nummu,sourceID),'b*')
-%         ylabel({'Distance in Pixels',''});
-%         xlabel(['\mu = ',num2str(mu(nummu))]);
-%         xlim([0 max(mu)])
-%         ylim([0 2])
-%         title('Registration Accuracy (Boutons)');
-%         drawnow
+        
+        % B-Spline-NonRigid
+        %         [SourcePoints_NR,~]=Perform_Bspline_Transform(BSourcePoints',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
+        %         SourcePoints_NR = SourcePoints_NR';
+        %         D_NonRigid_voxel = mean(mean((BTargetPoints-SourcePoints_NR).^2,2).^0.5);
+        %         BoutonsNonrigid(nummu,sourceID) = D_NonRigid_voxel;
+        %         figure(1),hold on, plot(mu(nummu),BoutonsNonrigid(nummu,sourceID),'b*')
+        %         ylabel({'Distance in Pixels',''});
+        %         xlabel(['\mu = ',num2str(mu(nummu))]);
+        %         xlim([0 max(mu)])
+        %         ylim([0 2])
+        %         title('Registration Accuracy (Boutons)');
+        %         drawnow
         
         
         %         showNRRegResult (StackList,sourceID,targetID,result{sourceID}.Bouton,[],0)
@@ -193,16 +194,16 @@ for sourceID = 1
         
         
         %--------------------------------------------------- Trace
-
+        
         
         
         for i=1:size(fname_First,1)
-
+            
             [SourcePoints_NR_temp,~]=Perform_Bspline_Transform(SourcePoints{i}',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
-
+            
             Ncuts=fix(size(AM_Source{i},1)./CutLength);
             inds=ceil(size(AM_Source{i},1)./(Ncuts+1)).*(1:Ncuts);
-
+            
             AM_Source{i}(inds,:)=0;
             AM_Source{i}(:,inds)=0;
             AM_Source{i}=LabelBranchesAM(AM_Source{i});
@@ -210,7 +211,7 @@ for sourceID = 1
             AM_Target{i}(inds,:)=0;
             AM_Target{i}(:,inds)=0;
             AM_Target{i}=LabelBranchesAM(AM_Target{i});
-        
+            
             [~,Dis_NonRigid_voxel] = TraceDistance(AM_Source{i}, SourcePoints_NR_temp', AM_Target{i}, TargetPoints{i},pixelSize,0);
             Dis_NonRigid_voxel=(Dis_NonRigid_voxel*diff([1,inds,size(AM_Source{i},1)])')./sum(diff([1,inds,size(AM_Source{i},1)]));
             TraceDistancesNR(nummu,sourceID,i)=Dis_NonRigid_voxel
@@ -249,12 +250,7 @@ for sourceID = 1
             
         end
         figure(2),hold on, plot(mu(nummu),mean(TraceDistancesNR(nummu,sourceID,:),3),'b*')
-        ylabel({'Distance in Pixels',''});
-        xlabel(['\mu = ',num2str(mu(nummu))]);
-        xlim([0 max(mu)])
-        ylim([0 2])
-        title('Registration Accuracy (Traces)');
-        drawnow
+        
         
         % --------------------------------------------------- End Trace
     end
