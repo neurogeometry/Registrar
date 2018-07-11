@@ -20,7 +20,7 @@ end
 
 if isempty(StackPosition)  % X is a 3xN array of positions
     if isempty(L)
-        X_prime=ones(sizeX(1),1)*b;
+        X_prime=X+ones(sizeX(1),1)*b;
     else
         X_prime=X*L+ones(sizeX(1),1)*b;
     end

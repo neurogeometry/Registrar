@@ -25,7 +25,7 @@ Affine_Fiji{12} =  [0.9861824146461196, -0.009038573199904351, 0.014602462685948
 % Functionspath = 'E:\Shih-Luen\Lab\Projects\registrar\Functions\';
 % resultpath = 'C:\Users\Seyed\Documents\DatasetTests\GUI\NCT_Registration\MicroscopeFiles\Results-TimeLapse_Holtmaat_StackList\';
 
-
+pixelSize = [0.26 0.26 0.8];
 GTpath = '..\..\RegistrationEvaluation\TimeLaps\';
 Functionspath = '..\';
 resultpath = '..\..\RegistrationEvaluation\Results-TimeLapse_Holtmaat_StackList\';
@@ -40,52 +40,138 @@ T_Names = {'B','C','D','E','F','G','H','I','J','K','L','M','N'};
 mu = 0:150:10000; %0:20:2000;
 
 Dis_NonRigid_voxelall = [];
+CutLength=100;
+FeaturePositions_NR = load([resultpath,'MatchedPoints_Non-Rigid_mu1.mat']);
 
-for nummu = 1:size(mu,2)
-    for sourceID = 1
-        disp('sourceID=')
-        disp(sourceID)
-        %     disp(sourceID)
-        targetID = sourceID + 1;
-        %         FeaturePositions_NR = load([resultpath,'MatchedPoints_Non-Rigid_mu',mu_Names{nummu},'.mat']);
-        FeaturePositions_NR = load([resultpath,'MatchedPoints_Non-Rigid_mu1.mat']);
+nxyz = [256;256;156]; 
+Boutons = struct2cell(Matches);
+
+figure(2)
+ylabel({'Distance in Pixels',''});
+xlabel('\mu');
+xlim([0 max(mu)])
+ylim([0 20])
+hold on
+drawnow
+
+for sourceID = 1
+    targetID = sourceID + 1;
+    Global_Matched_Source = FeaturePositions_NR.Matched{sourceID,targetID}(:,1:3)';
+    Global_Matched_Target = FeaturePositions_NR.Matched{sourceID,targetID}(:,4:6)';
+    fname_First = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
+    fname_First={fname_First.name}';
+    fname_Second = dir([GTpath,'Matches\Traces\DL083',T_Names{targetID},'001-A0*']);
+    fname_Second={fname_Second.name}';
+    
+    %Use Boutons
+       
+%         B1 = Boutons{sourceID,1};
+%         BSourcePoints = B1.r1;
+%         BTargetPoints = B1.r2;
+%         BoutonsDistanceOriginal = mean(mean((BTargetPoints-BSourcePoints).^2,2).^0.5)
+%     
+    
+    for i=1:size(fname_First,1)
+        sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083B001-A001.swc';
+        targetPath = [GTpath,'Matches\Traces\',fname_Second{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083C001-A001.swc';
         
-        % B-Spline-NonRigid
-        Global_Matched_Source = FeaturePositions_NR.Matched{sourceID,targetID}(:,1:3)';
-        Global_Matched_Target = FeaturePositions_NR.Matched{sourceID,targetID}(:,4:6)';
-        nxyz = [256;256;156]; %image size
+        [AM_Source_temp,r_Source_temp,~]=swc2AM(sourcePath);
+        [AM_Target_temp,r_Target_temp,~]=swc2AM(targetPath);
+        [AM_Source_temp,r_Source_temp,~] = AdjustPPM(AM_Source_temp,r_Source_temp,zeros(size(r_Source_temp,1),1),ppm);
+        [AM_Target_temp,r_Target_temp,~] = AdjustPPM(AM_Target_temp,r_Target_temp,zeros(size(r_Target_temp,1),1),ppm);
+        
+        SourcePoints{i} = r_Source_temp;
+        TargetPoints{i} = r_Target_temp;
+        
+        Ncuts=fix(size(AM_Source_temp,1)./CutLength);
+        inds=ceil(size(AM_Source_temp,1)./(Ncuts+1)).*(1:Ncuts);
+        
+        AM_Source_temp(inds,:)=0;
+        AM_Source_temp(:,inds)=0;
+        AM_Source{i}=LabelBranchesAM(AM_Source_temp);
+        
+        AM_Target_temp(inds,:)=0;
+        AM_Target_temp(:,inds)=0;
+        AM_Target{i}=LabelBranchesAM(AM_Target_temp);
+        
+        [~,Dis_Original_voxel_temp] = TraceDistance(AM_Source{i}, r_Source_temp, AM_Target{i}, r_Target_temp,pixelSize,0);
+        Dis_Original_voxel_temp=(Dis_Original_voxel_temp*diff([1,inds,size(AM_Source{i},1)])')./sum(diff([1,inds,size(AM_Source{i},1)]));
+        TraceDistancesOriginal(sourceID,i)=Dis_Original_voxel_temp;
+        
+        b=Optimal_Translation_Transform(Global_Matched_Source,Global_Matched_Target);
+        [SourcePoints_Translation_temp,~]=Perform_Linear_Transform(r_Source_temp,[],[],b);
+        [~,Distances_Translation_voxels_temp] = TraceDistance(AM_Source{i}, SourcePoints_Translation_temp, AM_Target{i}, r_Target_temp,pixelSize,0);
+        Distances_Translation_voxels_temp=(Distances_Translation_voxels_temp*diff([1,inds,size(AM_Source{i},1)])')./sum(diff([1,inds,size(AM_Source{i},1)]));
+        TraceDistancesTranslation(sourceID,i)=Distances_Translation_voxels_temp;
+        
+        [L,b]=Optimal_Rigid_Transform(Global_Matched_Source,Global_Matched_Target);
+        [SourcePoints_Rigid_temp,~]=Perform_Linear_Transform(r_Source_temp,[],L,b);
+        [~,Distances_Rigid_voxels_temp] = TraceDistance(AM_Source{i}, SourcePoints_Rigid_temp, AM_Target{i}, r_Target_temp,pixelSize,0);
+        Distances_Rigid_voxels_temp=(Distances_Rigid_voxels_temp*diff([1,inds,size(AM_Source{i},1)])')./sum(diff([1,inds,size(AM_Source{i},1)]));
+        TraceDistancesRigid(sourceID,i)=Distances_Rigid_voxels_temp;
+        
+        [X_aligned,L,b]=Optimal_Affine_Transform(Global_Matched_Source,Global_Matched_Target);
+        [SourcePoints_Affine_temp,~]=Perform_Linear_Transform(r_Source_temp,[],L,b);
+        [~,Distances_Affine_voxels_temp] = TraceDistance(AM_Source{i}, SourcePoints_Affine_temp, AM_Target{i}, r_Target_temp,pixelSize,0);
+        Distances_Affine_voxels_temp=(Distances_Affine_voxels_temp*diff([1,inds,size(AM_Source{i},1)])')./sum(diff([1,inds,size(AM_Source{i},1)]));
+        TraceDistancesAffine(sourceID,i)=Distances_Affine_voxels_temp;
+        
+        
+        
+        % --------------------------------------------------- Fiji
+        %             SourcePoints_Affine = ((SourcePoints(:,[2,1,3])));
+        %             TargetPoints_Affine = (Affine_L*TargetPoints(:,[2,1,3])'+Affine_b)';%(Affine_L*(TargetPoints)'-Affine_b)';
+        %             %         [Affine_Dis_um,Affine_Dis_voxel] = TraceDistance(AM_Source, SourcePoints_Affine, AM_Target, TargetPoints_Affine,pixelSize,0);
+        %             %         Affine_Dis_voxelall(i) = Affine_Dis_voxel
+        %             result{sourceID}.Trace.r1_fiji_Affine{i} = SourcePoints_Affine;
+        %             result{sourceID}.Trace.r2_fiji_Affine{i} = TargetPoints_Affine;
+        %             %         result{sourceID}.Trace.r1_fiji_Affine{i} = (Affine_L*(SourcePoints)'+Affine_b)';
+        %             %         TargetPoints_Affine = TargetPoints;
+        %
+        %             % [Before_Dis_um,Before_Dis_voxel] = TraceDistance(AM_Source, SourcePoints, AM_Target, TargetPoints, pixelSize, 0);
+        % Before_Dis_voxel
+        
+        %         SourcePoints_Affine = ((SourcePoints)+Affine_b');
+        %         TargetPoints_Affine = (Affine_L*TargetPoints(:,[2,1,3])')';%(Affine_L*(TargetPoints)'-Affine_b)';
+        %         TargetPoints_Affine = TargetPoints_Affine(:,[2,1,3]);
+        %         [Affine_Dis_um,Affine_Dis_voxel] = TraceDistance(AM_Source, SourcePoints_Affine, AM_Target, TargetPoints_Affine,pixelSize,0);
+        % Affine_Dis_voxel
+        %          PlotAM(AM_Source,SourcePoints_Affine,'r')
+        %                 axis equal
+        %                 PlotAM(AM_Target,TargetPoints_Affine,'g')
+        %                 axis equal
+        
+        %             [Distances_Affine,~] = TraceDistance(AM_Source, SourcePoints_Affine', AM_Target, TargetPoints_Affine',pixelSize,0);
+        %             D_Affine = mean(Distances_Affine)
+        %         else
+        %             D_Affine = mean(mean((SourcePoints_Affine-TargetPoints_Affine).^2,1).^0.5)
+        %         end
+        % --------------------------------------------------- End Fiji
+        
+    end
+    plot([mu(1),mu(end)],mean(TraceDistancesOriginal).*[1,1],'r-')
+    plot([mu(1),mu(end)],mean(TraceDistancesTranslation).*[1,1],'m-')
+    plot([mu(1),mu(end)],mean(TraceDistancesRigid).*[1,1],'c-')
+    plot([mu(1),mu(end)],mean(TraceDistancesAffine).*[1,1],'k-')
+        for nummu = 1:size(mu,2)
+ 
+
         [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu(nummu));
-        result{sourceID}.T.L = L;
-        result{sourceID}.T.b = b;
-        result{sourceID}.T.Cxyz = Cxyz;
-        result{sourceID}.T.Nxyz = Nxyz;
-        result{sourceID}.T.nxyz = nxyz;
-        result{sourceID}.T.Grid_start = Grid_start;
-        result{sourceID}.T.affine = affine;
-        
-        %Use Boutons
-        Boutons = struct2cell(Matches);
-        B1 = Boutons{sourceID,1};
-        SourcePoints = B1.r1;
-        TargetPoints = B1.r2;
-        BoutonsDistanceBeforeRegistration = mean(mean((TargetPoints-SourcePoints).^2,2).^0.5)
-        
-        [SourcePoints_NR,~]=Perform_Bspline_Transform(SourcePoints',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
-        result{sourceID}.Bouton.r1 = SourcePoints;
-        result{sourceID}.Bouton.r1_NR = SourcePoints_NR';
-        result{sourceID}.Bouton.r2 = TargetPoints;
-        SourcePoints_NR = SourcePoints_NR';
-        D_NonRigid_voxel = mean(mean((TargetPoints-SourcePoints_NR).^2,2).^0.5);
-        BoutonsNonrigid(nummu,sourceID) = D_NonRigid_voxel;
-        figure(1),hold on, plot(mu(nummu),BoutonsNonrigid(nummu,sourceID),'b*')
-        ylabel({'Distance in Pixels',''});
-        xlabel(['\mu = ',num2str(mu(nummu))]);
-        xlim([0 max(mu)])
-        ylim([0 2])
-        title('Registration Accuracy (Boutons)');
-        drawnow
 
-
+% B-Spline-NonRigid 
+%         [SourcePoints_NR,~]=Perform_Bspline_Transform(BSourcePoints',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
+%         SourcePoints_NR = SourcePoints_NR';
+%         D_NonRigid_voxel = mean(mean((BTargetPoints-SourcePoints_NR).^2,2).^0.5);
+%         BoutonsNonrigid(nummu,sourceID) = D_NonRigid_voxel;
+%         figure(1),hold on, plot(mu(nummu),BoutonsNonrigid(nummu,sourceID),'b*')
+%         ylabel({'Distance in Pixels',''});
+%         xlabel(['\mu = ',num2str(mu(nummu))]);
+%         xlim([0 max(mu)])
+%         ylim([0 2])
+%         title('Registration Accuracy (Boutons)');
+%         drawnow
+        
+        
         %         showNRRegResult (StackList,sourceID,targetID,result{sourceID}.Bouton,[],0)
         
         % --------------------------------------------------- Fiji
@@ -107,49 +193,28 @@ for nummu = 1:size(mu,2)
         
         
         %--------------------------------------------------- Trace
-        fname_First = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
-        fname_First={fname_First.name}';
-        fname_Second = dir([GTpath,'Matches\Traces\DL083',T_Names{targetID},'001-A0*']);
-        fname_Second={fname_Second.name}';
-        AllDistances = zeros(size(fname_First,1),6);
-        pixelSize = [0.26 0.26 0.8];
+
+        
         
         for i=1:size(fname_First,1)
-            sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083B001-A001.swc';
-            targetPath = [GTpath,'Matches\Traces\',fname_Second{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083C001-A001.swc';
+
+            [SourcePoints_NR_temp,~]=Perform_Bspline_Transform(SourcePoints{i}',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
+
+            Ncuts=fix(size(AM_Source{i},1)./CutLength);
+            inds=ceil(size(AM_Source{i},1)./(Ncuts+1)).*(1:Ncuts);
+
+            AM_Source{i}(inds,:)=0;
+            AM_Source{i}(:,inds)=0;
+            AM_Source{i}=LabelBranchesAM(AM_Source{i});
             
-            [AM_Source,r_Source,R_Source]=swc2AM(sourcePath);
-            [AM_Target,r_Target,R_Target]=swc2AM(targetPath);
-            [AM_Source,r_Source,~] = AdjustPPM(AM_Source,r_Source,R_Source,ppm);
-            [AM_Target,r_Target,~] = AdjustPPM(AM_Target,r_Target,R_Target,ppm);
-            SourcePoints = r_Source;
-            TargetPoints = r_Target;
-            %[Distances_before,~] = TraceDistance(AM_Source, SourcePoints, AM_Target, TargetPoints,pixelSize,0);
+            AM_Target{i}(inds,:)=0;
+            AM_Target{i}(:,inds)=0;
+            AM_Target{i}=LabelBranchesAM(AM_Target{i});
+        
+            [~,Dis_NonRigid_voxel] = TraceDistance(AM_Source{i}, SourcePoints_NR_temp', AM_Target{i}, TargetPoints{i},pixelSize,0);
+            Dis_NonRigid_voxel=(Dis_NonRigid_voxel*diff([1,inds,size(AM_Source{i},1)])')./sum(diff([1,inds,size(AM_Source{i},1)]));
+            TraceDistancesNR(nummu,sourceID,i)=Dis_NonRigid_voxel
             
-            [SourcePoints_NR,~]=Perform_Bspline_Transform(SourcePoints',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
-            result{sourceID}.Trace.r1{i} = SourcePoints;
-            result{sourceID}.Trace.r1_NR{i} = SourcePoints_NR';
-            result{sourceID}.Trace.r2{i} = TargetPoints;
-            result{sourceID}.Trace.AM1{i} = AM_Source;
-            result{sourceID}.Trace.AM2{i} = AM_Target;
-            result{sourceID}.Trace.R1{i} = R_Source;
-            result{sourceID}.Trace.R2{i} = R_Target;
-            
-            CutLength=100;
-            Ncuts=fix(size(AM_Source,1)./CutLength);
-            inds=ceil(size(AM_Source,1)./(Ncuts+1)).*(1:Ncuts);
-            
-            AM_Source(inds,:)=0;
-            AM_Source(:,inds)=0;
-            AM_Source=LabelBranchesAM(AM_Source);
-            
-            AM_Target(inds,:)=0;
-            AM_Target(:,inds)=0;
-            AM_Target=LabelBranchesAM(AM_Target);
-            
-            [Dis_NonRigid_um,Dis_NonRigid_voxel] = TraceDistance(AM_Source, SourcePoints_NR', AM_Target, TargetPoints,pixelSize,0);
-            Dis_NonRigid_voxel=(Dis_NonRigid_voxel*diff([1,inds,size(AM_Source,1)])')./sum(diff([1,inds,size(AM_Source,1)]));
-            TraceDistances(nummu,sourceID,i)=Dis_NonRigid_voxel
             
             
             % --------------------------------------------------- Fiji
@@ -181,9 +246,9 @@ for nummu = 1:size(mu,2)
             %             D_Affine = mean(mean((SourcePoints_Affine-TargetPoints_Affine).^2,1).^0.5)
             %         end
             % --------------------------------------------------- End Fiji
-
+            
         end
-        figure(2),hold on, plot(mu(nummu),mean(TraceDistances(nummu,sourceID,:),3),'b*')
+        figure(2),hold on, plot(mu(nummu),mean(TraceDistancesNR(nummu,sourceID,:),3),'b*')
         ylabel({'Distance in Pixels',''});
         xlabel(['\mu = ',num2str(mu(nummu))]);
         xlim([0 max(mu)])
@@ -196,7 +261,7 @@ for nummu = 1:size(mu,2)
 end
 
 
-save('Results.mat','result');
+
 
 
 
