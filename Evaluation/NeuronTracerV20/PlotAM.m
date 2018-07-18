@@ -32,6 +32,6 @@ for f=1:L
     X=[r(i,1),r(j,1)]';
     Y=[r(i,2),r(j,2)]';
     Z=[r(i,3),r(j,3)]';
-    line(Y,X,Z,'Color',color,'LineWidth',1);
+    line(Y,X,Z,'Color',color,'LineWidth',1.5);
 %     line(Y,X,Z,'Color',colors(f,:),'LineWidth',1);
 end
