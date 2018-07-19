@@ -396,10 +396,11 @@ for ID = 1: size(StackList,1)
     
             [KT]=FastMarchingTube(size(IM),r_source,3,[1,1,1]);
             IM =  uint8(KT).*IM;
-            if ID > 1
+%             if ID > 1
                 for j=size(b,2):-1:1
                 [IM,StackPosition_prime,~]=Perform_Bspline_Transform(IM,[1;1;1],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
                 end
+                
                 IM_NR_max=max(IM,[],3);
                 MIN=min([1;1],StackPosition_prime(1:2));
                 MAX=max(size(IM_source_max)',size(IM_target_max)'+StackPosition_prime(1:2)-1);
@@ -407,10 +408,11 @@ for ID = 1: size(StackList,1)
                 IMmax=temp;
                 IMmax(StackPosition_prime(1)-MIN(1)+1:StackPosition_prime(1)-MIN(1)+size(IM_NR_max,1),...
                     StackPosition_prime(2)-MIN(2)+1:StackPosition_prime(2)-MIN(2)+size(IM_NR_max,2))=IM_NR_max;
-            else
-                IMmax =  max(IM,[],3);
-            end
+%             else
+%                 IMmax =  max(IM,[],3);
+%             end
             IMmax = imtranslate(IMmax,[0, TR]);
+            IMmax = imresize(IMmax,[1024,1024]);
             IMAll = max(IMAll,IMmax);
             TR = TR - AddSpace;
 end
