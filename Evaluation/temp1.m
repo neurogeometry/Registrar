@@ -389,32 +389,53 @@ for ID = 1: size(StackList,1)
     [AM_source,r_source,R]=swc2AM(Path);
     [AM_source,r_source,~] = AdjustPPM(AM_source,r_source,R,ppm);
     
-            Stack_File = char(StackList(sourceID,1));
-            IM=ImportStack(char(Stack_File));
-            IM = uint8(double(IM)./double(max(IM(:))).*255);
-            IM_max=max(IM,[],3);
+    Stack_File = char(StackList(sourceID,1));
+    IM=ImportStack(char(Stack_File));
+    IM = uint8(double(IM)./double(max(IM(:))).*255);
+    IM_max=max(IM,[],3);
     
-            [KT]=FastMarchingTube(size(IM),r_source,3,[1,1,1]);
-            IM =  uint8(KT).*IM;
-%             if ID > 1
-                for j=size(b,2):-1:1
-                [IM,StackPosition_prime,~]=Perform_Bspline_Transform(IM,[1;1;1],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
-                end
-                
-                IM_NR_max=max(IM,[],3);
-                MIN=min([1;1],StackPosition_prime(1:2));
-                MAX=max(size(IM_source_max)',size(IM_target_max)'+StackPosition_prime(1:2)-1);
-                temp=zeros(MAX(1)-MIN(1)+1,MAX(2)-MIN(2)+1,'uint8');
-                IMmax=temp;
-                IMmax(StackPosition_prime(1)-MIN(1)+1:StackPosition_prime(1)-MIN(1)+size(IM_NR_max,1),...
-                    StackPosition_prime(2)-MIN(2)+1:StackPosition_prime(2)-MIN(2)+size(IM_NR_max,2))=IM_NR_max;
-%             else
-%                 IMmax =  max(IM,[],3);
-%             end
-            IMmax = imtranslate(IMmax,[0, TR]);
-            IMmax = imresize(IMmax,[1024,1024]);
-            IMAll = max(IMAll,IMmax);
-            TR = TR - AddSpace;
+    [KT]=FastMarchingTube(size(IM),r_source,3,[1,1,1]);
+    IM =  uint8(KT).*IM;
+    IMind=find(KT);
+    [IMx,IMy,IMz]=ind2sub(size(IM),IMind);
+    IMxyz=[IMx,IMy,IMz]';
+    Int=IM(IMind);
+    
+    for j=ID-1:-1:1
+        StackPosition_prime=[1;1;1];
+        [IMxyz,~,~]=Perform_Bspline_Transform(IMxyz,[],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
+    end
+    IM =  zeros(size(IM),'uint8');
+    IMind=sub2ind(size(IM),round(IMxyz(1,:)),round(IMxyz(2,:)),round(IMxyz(3,:)));
+    IM(IMind)=Int;
+    IM = imtranslate(IM,[0, TR]);
+    IM=max(IM,[],3);
+    IMAll = max(IMAll,IM);
+    figure(N);imshow(IMAll,[0 20])
+    drawnow
+    TR = TR - AddSpace;
+%     
+%     for j=ID-1:-1:1
+%         StackPosition_prime=[1;1;1];
+%         [IM,StackPosition_prime,~]=Perform_Bspline_Transform(IM,StackPosition_prime,L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
+%     end
+%     
+    
+%     IM_NR_max=max(IM,[],3);
+%     IM_NR_max=imtranslate(IM_NR_max,StackPosition_prime(1:2));
+%     IM_NR_max=IM_NR_max(1:1024,1:1024);
+%     
+% %     MIN=min([1;1],StackPosition_prime(1:2));
+% %     MAX=max([1024;1024],size(IM_target_max)'+StackPosition_prime(1:2)-1);
+% %     IMmax=zeros(MAX(1)-MIN(1)+1,MAX(2)-MIN(2)+1,'uint8');
+% %     IMmax(StackPosition_prime(1)-MIN(1)+1:StackPosition_prime(1)-MIN(1)+size(IM_NR_max,1),...
+% %     StackPosition_prime(2)-MIN(2)+1:StackPosition_prime(2)-MIN(2)+size(IM_NR_max,2))=IM_NR_max;
+%     IM_NR_max = imtranslate(IM_NR_max,[0, TR]);
+%     %             IMmax = imresize(IMmax,[1024,1024]);
+%     IMAll = max(IMAll,IM_NR_max);
+%     figure(N);imshow(IMAll,[0 20])
+%     drawnow
+%     TR = TR - AddSpace;
 end
 figure(N);imshow(IMAll,[0 20])
 save('C:\Users\Seyed\Documents\Meetings\Research\SPIE\Results\AllFigs_trace2.mat','IMAll');
