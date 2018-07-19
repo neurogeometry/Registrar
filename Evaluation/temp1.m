@@ -372,50 +372,50 @@ IM_target_max=max(IM_Target,[],3);
 %%                     ----------------- Fig 4.B
 
 L=[];b=[];Cxyz=[];Grid_start=[];Nxyz=[];
-% IMAll = uint8(zeros(1024,1024));
+IMAll = uint8(zeros(1024,1024));
 TR = 0;
 AddSpace = 40;
-% for ID = 1: size(StackList,1)
-%     sourceID = ID;
-%     targetID = ID + 1;
-%     
-%     Global_Matched_Source = Matched{sourceID,targetID}(:,4:6)';
-%     Global_Matched_Target = Matched{sourceID,targetID}(:,1:3)';
-%     [~,L{sourceID},b{sourceID},Cxyz{sourceID},Nxyz{sourceID},nxyz,Grid_start{sourceID}]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
-%     
-%     fname = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
-%     fname={fname.name}';
-%     Path = [GTpath,'Matches\Traces\',fname{TraceNum}];
-%     [AM_source,r_source,R]=swc2AM(Path);
-%     [AM_source,r_source,~] = AdjustPPM(AM_source,r_source,R,ppm);
-%     
-%             Stack_File = char(StackList(sourceID,1));
-%             IM=ImportStack(char(Stack_File));
-%             IM = uint8(double(IM)./double(max(IM(:))).*255);
-%             IM_max=max(IM,[],3);
-%     
-%             [KT]=FastMarchingTube(size(IM),r_source,3,[1,1,1]);
-%             IM =  uint8(KT).*IM;
-%             if ID > 1
-%                 for j=size(b,2):-1:1
-%                 [IM,StackPosition_prime,~]=Perform_Bspline_Transform(IM,[1;1;1],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
-%                 end
-%                 IM_NR_max=max(IM,[],3);
-%                 MIN=min([1;1],StackPosition_prime(1:2));
-%                 MAX=max(size(IM_source_max)',size(IM_target_max)'+StackPosition_prime(1:2)-1);
-%                 temp=zeros(MAX(1)-MIN(1)+1,MAX(2)-MIN(2)+1,'uint8');
-%                 IMmax=temp;
-%                 IMmax(StackPosition_prime(1)-MIN(1)+1:StackPosition_prime(1)-MIN(1)+size(IM_NR_max,1),...
-%                     StackPosition_prime(2)-MIN(2)+1:StackPosition_prime(2)-MIN(2)+size(IM_NR_max,2))=IM_NR_max;
-%             else
-%                 IMmax =  max(IM,[],3);
-%             end
-%             IMmax = imtranslate(IMmax,[0, TR]);
-%             IMAll = max(IMAll,IMmax);
-%             TR = TR - AddSpace;
-% end
-% figure(N);imshow(IMAll,[0 20])
-% save('C:\Users\Seyed\Documents\Meetings\Research\SPIE\Results\AllFigs_trace2.mat','IMAll');
+for ID = 1: size(StackList,1)
+    sourceID = ID;
+    targetID = ID + 1;
+    
+    Global_Matched_Source = Matched{sourceID,targetID}(:,4:6)';
+    Global_Matched_Target = Matched{sourceID,targetID}(:,1:3)';
+    [~,L{sourceID},b{sourceID},Cxyz{sourceID},Nxyz{sourceID},nxyz,Grid_start{sourceID}]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
+    
+    fname = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
+    fname={fname.name}';
+    Path = [GTpath,'Matches\Traces\',fname{TraceNum}];
+    [AM_source,r_source,R]=swc2AM(Path);
+    [AM_source,r_source,~] = AdjustPPM(AM_source,r_source,R,ppm);
+    
+            Stack_File = char(StackList(sourceID,1));
+            IM=ImportStack(char(Stack_File));
+            IM = uint8(double(IM)./double(max(IM(:))).*255);
+            IM_max=max(IM,[],3);
+    
+            [KT]=FastMarchingTube(size(IM),r_source,3,[1,1,1]);
+            IM =  uint8(KT).*IM;
+            if ID > 1
+                for j=size(b,2):-1:1
+                [IM,StackPosition_prime,~]=Perform_Bspline_Transform(IM,[1;1;1],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
+                end
+                IM_NR_max=max(IM,[],3);
+                MIN=min([1;1],StackPosition_prime(1:2));
+                MAX=max(size(IM_source_max)',size(IM_target_max)'+StackPosition_prime(1:2)-1);
+                temp=zeros(MAX(1)-MIN(1)+1,MAX(2)-MIN(2)+1,'uint8');
+                IMmax=temp;
+                IMmax(StackPosition_prime(1)-MIN(1)+1:StackPosition_prime(1)-MIN(1)+size(IM_NR_max,1),...
+                    StackPosition_prime(2)-MIN(2)+1:StackPosition_prime(2)-MIN(2)+size(IM_NR_max,2))=IM_NR_max;
+            else
+                IMmax =  max(IM,[],3);
+            end
+            IMmax = imtranslate(IMmax,[0, TR]);
+            IMAll = max(IMAll,IMmax);
+            TR = TR - AddSpace;
+end
+figure(N);imshow(IMAll,[0 20])
+save('C:\Users\Seyed\Documents\Meetings\Research\SPIE\Results\AllFigs_trace2.mat','IMAll');
 
 
 
@@ -519,7 +519,6 @@ for ID = 1: size(StackList,1)
         %         end
         SourcePoints_onTrace;
         TargetPoints_onTrace;
-        SourcePoints_onTrace(:,1) = SourcePoints_onTrace(:,1)+TR;
         HC = [];
         for i=1:size(SourcePoints_onTrace,1)
             for j=1:size(TargetPoints_onTrace,1)
@@ -527,16 +526,16 @@ for ID = 1: size(StackList,1)
             end
         end
         
-        Am = Hungarian_fast(HC,5,5);
+        Am = Hungarian_fast(HC);
         [idx1,idx2]=find(Am);
-        x_Source = SourcePoints_onTrace(idx1,1)-TR;
+        x_Source = SourcePoints_onTrace(idx1,1);
         x_Target = TargetPoints_onTrace(idx2,1);
         y_Source = SourcePoints_onTrace(idx1,2);
         y_Target = TargetPoints_onTrace(idx2,2);
         z_Source = SourcePoints_onTrace(idx1,3);
         z_Target = TargetPoints_onTrace(idx2,3);
-        matchLoc_Target = [x_Target,y_Target,z_Target];
-        matchLoc_Source = [x_Source,y_Source,z_Source];
+        matchLoc_Source = [x_Target,y_Target,z_Target];
+        matchLoc_Target = [x_Source,y_Source,z_Source];
         
         if ID==1
         line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
@@ -544,7 +543,7 @@ for ID = 1: size(StackList,1)
                 [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', rand(1,3));
         else
          line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
-                [matchLoc_Source(:,1)+TR+AddSpace matchLoc_Target(:,1)]',...
+                [matchLoc_Source(:,1) matchLoc_Target(:,1)+TR+AddSpace]',...
                 [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', rand(1,3));  
         end
         axis equal
@@ -559,15 +558,10 @@ for ID = 1: size(StackList,1)
     end
     
 end
- tp = 183;
- fp = 0;
- tn = 3;
- fn = 0
-    
 
-Precision = tp / (tp+fp)
-Accuracy  = (tp+tn)/(tp+tn+fp+fn)
-TrueNegativeRate = tn / (tn+fp)
+
+
+
 
 
 

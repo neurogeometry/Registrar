@@ -135,23 +135,24 @@ for ID = 1:12
 %     drawnow
     
 end
-TraceDistancesOriginalAll = TraceDistancesOriginal(:);
-TraceDistancesTranslationAll = TraceDistancesTranslation(:);
-TraceDistancesRigidAll = TraceDistancesRigid(:);
-TraceDistancesAffineAll = TraceDistancesAffine(:);
-TraceDistancesNRAll = TraceDistancesNR(:);
 
-figure,hold on
-xx=[0.5:1:13.5];
-[temp,~]=hist(TraceDistancesOriginalAll,xx,'r-');
-plot(xx,temp)
-[temp,~]=hist(TraceDistancesTranslationAll,xx,'m-');
-plot(xx,temp)
-[temp,~]=hist(TraceDistancesRigidAll,xx,'c-');
-plot(xx,temp)
-[temp,~]=hist(TraceDistancesAffineAll,xx,'b-');
-plot(xx,temp)
-[temp,~]=hist(TraceDistancesNRAll,xx,'g-');
-plot(xx,temp)
-axis square, box on
+
+% figure,hold on
+% xx=[0.75:1.5:20];
+% [temp,~]=hist(TraceDistancesOriginal(:),xx);
+% plot(xx,temp,'r-')
+% [temp,~]=hist(TraceDistancesTranslation(:),xx);
+% plot(xx,temp,'m-')
+% [temp,~]=hist(TraceDistancesRigid(:),xx);
+% plot(xx,temp,'c-')
+% [temp,~]=hist(TraceDistancesAffine(:),xx);
+% plot(xx,temp,'b-')
+% [temp,~]=hist(TraceDistancesNR(:),xx);
+% plot(xx,temp,'g-')
+% axis square, box on
     
+figure,hold on
+boxplot([TraceDistancesOriginal(:),TraceDistancesTranslation(:),TraceDistancesRigid(:),...
+    TraceDistancesAffine(:),TraceDistancesNR(:)],'OutlierSize' ,0)
+axis square, box on
+ylim([0 20])
