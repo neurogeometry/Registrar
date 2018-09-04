@@ -30,7 +30,7 @@ Y=Y-Grid_start*ones(1,size(Y,2));
 
 % regularization parameter
 % mu=1; %[0, 2.^[-10:10]]
-learning_rate=1;
+learning_rate=5;
 Max_iterations=100000;
 TolCost=10^-5;
 

@@ -26,10 +26,15 @@ paramsFMminReqFeatures = paramsFMminReqFeatures;
 discovery = 1;
 stop = 0;
 
-matchedLocationFile_Translation = [DataFolder,params.FM.MatchedLocationsFile_Translation,'_mu',num2str(mu),'.mat'];
-matchedLocationFile_Rigid = [DataFolder,params.FM.MatchedLocationsFile_Rigid,'_mu',num2str(mu),'.mat'];
-matchedLocationFile_Affine = [DataFolder,params.FM.MatchedLocationsFile_Affine,'_mu',num2str(mu),'.mat'];
-matchedLocationFile_Non_Rigid = [DataFolder,params.FM.MatchedLocationsFile_Non_Rigid,'_mu',num2str(mu),'.mat'];
+% matchedLocationFile_Translation = [DataFolder,params.FM.MatchedLocationsFile_Translation,'_mu',num2str(mu),'.mat'];
+% matchedLocationFile_Rigid = [DataFolder,params.FM.MatchedLocationsFile_Rigid,'_mu',num2str(mu),'.mat'];
+% matchedLocationFile_Affine = [DataFolder,params.FM.MatchedLocationsFile_Affine,'_mu',num2str(mu),'.mat'];
+% matchedLocationFile_Non_Rigid = [DataFolder,params.FM.MatchedLocationsFile_Non_Rigid,'_mu',num2str(mu),'.mat'];
+
+matchedLocationFile_Translation = [DataFolder,params.FM.MatchedLocationsFile_Translation];
+matchedLocationFile_Rigid = [DataFolder,params.FM.MatchedLocationsFile_Rigid];
+matchedLocationFile_Affine = [DataFolder,params.FM.MatchedLocationsFile_Affine];
+matchedLocationFile_Non_Rigid = [DataFolder,params.FM.MatchedLocationsFile_Non_Rigid];
 
 FeatureMatchingLog = [];
 tic

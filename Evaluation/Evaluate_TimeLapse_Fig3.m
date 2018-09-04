@@ -150,9 +150,20 @@ end
 % [temp,~]=hist(TraceDistancesNR(:),xx);
 % plot(xx,temp,'g-')
 % axis square, box on
+TraceDistancesOriginal1 = TraceDistancesOriginal(1:4,:)
+TraceDistancesTranslation1 = TraceDistancesTranslation(1:4,:)
+TraceDistancesRigid1 = TraceDistancesRigid(1:4,:)
+TraceDistancesAffine1 = TraceDistancesAffine(1:4,:)
+TraceDistancesNR1 = TraceDistancesNR(1:4,:)
     
 figure,hold on
-boxplot([TraceDistancesOriginal(:),TraceDistancesTranslation(:),TraceDistancesRigid(:),...
-    TraceDistancesAffine(:),TraceDistancesNR(:)],'OutlierSize' ,0)
+boxplot([TraceDistancesOriginal1(:),TraceDistancesTranslation1(:),TraceDistancesRigid1(:),...
+    TraceDistancesAffine1(:),TraceDistancesNR1(:)],'Whisker',3)
 axis square, box on
-ylim([0 20])
+ylim([0 25])
+
+figure,hold on
+boxplot([TraceDistancesOriginal(:),TraceDistancesTranslation(:),TraceDistancesRigid(:),...
+    TraceDistancesAffine(:),TraceDistancesNR(:)],'Whisker',inf)
+axis square, box on
+ylim([0 25])

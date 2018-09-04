@@ -376,13 +376,18 @@ IMAll = uint8(zeros(1024,1024));
 TR = 0;
 AddSpace = 40;
 for ID = 1: size(StackList,1)
-    sourceID = ID;
+    sourceID = ID
     targetID = ID + 1;
-    
-    Global_Matched_Source = Matched{sourceID,targetID}(:,4:6)';
-    Global_Matched_Target = Matched{sourceID,targetID}(:,1:3)';
-    [~,L{sourceID},b{sourceID},Cxyz{sourceID},Nxyz{sourceID},nxyz,Grid_start{sourceID}]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
-    
+    if ID == size(StackList,1)
+        Global_Matched_Source = Matched{sourceID-1,targetID-1}(:,4:6)';
+        Global_Matched_Target = Matched{sourceID-1,targetID-1}(:,1:3)';
+        [~,L{sourceID},b{sourceID},Cxyz{sourceID},Nxyz{sourceID},nxyz,Grid_start{sourceID}]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
+    else
+        Global_Matched_Source = Matched{sourceID,targetID}(:,4:6)';
+        Global_Matched_Target = Matched{sourceID,targetID}(:,1:3)';
+        [~,L{sourceID},b{sourceID},Cxyz{sourceID},Nxyz{sourceID},nxyz,Grid_start{sourceID}]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
+        
+    end
     fname = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
     fname={fname.name}';
     Path = [GTpath,'Matches\Traces\',fname{TraceNum}];

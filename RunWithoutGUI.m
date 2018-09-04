@@ -10,7 +10,7 @@ StackList_csv_pth = '../../MicroscopeFiles/TimeLapse_Holtmaat_StackList.csv';
 % Transformation Type, 1: Translation, 2: Rigid, 3: Affine, 4:Non-Rigid
 TransformationValue = 4;
 % Run in 1: Sequential or 2: Parallel
-Seq_Par = 2;
+Seq_Par = 1;
 % Number of Workes 
 
 TyoeOfRegistration = 7;

@@ -43,12 +43,12 @@ if size(varargin,2)==6
 elseif size(varargin,2)==5
     GUI=false;
     runFeatureExtraction = 0;
-    runFeatureMatching = 1;
-    runGlobalOpt = 0;
-    TyoeOfRegistration = 7; %MouseLight
+    runFeatureMatching = 0;
+    runGlobalOpt = 1;
+    TyoeOfRegistration = 1; %MouseLight
     outputType = 2; % use NCTracerDB
     runBlending = 0;
-    runRetilling = 0;
+    runRetilling = 1;
     debug = 0;
     mu = varargin{5};
     v = 0;
@@ -57,7 +57,7 @@ elseif size(varargin,2)==5
 else
     error('Number of inputs to the registration function must equal 4 or 6.')
 end
-addpath('../Functions');
+% addpath('../Functions');
 parameters;
 stop = 0;
 tic

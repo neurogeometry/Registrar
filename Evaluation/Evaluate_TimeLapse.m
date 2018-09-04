@@ -37,7 +37,7 @@ showTranceonImage = 0;
 
 
 
-mu = 0:10:1480; %0:20:2000;
+mu = 0:20:2000; %0:10:4000; %
 
 Dis_NonRigid_voxelall = [];
 CutLength=100;
@@ -62,7 +62,7 @@ hold on
 drawnow
 
 for ID = 1
-    sourceID = ID + 1;
+    sourceID = ID ;
     targetID = sourceID + 1;
     Global_Matched_Source = FeaturePositions_NR.Matched{sourceID,targetID}(:,1:3)';
     Global_Matched_Target = FeaturePositions_NR.Matched{sourceID,targetID}(:,4:6)';
@@ -156,7 +156,7 @@ for ID = 1
     plot([mu(1),mu(end)],mean(TraceDistancesOriginal).*[1,1],'r-')
     plot([mu(1),mu(end)],mean(TraceDistancesTranslation).*[1,1],'m-')
     plot([mu(1),mu(end)],mean(TraceDistancesRigid).*[1,1],'c-')
-    plot([mu(1),mu(end)],mean(TraceDistancesAffine).*[1,1],'k-')
+%     plot([mu(1),mu(end)],mean(TraceDistancesAffine).*[1,1],'k-')
     drawnow
     TraceDistancesNR = [];
     TraceDistancesAffine = [];
@@ -285,19 +285,19 @@ for ID = 1
     box on
     plot([mu(1),mu(end)],(mean(TraceDistancesOriginal)-5.5).*[1,1],'r-')
     
-    figure,hold on
-    xx=[0.5:1:13.5];
-    [temp,~]=hist(TraceDistancesOriginal,xx,'r-');
-    plot(xx,temp)
-    [temp,~]=hist(TraceDistancesTranslation,xx,'m-');
-    plot(xx,temp)
-    [temp,~]=hist(TraceDistancesRigid,xx,'c-');
-    plot(xx,temp)
-    [temp,~]=hist(TraceDistancesAffine,xx,'b-');
-    plot(xx,temp)
-    [temp,~]=hist(TraceDistancesNR,xx,'g-');
-    plot(xx,temp)
-    axis square, box on
+%     figure,hold on
+%     xx=[0.5:1:13.5];
+%     [temp,~]=hist(TraceDistancesOriginal,xx,'r-');
+%     plot(xx,temp)
+%     [temp,~]=hist(TraceDistancesTranslation,xx,'m-');
+%     plot(xx,temp)
+%     [temp,~]=hist(TraceDistancesRigid,xx,'c-');
+%     plot(xx,temp)
+%     [temp,~]=hist(TraceDistancesAffine,xx,'b-');
+%     plot(xx,temp)
+%     [temp,~]=hist(TraceDistancesNR,xx,'g-');
+%     plot(xx,temp)
+%     axis square, box on
     
 %     figure,histfit(TraceDistancesOriginal)
 %     figure,histfit(TraceDistancesTranslation)
@@ -309,10 +309,37 @@ for ID = 1
 %     figure(2),hold on, plot(mu(:),mean(TraceDistancesNR(:,sourceID,:),3),'b-')
 end
 
+figure(3)
+ylabel({'Distance in Pixels',''});
+xlabel('\mu');
+% xlim([0 max(mu)])
+% ylim([0 5])
+hold on
+drawnow
 
+plot([mu(1),mu(end)],mean(TraceDistancesOriginal).*[1,1],'r-')
+    plot([mu(1),mu(end)],mean(TraceDistancesTranslation).*[1,1],'m-')
+    plot([mu(1),mu(end)],mean(TraceDistancesRigid).*[1,1],'c-')
+figure(3)
+    ylabel({'Distance in Pixels',''});
+    xlabel('\mu');
+    % xlim([0 max(mu)])
+     ylim([0 5])
+    hold on
+    drawnow
+    plot(mu(:),mean(TraceDistancesAffine(:,ID,:),3),'b-')
+    plot(mu(:),mean(TraceDistancesNR(:,ID,:),3),'g-')
+%     plot([mu(1),mu(end)],mean(TraceDistancesOriginal).*[1,1],'r-')
+    plot([mu(1),mu(end)],mean(TraceDistancesTranslation).*[1,1],'m-')
+    plot([mu(1),mu(end)],mean(TraceDistancesRigid).*[1,1],'c-')
+    axis square 
+    box on
+    plot([mu(1),mu(end)],(mean(TraceDistancesOriginal)-5.5).*[1,1],'r-')
 
-
-
+% boxplot([TraceDistancesOriginal(:),TraceDistancesTranslation(:),TraceDistancesRigid(:),...
+%         TraceDistancesAffine(:),TraceDistancesNR(:)],'OutlierSize' ,0)
+%     axis square, box on
+% ylim([0 20])
 
 
 
