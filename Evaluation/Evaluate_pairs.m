@@ -8,7 +8,7 @@ CalculateOtherMEthods = 1;
 usePoints = 0;
 % DatasetList = {'Holtmaat','Neuromuscular','Neocortical_1','MouseLight','Visual'};
 showCorr = 0;
-DatasetList = {'Holtmaat'};
+DatasetList = {'MouseLight'};
 doCorrelation = 0;
 CSVData = 'C:\Users\Seyed\Documents\NeurogeometryLab\NeurogeometryLab\Seyed\Evaluation\data\evaluation\';
 db = 1;
@@ -115,9 +115,9 @@ for Dataset = DatasetList
         
         
         temp=StackList{sourceID,1};
-        sourcePath = ['../data/evaluation/',char(EvaluationInfo{k,3}),'/',temp,'_opt.swc'];
+        sourcePath = ['data/evaluation/',char(EvaluationInfo{k,3}),'/',temp,'_opt.swc'];
         temp=StackList{targetID,1};
-        targetPath = ['../data/evaluation/',char(EvaluationInfo{k,3}),'/',temp,'_opt.swc'];
+        targetPath = ['data/evaluation/',char(EvaluationInfo{k,3}),'/',temp,'_opt.swc'];
         
         if CalculateOtherMEthods
             dx_Fiji = EvaluationInfo{k,4};

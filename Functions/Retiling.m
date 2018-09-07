@@ -57,7 +57,7 @@ end
 if outputType == 1
     SpecimenName = extractBefore(extractAfter(DataFolder,'MicroscopeFiles/Results-'),'_StackList');
     %     DBFile = [pwd,'/',DataFolder,'/nctracer.db'];
-    DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/db/nctracer.db';
+    DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
     % for connection help: https://www.mathworks.com/help/database/ug/sqlite-jdbc-windows.html#bt8kopj-1
     %     delete(DBFile);
     if exist(DBFile) > 0

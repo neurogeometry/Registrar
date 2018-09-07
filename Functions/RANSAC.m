@@ -19,16 +19,19 @@ if TransformationValue == 1 % Translation
     MaxNumSamples=10^6;
     MaxNumMatches=inf;
     MaxErrorDistance = 3;
+    InlierRatio = 0.20;
 elseif TransformationValue == 2 % Rigid
     NumRandPoints = 2;
     MaxNumSamples=10^6;
     MaxNumMatches=inf;
     MaxErrorDistance = 2;
+    InlierRatio = 0.20;
 elseif TransformationValue == 3 % Affine
     NumRandPoints = 4;
     MaxNumSamples=10^6;
     MaxNumMatches=15;
     MaxErrorDistance = 2;
+    InlierRatio = 0.20;
 elseif TransformationValue == 4 % Non-Rigid
     NumRandPoints = 4;
 %     N_L = 3;
@@ -40,10 +43,11 @@ elseif TransformationValue == 4 % Non-Rigid
     nxyz = [256;256;156];
 %     Nxyz = ceil((Maximum-Minimum)./nxyz');
     affine = 1;
+    InlierRatio = 0.10;
 %     mu = 1;
 end
 
-InlierRatio = 0.20;
+
 
 
 NumAllMatches = size(TargetLocations,2);
@@ -81,7 +85,7 @@ while  i <= size(AllSamples,1) && length(Match_Indexes) <= MaxNumMatches
         SourceLocations_Rigid=L*SourceLocations+b*ones(1,size(SourceLocations,2));
         AllDistances2 = sum((SourceLocations_Rigid-TargetLocations).^2,1);
     elseif TransformationValue == 3 % Affine
-        [~,L,b]=Optimal_Affine_Transform(RandSourceLocations,RandTargetLocations);
+        [~,L,b]=Optimal_Affine_Transform(RandSourceLocations,RandTargetLocations,mu);
         SourceLocations_affine=L*SourceLocations+b*ones(1,size(SourceLocations,2));
         AllDistances2 = sum((SourceLocations_affine-TargetLocations).^2,1);
     elseif TransformationValue == 4 % Non-Rigid
@@ -97,7 +101,8 @@ while  i <= size(AllSamples,1) && length(Match_Indexes) <= MaxNumMatches
     end
     
     CorrectNumbers = (AllDistances2 < MaxErrorDistance^2);
-    i = i+1
+    i = i+1;
+    length(Match_Indexes)
     if sum(CorrectNumbers) > length(Match_Indexes)
         Match_Indexes = find(CorrectNumbers);
     end
