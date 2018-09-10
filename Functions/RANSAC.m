@@ -22,13 +22,13 @@ if TransformationValue == 1 % Translation
     InlierRatio = 0.20;
 elseif TransformationValue == 2 % Rigid
     NumRandPoints = 2;
-    MaxNumSamples=10^6;
+    MaxNumSamples=10^3;
     MaxNumMatches=inf;
     MaxErrorDistance = 2;
     InlierRatio = 0.20;
 elseif TransformationValue == 3 % Affine
     NumRandPoints = 4;
-    MaxNumSamples=10^6;
+    MaxNumSamples=10^3;
     MaxNumMatches=15;
     MaxErrorDistance = 2;
     InlierRatio = 0.20;
