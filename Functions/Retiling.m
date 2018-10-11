@@ -1,6 +1,6 @@
 % This function creates seamless image tiles from the dataset of original image stacks and stack transformations.
 
-function Retiling(StackList,StackPositions,StackSizes,T,DataFolder,outputType,Seq_Par,Par_workers)
+function Retiling(StackList,StackPositions,StackSizes,T,DataFolder,outputType,Seq_Par,Par_workers,DBFile)
 % addpath('../Functions');
 parameters
 paramsREuseHDF5=paramsREuseHDF5;
@@ -8,7 +8,7 @@ paramsRERemoveBlack = paramsRERemoveBlack;
 paramsBigTileSize=paramsBigTileSize;
 paramsFinalTileSize=paramsFinalTileSize;
 discovery = 1;
-DBFile = [];
+
 % if discovery
 %     DBFile = 0;
 % end
@@ -57,7 +57,7 @@ end
 if outputType == 1
     SpecimenName = extractBefore(extractAfter(DataFolder,'MicroscopeFiles/Results-'),'_StackList');
     %     DBFile = [pwd,'/',DataFolder,'/nctracer.db'];
-    DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
+%     DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
     % for connection help: https://www.mathworks.com/help/database/ug/sqlite-jdbc-windows.html#bt8kopj-1
     %     delete(DBFile);
     if exist(DBFile) > 0
@@ -81,6 +81,10 @@ if outputType == 1
         
         sqlquery_createTRACE = 'CREATE TABLE trace (id integer primary key autoincrement not null, name text not null, image_id integer not null)';
         curs = exec(conn,sqlquery_createTRACE);
+        close(curs);
+        
+        sqlquery_createbatchlog = 'CREATE TABLE batchlog (id INTEGER PRIMARY KEY AUTOINCREMENT, job TEXT NOT NULL, description TEXT NOT NULL, created timestamp NOT NULL)';
+        curs = exec(conn,sqlquery_createbatchlog);
         close(curs);
         
         sqlquery_createVERTEX = 'CREATE TABLE vertex (id integer primary key autoincrement not null, trace_id integer not null, x integer not null, y integer not null, z integer not null)';

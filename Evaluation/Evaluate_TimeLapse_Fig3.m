@@ -36,7 +36,7 @@ load([GTpath,'Matches\DL083-001-Matches.mat']);
 showTranceonImage = 0;
 
 
-
+NumTraces = 0;
 % mu = 0:10:1480; %0:20:2000;
 mu = 0;
 
@@ -73,7 +73,7 @@ for ID = 1:12
     fname_Second={fname_Second.name}';
 
     
-    for i=1:size(fname_First,1)
+    for i=1:size(fname_First,1)-21
         sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083B001-A001.swc';
         targetPath = [GTpath,'Matches\Traces\',fname_Second{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083C001-A001.swc';
         
@@ -125,7 +125,7 @@ for ID = 1:12
         [~,Dis_NonRigid_voxel] = TraceDistance(AM_Source{i}, SourcePoints_NR_temp', AM_Target{i}, TargetPoints{i},pixelSize,0);
         Dis_NonRigid_voxel=(Dis_NonRigid_voxel*diff([1,inds,size(AM_Source{i},1)])')./sum(diff([1,inds,size(AM_Source{i},1)]));
         TraceDistancesNR(ID,i)=Dis_NonRigid_voxel;        
-       
+       NumTraces = NumTraces + 1;
         
     end
 %     plot([mu(1),mu(end)],mean(TraceDistancesOriginal).*[1,1],'r-')
@@ -167,3 +167,28 @@ boxplot([TraceDistancesOriginal(:),TraceDistancesTranslation(:),TraceDistancesRi
     TraceDistancesAffine(:),TraceDistancesNR(:)],'Whisker',inf)
 axis square, box on
 ylim([0 25])
+
+
+
+
+
+
+        
+  
+
+% Table 2
+MeanTraceDistances_Original = mean(mean(TraceDistancesOriginal))
+ErrorTraceDistances_Original = MeanTraceDistances_Original/sqrt(NumTraces)
+
+MeanTraceDistances_Translation = mean(mean(TraceDistancesTranslation))
+ErrorTraceDistances_Translation = MeanTraceDistances_Translation/sqrt(NumTraces)
+
+MeanTraceDistances_Rigid = mean(mean(TraceDistancesRigid))
+ErrorTraceDistances_Rigid = MeanTraceDistances_Rigid/sqrt(NumTraces)
+
+MeanTraceDistances_Affine = mean(mean(TraceDistancesAffine))
+ErrorTraceDistances_Affine = MeanTraceDistances_Affine/sqrt(NumTraces)
+
+MeanTraceDistances_NR = mean(mean(TraceDistancesNR))
+ErrorTraceDistances_NR = MeanTraceDistances_NR/sqrt(NumTraces)
+

@@ -9,7 +9,7 @@ usePoints = 0;
 % DatasetList = {'Holtmaat','Neuromuscular','Neocortical_1','MouseLight','Visual'};
 showCorr = 0;
 DatasetList = {'MouseLight'};
-doCorrelation = 0;
+doCorrelation = 1;
 CSVData = 'C:\Users\Seyed\Documents\NeurogeometryLab\NeurogeometryLab\Seyed\Evaluation\data\evaluation\';
 db = 1;
 for Dataset = DatasetList
@@ -241,12 +241,12 @@ for Dataset = DatasetList
         % AffineNonRigid
         Global_Matched_Source = FeaturePositions_A.Matched{sourceID,targetID}(:,1:3)'+Source_StackPositions'-1;
         Global_Matched_Target = FeaturePositions_A.Matched{sourceID,targetID}(:,4:6)'+Target_StackPositions'-1;
-        [L,b]=Optimal_Affine_Transform(Global_Matched_Source,Global_Matched_Target);
+        [~,L,b]=Optimal_Affine_Transform(Global_Matched_Source,Global_Matched_Target,0.1);
         
         r_Source_Affine = (L*(r_Source+Source_StackPositions-1)'+b)';
         r_Target_Affine = r_Target+Target_StackPositions-1;
         
-        N_L=3;
+        N_L=1;
         temp = (L*Global_Matched_Source+b);
         Min=min([min(temp,[],2),min(Global_Matched_Target,[],2)],[],2);
         Max=max([max(temp,[],2),max(Global_Matched_Target,[],2)],[],2);
@@ -351,164 +351,12 @@ for Dataset = DatasetList
         
         
     end
-    
-    
-    
-    All_voxels(db,:) = [mean(M_Old(db,:,1)),mean(M_Translation(db,:,1)),mean(M_Rigid(db,:,1)),mean(M_Affine(db,:,1)),mean(M_NonRigid(db,:,1)),mean(M_Fiji(db,:,1)),mean(M_XUV(db,:,1)),mean(M_Tera(db,:,1))]
-    All_um(db,:) = [mean(M_Old(db,:,2)),mean(M_Translation(db,:,2)),mean(M_Rigid(db,:,2)),mean(M_Affine(db,:,2)),mean(M_NonRigid(db,:,2)),mean(M_Fiji(db,:,2)),mean(M_XUV(db,:,2)),mean(M_Tera(db,:,2))];
+
+    All_voxels(db,:) = [mean(M_Old(db,:,1)),mean(M_Translation(db,:,1)),mean(M_Rigid(db,:,1)),mean(M_Affine(db,:,1)),mean(M_NonRigid(db,:,1)),mean(M_Fiji(db,:,1)),mean(M_XUV(db,:,1)),mean(M_Tera(db,:,1))];
+    All_um(db,:) = [mean(M_Old(db,:,2)),mean(M_Translation(db,:,2)),mean(M_Rigid(db,:,2)),mean(M_Affine(db,:,2)),mean(M_NonRigid(db,:,2)),mean(M_Fiji(db,:,2)),mean(M_XUV(db,:,2)),mean(M_Tera(db,:,2))]
     if doCorrelation
         All_corr(db,:) = [mean(M_Old(db,:,3)),mean(M_Translation(db,1:1,3)),mean(M_Rigid(db,:,3)),mean(M_Affine(db,:,3)),mean(M_NonRigid(db,:,3)),mean(M_Fiji(db,:,3)),mean(M_XUV(db,:,3)),mean(M_Tera(db,:,3))];
     end
-    %     All_corr(db,:) = [corr_old,corr_XUV,corr_Tera,corr_Fiji,corr_Translation,corr_Rigid,corr_Affine,corr_NonRigid];
-    %     db = db + 1;
-    %     Source_Stack_File = [char(StackList(sourceID,2)),'\',char(StackList(sourceID,1)),'-ngc.0.tif'];
-    %     Target_Stack_File = [char(StackList(targetID,2)),'\',char(StackList(targetID,1)),'-ngc.0.tif'];
-    %     IM_Source=ImportStack(char(Source_Stack_File));
-    %     IM_Target=ImportStack(char(Target_Stack_File));
-    %     IM_Source_max=max(IM_Source,[],3);
-    %     IM_Target_max=max(IM_Target,[],3);
-    %
-    %
-    % JPEG2000
-    %     imwrite(IM_Source_max,'Xcomp.jp2','jp2','Mode','lossy','CompressionRatio',20);
-    %     Xcomp = imread('Xcomp.jp2');
-    %     figure(2);imshow(IM_Source_max);
-    %     figure(1), imshow(Xcomp,[])
-    % %
-    % %     % haar Transform
-    % %     [LLw,LHw,HLw,HHw] = haart2(IM_source_max,3);
-    % %     imagesc(LLw); colormap gray;
-    % %     title('Level 3 Haar Approximation--Watermark');
-    % %
-    % %     [LLorig,LHorig,HLorig,HHorig] = haart2(IM_source_max,3);
-    % %     save('test.mat','LLorig','LHorig','HLorig','HHorig')
-    % %     LLwatermarked = LLorig+1e-4*LLw;
-    % %     markedIM = ihaart2(LLwatermarked,LHorig,HLorig,HHorig);
-    % %     imagesc(markedIM); title('Watermarked Image')
-    % %     axis off; axis square;
-    % %     colormap gray;
-    % %
-    % %
-    % %
-    % %     % Wavelet Transform
-    % %     figure;imshow(IM_source_max,[0 max(IM_source_max(:))]);
-    % %     hold on; PlotAM(AM_Source,r_Source,'r')
-    % %     imwrite(IM_source_max,'beforeCompression.tif')
-    % %     n = 5;                   % Decomposition Level
-    % %     w = 'sym8';              % Near symmetric wavelet
-    % %     [c l] = wavedec2(double(IM_source_max),n,w); % Multilevel 2-D wavelet decomposition.
-    % %
-    % %
-    % %     [cratio,bpp] = wcompress('c',imresize(IM_source_max,[1024,1024]),'wpeppers.wtc','spiht','maxloop',75);
-    % %     Xc = wcompress('u','wpeppers.wtc');
-    % % %     delete('wpeppers.wtc')
-    % %     subplot(1,2,1); imshow(IM_source_max);  title('Original image'), axis square
-    % %     subplot(1,2,2); imshow(Xc,[0 50000]); title('Compressed image'), axis square
-    % %
-    % %     csvwrite('aftercompression.csv',c)
-    % %     save('aftercompression.mat','c' ,'l')
-    % %     opt = 'gbl'; % Global threshold
-    % %     thr = 20;    % Threshold
-    % %     sorh = 'h';  % Hard thresholding
-    % %     keepapp = 1; % Approximation coefficients cannot be thresholded
-    % %     [xd,cxd,lxd,perf0,perfl2] = wdencmp(opt,c,l,w,n,thr,sorh,keepapp);
-    % %     imshow(IM_source_max)
-    % %     title('Original Image')
-    % % %     colormap(map)
-    % %     figure('Color','white'),imshow(xd,[0 500])
-    % %     title('Compressed Image - Global Threshold = 20')
-    % % %     colormap(map)
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %     figure;imshow(IM_target_max,[0 max(IM_target_max(:))]);
-    %     hold on; PlotAM(AM_Target,r_Target,'r')
-    
-    
-    
-    % load('C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-MouseLight_StackList\StackPositions_Registered.mat');
-    %     reg_Source_StackPositions = round(StackPositions_Registered(sourceID,:));
-    %     reg_Target_StackPositions = round(StackPositions_Registered(targetID,:));
-    %
-    %     Source_Stack_File = [char(StackList(sourceID,2)),'\',char(StackList(sourceID,1)),'-ngc.0.tif'];
-    %     Target_Stack_File = [char(StackList(targetID,2)),'\',char(StackList(targetID,1)),'-ngc.0.tif'];
-    %     IM_Source=ImportStack(char(Source_Stack_File));
-    %     IM_Target=ImportStack(char(Target_Stack_File));
-    %     IM_Source_max=max(IM_Source,[],3);
-    %     IM_Target_max=max(IM_Target,[],3);
-    %
-    %     translate_After = (reg_Source_StackPositions - reg_Target_StackPositions);
-    %     translate_before = (Source_StackPositions -Target_StackPositions);
-    %
-    %     pad = [50 50 0];
-    %
-    %     correl = caclulateCorr(reg_Source_StackPositions,reg_Target_StackPositions,IM_Source,IM_Target,pad,1)
-    %
-    %     temp_Source=IM_Source(pad(1)+max(1,reg_Target_StackPositions(1)-reg_Source_StackPositions(1)+1):-pad(1)+min(reg_Target_StackPositions(1)-reg_Source_StackPositions(1)+size(IM_Target,1),size(IM_Source,1)),...
-    %         pad(2)+max(1,reg_Target_StackPositions(2)-reg_Source_StackPositions(2)+1):-pad(2)+min(reg_Target_StackPositions(2)-reg_Source_StackPositions(2)+size(IM_Target,2),size(IM_Source,2)),...
-    %         pad(3)+max(1,reg_Target_StackPositions(3)-reg_Source_StackPositions(3)+1):-pad(3)+min(reg_Target_StackPositions(3)-reg_Source_StackPositions(3)+size(IM_Target,3),size(IM_Source,3)));
-    %     figure;imshow(max(temp_Source,[],3),[0 max(IM_Source_max(:))]);
-    %
-    %     temp_Target=IM_Target(pad(1)+max(1,reg_Source_StackPositions(1)-reg_Target_StackPositions(1)+1):-pad(1)+min(reg_Source_StackPositions(1)-reg_Target_StackPositions(1)+size(IM_Source,1),size(IM_Target,1)),...
-    %         pad(2)+max(1,reg_Source_StackPositions(2)-reg_Target_StackPositions(2)+1):-pad(2)+min(reg_Source_StackPositions(2)-reg_Target_StackPositions(2)+size(IM_Source,2),size(IM_Target,2)),...
-    %         pad(3)+max(1,reg_Source_StackPositions(3)-reg_Target_StackPositions(3)+1):-pad(3)+min(reg_Source_StackPositions(3)-reg_Target_StackPositions(3)+size(IM_Source,3),size(IM_Target,3)));
-    %     figure;imshow(max(temp_Target,[],3),[0 max(IM_Source_max(:))]);
-    %
-    %     cor3 = corrcoef(double(temp_Target),double(temp_Source));
-    
-    %     pad = [50 50 0];
-    %
-    %     reg_Target_StackPositions = Target_StackPositions;
-    %     reg_Source_StackPositions = Source_StackPositions;
-    %
-    %     temp_Source=IM_Source(pad(1)+max(1,reg_Target_StackPositions(1)-reg_Source_StackPositions(1)+1):-pad(1)+min(reg_Target_StackPositions(1)-reg_Source_StackPositions(1)+size(IM_Target,1),size(IM_Source,1)),...
-    %         pad(2)+max(1,reg_Target_StackPositions(2)-reg_Source_StackPositions(2)+1):-pad(2)+min(reg_Target_StackPositions(2)-reg_Source_StackPositions(2)+size(IM_Target,2),size(IM_Source,2)),...
-    %         pad(3)+max(1,reg_Target_StackPositions(3)-reg_Source_StackPositions(3)+1):-pad(3)+min(reg_Target_StackPositions(3)-reg_Source_StackPositions(3)+size(IM_Target,3),size(IM_Source,3)));
-    %     figure;imshow(max(temp_Source,[],3),[0 max(IM_Source_max(:))]);
-    %
-    %     temp_Target=IM_Target(pad(1)+max(1,reg_Source_StackPositions(1)-reg_Target_StackPositions(1)+1):-pad(1)+min(reg_Source_StackPositions(1)-reg_Target_StackPositions(1)+size(IM_Source,1),size(IM_Target,1)),...
-    %         pad(2)+max(1,reg_Source_StackPositions(2)-reg_Target_StackPositions(2)+1):-pad(2)+min(reg_Source_StackPositions(2)-reg_Target_StackPositions(2)+size(IM_Source,2),size(IM_Target,2)),...
-    %         pad(3)+max(1,reg_Source_StackPositions(3)-reg_Target_StackPositions(3)+1):-pad(3)+min(reg_Source_StackPositions(3)-reg_Target_StackPositions(3)+size(IM_Source,3),size(IM_Target,3)));
-    %     figure;imshow(max(temp_Target,[],3),[0 max(IM_Source_max(:))]);
-    %
-    %     cor3 = corrcoef(double(temp_Target),double(temp_Source))
-    %
-    %
-    %     cor3 = corrcoef(double(IM_Source),double(IM_Target))
-    
-    
-    
-    
-    
-    
-    
-    %     IM_Source_translate = imtranslate(IM_Source,translate_before([2,1,3]));
-    %
-    %     figure;imshow(max(IM_Source,[],3),[0 max(IM_Source_max(:))]);
-    %     figure;imshow(max(IM_Target,[],3),[0 max(IM_Source_max(:))]);
-    %
-    %      cor3 = corrcoef(double(IM_Source_translate),double(IM_Target))
-    %     IM_Source_translate(all(all(IM_Source_translate == 0,3),2),:,:) = [];
-    %     IM_Source_translate(:,all(all(IM_Source_translate == 0,3),1),:) = [];
-    %     figure;imshow(max(IM_Source_translate,[],3),[0 max(IM_Source_max(:))]);
-    %
-    %      IM_Target_translate = IM_Target(translate_before(1)+1:end,translate_before(2):end,translate_before(3)+1:end);
-    %
-    %     figure;imshow(max(IM_Target,[],3),[0 max(IM_Source_max(:))]);
-    %
-    %     cor3 = corrcoef(double(IM_Source_translate),double(IM_Target))
-    
-    
-    
-    
-    
-    
-    %         correlation_before = corr2(max(IM_Source_translate,[],3),IM_target_max)
-    %         sum(sum(max(IM_Source_translate,[],3) - IM_target_max))
-    
-    
+
 end
+

@@ -44,6 +44,10 @@ else
         IM_Source = ImportStack(char(StackList(stackID,1)),StackSizes_pixels(stackID,:));
     end
 end
+% IM_Source(:,1:3,:) = 60000;
+% IM_Source(:,end-2:end,:) = 60000;
+% IM_Source(1:3,:,:) = 60000;
+% IM_Source(end-2:end,:,:) = 60000;
 
 StackPositions_pixels_original = round(StackPositions_pixels_original);
 Neighbors = findStackNeighbors(stackID,StackSizes_pixels,StackPositions_pixels_original);
@@ -83,7 +87,10 @@ for i = 1:size(Neighbors,1)
             IM_Source = ImportStack(char(StackList(SourceID,1)),StackSizes_pixels(SourceID,:));
         end
     end
-    
+%     IM_Source(:,1:3,:) = 60000;
+%     IM_Source(:,end-2:end,:) = 60000;
+%     IM_Source(1:3,:,:) = 60000;
+%     IM_Source(end-2:end,:,:) = 60000;
     Start=max([1,1,1;StackPositions_neighb(i,:)]);
     End=min(size(Tile3D_org),StackPositions_neighb(i,:)+size(IM_Source)-1);
     Start1=max([1,1,1;1-StackPositions_neighb(i,:)+1]);
@@ -116,5 +123,8 @@ if params.BP.saveImages
     saveastiff(Tile3D_org,[DataFolder,'\stacks_before_register.tif'],options);
 end
 
-
+% for Fig 3-A with below parameters    
+%Parameters to control the size of the visualization tile size
+% params.BP.extSize = [2024 2024 0];
+% figure,imshow(max(Tile3D_org(2025:5005,1160:3047,:),[],3) ,[0 max(Tile3D_org(:))]);
 end

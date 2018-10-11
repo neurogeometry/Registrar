@@ -1,7 +1,7 @@
 % This function creates factor of 2 zoom levels, e.g. 2,4,8,16
 % Zoom is uniform in xyz. Tile sizes remain the same
 
-function NumTiles = CreateZoomLevels(ZoomLevel,DataFolder,OutMethod)
+function NumTiles = CreateZoomLevels(ZoomLevel,DataFolder,OutMethod,DBFile)
 addpath('../Functions');
 parameters;
 StackClass='uint8';
@@ -15,7 +15,7 @@ if OutMethod == 1
 %     DBFile = [pwd,'/',DataFolder,'/nctracer.db'];
 %     SpecimenName = [extractBefore(extractAfter(DataFolder,"MicroscopeFiles/Results-"),'_StackList'),'_Z_',num2str(ZoomLevel)];
     
-    DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
+%     DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
     conn = database('','','','org.sqlite.JDBC',['jdbc:sqlite:',DBFile]);
     conn.Message
     x = conn.Handle;
@@ -253,6 +253,29 @@ for i=1:prod(N_tiles_new)
         else
             mkdir([SaveFolder,TileName]);
             saveastiff(Tile, [SaveFolder,TileName,'/',TileName,'.tif'],options);
+            
+            % for save as JPEG (separated z) for Joe
+%             for j=1:size(Tile,3)
+%                 TileName1=[num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,1)+j-1)];
+%                 imwrite(Tile(:,:,j),[SaveFolder,TileName,'/',TileName1,'.jpg'],'jpg');
+%             end
+            
+           
+            
+            % for save as JPEG (Like Neuroglancer) for Joe
+            C1 = permute(Tile,[1 3 2]);
+            Tile_glancer1 = reshape(C1,[],size(Tile,2),1);
+            xstart1 = NewTilePositions(i,2)-1;
+            xend1 = xstart1+size(Tile,1);
+            ystart1 = NewTilePositions(i,1)-1;
+            yend1 = ystart1+size(Tile,2);
+            zstart1 = NewTilePositions(i,3)-1;
+            zend1 = zstart1+size(Tile,3);
+            TileName1 = [num2str(xstart1),'-',num2str(xend1),'_',num2str(ystart1),'-',num2str(yend1),'_',num2str(zstart1),'-',num2str(zend1)];
+            %                 saveastiff(im2uint8(Tile_glancer), [SaveFolder,'image/',TileName]);
+            SaveFolder1 = ['C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-Neocortical2_StackList\forJoe\Zoom',num2str(ZoomLevel),'\'];
+            imwrite(Tile_glancer1,[SaveFolder1,TileName1,'.jpg'],'jpg');
+                        
             disp(['Tile ',TileName,' created.']);
         end
     end

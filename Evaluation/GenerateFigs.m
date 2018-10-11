@@ -46,6 +46,7 @@ B1 = Boutons{sourceID,1};
 SourcePoints = B1.r1;
 TargetPoints = B1.r2;
 BoutonsBefore = mean(sum((TargetPoints-SourcePoints).^2,2).^0.5)
+BoutonErrorBefore = mean(sum((TargetPoints-SourcePoints).^2,2).^0.5)/sqrt(size(TargetPoints,1))
 % k=0;
 % for i = 1:12
 % B1 = Boutons{i,1};
@@ -76,20 +77,20 @@ IM_target_max=max(IM_Target,[],3);
 % figure(N);imshow(IM_target_max,[0 50]);
 % for i=1:size(fname_First,1)
 %     % Using Trace
-%     
+%
 %     sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];
 %     targetPath = [GTpath,'Matches\Traces\',fname_Second{i}];
-%     
+%
 %     [AM_Source,r_Source,R_Source]=swc2AM(sourcePath);
 %     [AM_Target,r_Target,R_Target]=swc2AM(targetPath);
 %     [AM_Source,r_Source,~] = AdjustPPM(AM_Source,r_Source,R_Source,ppm);
 %     [AM_Target,r_Target,~] = AdjustPPM(AM_Target,r_Target,R_Target,ppm);
-%     
+%
 %     figure(N-1);hold on; PlotAM(AM_Source,r_Source,color(i,:))
 %     text(r_Source(round(size(r_Source,1)/3),2),r_Source(round(size(r_Source,1)/3),1),['Axon #',num2str(i)],'Color',color(i,:))
 %     figure(N);hold on; PlotAM(AM_Target,r_Target,color(i,:))
 %     text(r_Target(round(size(r_Target,1)/3),2),r_Target(round(size(r_Target,1)/3),1),['Axon #',num2str(i)],'Color',color(i,:))
-% 
+%
 % end
 
 % %% Show One Trace  ----------------- Fig 1. B
@@ -101,14 +102,14 @@ IM_target_max=max(IM_Target,[],3);
 % [AM_Target,r_Target,R_Target]=swc2AM(targetPath);
 % [AM_Source,r_Source,~] = AdjustPPM(AM_Source,r_Source,R_Source,ppm);
 % [AM_Target,r_Target,~] = AdjustPPM(AM_Target,r_Target,R_Target,ppm);
-% 
+%
 % [KT]=FastMarchingTube(size(IM_Source),r_Source,7,[1,1,1]);
 % N = N+1;
 % figure(N);imshow(max(uint8(KT).*IM_Source,[],3),[0 30])
 % figure(N);hold on; PlotAM(AM_Source,r_Source,color(TraceNum,:))
 % % figure(N);hold on; plot(SourcePoints(:,2),SourcePoints(:,1),'or')
 % % text(r_Source(round(size(r_Source,1)/3),2),r_Source(round(size(r_Source,1)/3),1),['Axon #',num2str(TraceNum),' Day ',num2str(0)],'Color',color(TraceNum,:))
-% 
+%
 % [KT]=FastMarchingTube(size(IM_Target),r_Target,7,[1,1,1]);
 % N = N+1;
 % figure(N);imshow(max(uint8(KT).*IM_Target,[],3),[0 30])
@@ -121,7 +122,7 @@ IM_target_max=max(IM_Target,[],3);
 % figure(N),imshowpair(IM_source_max,IM_target_max,'Scaling','independent')
 
 %% Show One Trace  ----------------- Fig 1. D
-% 
+%
 % for i = 1: size(StackList,1)
 %     fname = dir([GTpath,'Matches\Traces\DL083',T_Names{i},'001-A0*']);
 %     fname={fname.name}';
@@ -133,7 +134,7 @@ IM_target_max=max(IM_Target,[],3);
 %     IM=ImportStack(char(Stack_File));
 %     IM = uint8(double(IM)./double(max(IM(:))).*255);
 %     IM_max=max(IM,[],3);
-% 
+%
 %     [KT]=FastMarchingTube(size(IM),r,3,[1,1,1]);
 % %     N = N+1;
 %     figure(N);imshow(max(uint8(KT).*IM,[],3),[0 20])
@@ -144,11 +145,11 @@ IM_target_max=max(IM_Target,[],3);
 %     if i == size(StackList,1)
 %         B1 = Boutons{i-1,1};
 %         SourcePoints = B1.r2;
-%         
+%
 %     else
 %         B1 = Boutons{i,1};
 %         SourcePoints = B1.r1;
-%         
+%
 %     end
 % %     figure(N);hold on; plot(SourcePoints(:,2),SourcePoints(:,1),'or')
 % end
@@ -166,7 +167,7 @@ IM_target_max=max(IM_Target,[],3);
 % line([Matched_hung{sourceID,targetID}(i,5) Matched_hung{sourceID,targetID}(i,2)+size(IM_target_max,1)+45], ...
 %                     [Matched_hung{sourceID,targetID}(i,4) Matched_hung{sourceID,targetID}(i,1)], 'Color', rand(1,3));
 % end
-% 
+%
 % %                   ----------------- Fig 2. B
 % N = N + 1;
 % figure(N);imshow(stitched,[0 20])
@@ -196,13 +197,13 @@ IM_target_max=max(IM_Target,[],3);
 
 %% Validation Result  ----------------- Fig 3.A
 % [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
-% 
+%
 % [IM_Target_NR,StackPosition_prime,~]=Perform_Bspline_Transform(IM_Target,[1;1;1],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
 % IM_Target_NR_max=max(IM_Target_NR,[],3);
 % MIN=min([1;1],StackPosition_prime(1:2));
 % MAX=max(size(IM_source_max)',size(IM_target_max)'+StackPosition_prime(1:2)-1);
 % temp=zeros(MAX(1)-MIN(1)+1,MAX(2)-MIN(2)+1,'uint8');
-% 
+%
 % IM_Target_NR_max_P=temp;
 % IM_Target_NR_max_P(StackPosition_prime(1)-MIN(1)+1:StackPosition_prime(1)-MIN(1)+size(IM_Target_NR_max,1),...
 %     StackPosition_prime(2)-MIN(2)+1:StackPosition_prime(2)-MIN(2)+size(IM_Target_NR_max,2))=IM_Target_NR_max;
@@ -215,13 +216,13 @@ IM_target_max=max(IM_Target,[],3);
 %                      ----------------- Fig 3.B
 % L=[];b=[];Cxyz=[];Grid_start=[];Nxyz=[];
 % for sourceID = 1: size(StackList,1)-1
-%     
+%
 %     fname = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
 %     fname={fname.name}';
 %     Path = [GTpath,'Matches\Traces\',fname{TraceNum}];
 %     [AM,r,R]=swc2AM(Path);
 %     [AM,r,~] = AdjustPPM(AM,r,R,ppm);
-%     
+%
 %      if sourceID ==1
 %         Stack_File = char(StackList(sourceID,1));
 %     IM=ImportStack(char(Stack_File));
@@ -234,19 +235,19 @@ IM_target_max=max(IM_Target,[],3);
 % %     text(r(round(size(r,1)/3),2),r(round(size(r,1)/3),1),['Axon #',num2str(TraceNum),' Day ',num2str(T_Days(i))],'Color',color(TraceNum,:))
 % %     if i == size(StackList,1)
 % %         B1 = Boutons{i-1,1};
-% %         SourcePoints = B1.r2;  
+% %         SourcePoints = B1.r2;
 % %     else
 % %         B1 = Boutons{i,1};
 % %         SourcePoints = B1.r1;
 % %     end
 % %     figure(N);hold on; plot(SourcePoints(:,2),SourcePoints(:,1),'or')
 %      end
-%    
+%
 %     targetID = sourceID + 1;
 %     Global_Matched_Source = Matched{sourceID,targetID}(:,4:6)';
 %     Global_Matched_Target = Matched{sourceID,targetID}(:,1:3)';
 %     [~,L{sourceID},b{sourceID},Cxyz{sourceID},Nxyz{sourceID},nxyz,Grid_start{sourceID}]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
-%     
+%
 %     fname = dir([GTpath,'Matches\Traces\DL083',T_Names{targetID},'001-A0*']);
 %     fname={fname.name}';
 %     Path = [GTpath,'Matches\Traces\',fname{TraceNum}];
@@ -257,7 +258,7 @@ IM_target_max=max(IM_Target,[],3);
 %     [Points_NR_temp,~]=Perform_Bspline_Transform(Points_NR_temp,[],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
 %     end
 %     hold on; PlotAM(AM,Points_NR_temp',color(TraceNum+sourceID,:))
-% 
+%
 % %     [KT]=FastMarchingTube(size(IM),r,3,[1,1,1]);
 % %     Target_Stack_File = char(StackList(targetID,1));
 % %     IM_Target=ImportStack(char(Target_Stack_File));
@@ -276,7 +277,7 @@ IM_target_max=max(IM_Target,[],3);
 % %         2-MIN(2):1-MIN(2)+size(IM_source_max,2))=IM_source_max;
 % %     N = N +1;
 % %     figure(N),imshowpair(IM_Target_NR_max_P,IM_source_max_P,'Scaling','independent')
-% 
+%
 % end
 
 %                      ----------------- Fig 3.C
@@ -297,34 +298,34 @@ IM_target_max=max(IM_Target,[],3);
 %     Path = [GTpath,'Matches\Traces\',fname{TraceNum}];
 %     [AM_source,r_source,R]=swc2AM(Path);
 %     [AM_source,r_source,~] = AdjustPPM(AM_source,r_source,R,ppm);
-%     
-%     
-%     
+%
+%
+%
 %         Stack_File = char(StackList(sourceID,1));
 %         IM=ImportStack(char(Stack_File));
 %         IM = uint8(double(IM)./double(max(IM(:))).*255);
 %         IM_max=max(IM,[],3);
-%     
+%
 %         [KT]=FastMarchingTube(size(IM),r_source,3,[1,1,1]);
 %         IMmax =  max(uint8(KT).*IM,[],3);
 %         IMmax = imtranslate(IMmax,[0, TR]);
 %         IMAll = max(IMAll,IMmax);
-%     
+%
 %     if ID < size(StackList,1)
-%         
+%
 %         fname = dir([GTpath,'Matches\Traces\DL083',T_Names{targetID},'001-A0*']);
 %         fname={fname.name}';
 %         Path = [GTpath,'Matches\Traces\',fname{TraceNum}];
 %         [AM_target,r_target,R]=swc2AM(Path);
 %         [AM_target,r_target,~] = AdjustPPM(AM_target,r_target,R,ppm);
-%         
+%
 %         B1 = Boutons{sourceID,1};
 %         SourcePoints = B1.r1;
 %         TargetPoints = B1.r2;
-%         
-%         
+%
+%
 %         [k,f] = dsearchn(r_source,SourcePoints);
-%         
+%
 %         s = 1;
 %         SourcePoints_onTrace=[];
 %         for j=1:size(k)
@@ -338,9 +339,9 @@ IM_target_max=max(IM_Target,[],3);
 %         %     figure(N); hold on; PlotAM(AM_source,r_source,'c')
 %         %
 %         %     end
-%         
+%
 %         plot3(SourcePoints_onTrace(:,2),SourcePoints_onTrace(:,1)+TR,ones(1,length(SourcePoints_onTrace(:,2))),'or')
-%         
+%
 %         TR = TR - AddSpace;
 %         [k,f] = dsearchn(r_target,TargetPoints);
 %         TargetPoints(:,1) = TargetPoints(:,1)+TR;
@@ -355,7 +356,7 @@ IM_target_max=max(IM_Target,[],3);
 %             end
 %         end
 %         plot3(TargetPoints_onTrace(:,2),TargetPoints_onTrace(:,1),ones(1,length(TargetPoints_onTrace(:,2))),'or')
-%         
+%
 %         if ID==1
 %             line([SourcePoints_onTrace(:,2) TargetPoints_onTrace(:,2)]', ...
 %                 [SourcePoints_onTrace(:,1) TargetPoints_onTrace(:,1)]',[1;1]*ones(1,length(TargetPoints_onTrace(:,1))), 'Color', 'c');
@@ -365,58 +366,58 @@ IM_target_max=max(IM_Target,[],3);
 %         end
 %         drawnow
 %     end
-%     
+%
 % end
 % figure(N);imshow(IMAll,[0 20])
 
 %%                     ----------------- Fig 4.B
 
 % L=[];b=[];Cxyz=[];Grid_start=[];Nxyz=[];
-% % IMAll = uint8(zeros(1024,1024));
+% IMAll = uint8(zeros(1024,1024));
 % TR = 0;
 % AddSpace = 40;
-% % for ID = 1: size(StackList,1)
-% %     sourceID = ID;
-% %     targetID = ID + 1;
-% %
-% %     Global_Matched_Source = Matched{sourceID,targetID}(:,4:6)';
-% %     Global_Matched_Target = Matched{sourceID,targetID}(:,1:3)';
-% %     [~,L{sourceID},b{sourceID},Cxyz{sourceID},Nxyz{sourceID},nxyz,Grid_start{sourceID}]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
-% %
-% %     fname = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
-% %     fname={fname.name}';
-% %     Path = [GTpath,'Matches\Traces\',fname{TraceNum}];
-% %     [AM_source,r_source,R]=swc2AM(Path);
-% %     [AM_source,r_source,~] = AdjustPPM(AM_source,r_source,R,ppm);
-% %
-% %             Stack_File = char(StackList(sourceID,1));
-% %             IM=ImportStack(char(Stack_File));
-% %             IM = uint8(double(IM)./double(max(IM(:))).*255);
-% %             IM_max=max(IM,[],3);
-% %
-% %             [KT]=FastMarchingTube(size(IM),r_source,3,[1,1,1]);
-% %             IM =  uint8(KT).*IM;
-% %             if ID > 1
-% %                 for j=size(b,2):-1:1
-% %                 [IM,StackPosition_prime,~]=Perform_Bspline_Transform(IM,[1;1;1],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
-% %                 end
-% %                 IM_NR_max=max(IM,[],3);
-% %                 MIN=min([1;1],StackPosition_prime(1:2));
-% %                 MAX=max(size(IM_source_max)',size(IM_target_max)'+StackPosition_prime(1:2)-1);
-% %                 temp=zeros(MAX(1)-MIN(1)+1,MAX(2)-MIN(2)+1,'uint8');
-% %                 IMmax=temp;
-% %                 IMmax(StackPosition_prime(1)-MIN(1)+1:StackPosition_prime(1)-MIN(1)+size(IM_NR_max,1),...
-% %                     StackPosition_prime(2)-MIN(2)+1:StackPosition_prime(2)-MIN(2)+size(IM_NR_max,2))=IM_NR_max;
-% %             else
-% %                 IMmax =  max(IM,[],3);
-% %             end
-% %             IMmax = imtranslate(IMmax,[0, TR]);
-% %             IMAll = max(IMAll,IMmax);
-% %             TR = TR - AddSpace;
-% % end
-% % figure(N);imshow(IMAll,[0 20])
-% % save('C:\Users\Seyed\Documents\Meetings\Research\SPIE\Results\AllFigs_trace2.mat','IMAll');
-% 
+% for ID = 1: size(StackList,1)
+%     sourceID = ID;
+%     targetID = ID + 1;
+%
+%     Global_Matched_Source = Matched{sourceID,targetID}(:,4:6)';
+%     Global_Matched_Target = Matched{sourceID,targetID}(:,1:3)';
+%     [~,L{sourceID},b{sourceID},Cxyz{sourceID},Nxyz{sourceID},nxyz,Grid_start{sourceID}]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
+%
+%     fname = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
+%     fname={fname.name}';
+%     Path = [GTpath,'Matches\Traces\',fname{TraceNum}];
+%     [AM_source,r_source,R]=swc2AM(Path);
+%     [AM_source,r_source,~] = AdjustPPM(AM_source,r_source,R,ppm);
+%
+%             Stack_File = char(StackList(sourceID,1));
+%             IM=ImportStack(char(Stack_File));
+%             IM = uint8(double(IM)./double(max(IM(:))).*255);
+%             IM_max=max(IM,[],3);
+%
+%             [KT]=FastMarchingTube(size(IM),r_source,3,[1,1,1]);
+%             IM =  uint8(KT).*IM;
+%             if ID > 1
+%                 for j=size(b,2):-1:1
+%                 [IM,StackPosition_prime,~]=Perform_Bspline_Transform(IM,[1;1;1],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
+%                 end
+%                 IM_NR_max=max(IM,[],3);
+%                 MIN=min([1;1],StackPosition_prime(1:2));
+%                 MAX=max(size(IM_source_max)',size(IM_target_max)'+StackPosition_prime(1:2)-1);
+%                 temp=zeros(MAX(1)-MIN(1)+1,MAX(2)-MIN(2)+1,'uint8');
+%                 IMmax=temp;
+%                 IMmax(StackPosition_prime(1)-MIN(1)+1:StackPosition_prime(1)-MIN(1)+size(IM_NR_max,1),...
+%                     StackPosition_prime(2)-MIN(2)+1:StackPosition_prime(2)-MIN(2)+size(IM_NR_max,2))=IM_NR_max;
+%             else
+%                 IMmax =  max(IM,[],3);
+%             end
+%             IMmax = imtranslate(IMmax,[0, TR]);
+%             IMAll = max(IMAll,IMmax);
+%             TR = TR - AddSpace;
+% end
+% figure(N);imshow(IMAll,[0 20])
+% save('C:\Users\Seyed\Documents\Meetings\Research\SPIE\Results\AllFigs_trace2.mat','IMAll');
+
 
 
 
@@ -427,7 +428,7 @@ IM_target_max=max(IM_Target,[],3);
 % for ID = 1: size(StackList,1)-1
 %     sourceID = ID;
 %     targetID = ID + 1;
-%     
+%
 %     Global_Matched_Source = Matched{sourceID,targetID}(:,4:6)';
 %     Global_Matched_Target = Matched{sourceID,targetID}(:,1:3)';
 %     [~,L{sourceID},b{sourceID},Cxyz{sourceID},Nxyz{sourceID},nxyz,Grid_start{sourceID}]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
@@ -441,7 +442,7 @@ IM_target_max=max(IM_Target,[],3);
 %     Path = [GTpath,'Matches\Traces\',fname{TraceNum}];
 %     [AM_source,r_source,R]=swc2AM(Path);
 %     [AM_source,r_source,~] = AdjustPPM(AM_source,r_source,R,ppm);
-%     
+%
 %     r_source_NR_temp = r_source';
 %     for j=ID-1:-1:1
 %         [r_source_NR_temp,~]=Perform_Bspline_Transform(r_source_NR_temp,[],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
@@ -449,7 +450,7 @@ IM_target_max=max(IM_Target,[],3);
 %     r_source_NR{ID} = r_source_NR_temp';
 %     AM_source_NR{ID}=AM_source;
 % end
-% 
+%
 % Boutons_NR={};
 % for ID = 1:size(StackList,1)-1
 %     sourcePoints_NR_temp = Boutons{ID,1}.r1';
@@ -457,7 +458,7 @@ IM_target_max=max(IM_Target,[],3);
 %         [sourcePoints_NR_temp,~]=Perform_Bspline_Transform(sourcePoints_NR_temp,[],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
 %     end
 %     Boutons_NR{ID,1}.r1 = sourcePoints_NR_temp';
-%     
+%
 %     targetPoints_NR_temp = Boutons{ID,1}.r2';
 %     for j=ID:-1:1
 %         [targetPoints_NR_temp,~]=Perform_Bspline_Transform(targetPoints_NR_temp,[],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
@@ -467,7 +468,7 @@ IM_target_max=max(IM_Target,[],3);
 % % ID=2;
 % % figure, PlotAM(AM_source_NR{ID},r_source_NR{ID},'c'), hold on
 % % plot3(Boutons_NR{ID,1}.r1(:,2),Boutons_NR{ID,1}.r1(:,1),Boutons_NR{ID,1}.r1(:,3),'o')
-% 
+%
 % % IMAll = uint8(zeros(1024,1024));
 % TR = 0;
 % AddSpace = 40;
@@ -477,10 +478,10 @@ IM_target_max=max(IM_Target,[],3);
 %     targetID = ID + 1;
 %     AM_source = AM_source_NR{ID};
 %     r_source = r_source_NR{ID};
-%     
-%     
-%     
-%     
+%
+%
+%
+%
 %     %     Stack_File = char(StackList(sourceID,1));
 %     %     IM=ImportStack(char(Stack_File));
 %     %     IM = uint8(double(IM)./double(max(IM(:))).*255);
@@ -490,20 +491,20 @@ IM_target_max=max(IM_Target,[],3);
 %     %     IMmax =  max(uint8(KT).*IM,[],3);
 %     %     IMmax = imtranslate(IMmax,[0, TR]);
 %     %     IMAll = max(IMAll,IMmax);
-%     
+%
 %     if ID < size(StackList,1)
-%         
+%
 %         AM_target = AM_source_NR{ID+1};
 %         r_target = r_source_NR{ID+1};
-%         
-%         
+%
+%
 %         SourcePoints = Boutons_NR{sourceID,1}.r1;
 %         TargetPoints = Boutons_NR{sourceID,1}.r2;
-%         
-%         
-%         
+%
+%
+%
 %         [k,f] = dsearchn(r_source,SourcePoints);
-%         
+%
 %         s = 1;
 %         SourcePoints_onTrace=[];
 %         for j=1:size(k)
@@ -517,9 +518,9 @@ IM_target_max=max(IM_Target,[],3);
 %         %     figure(N); hold on; PlotAM(AM_source,r_source,'c')
 %         %
 %         %     end
-%         
+%
 %         plot3(SourcePoints_onTrace(:,2),SourcePoints_onTrace(:,1)+TR,ones(1,length(SourcePoints_onTrace(:,2))),'or')
-%         
+%
 %         TR = TR - AddSpace;
 %         [k,f] = dsearchn(r_target,TargetPoints);
 %         TargetPoints(:,1) = TargetPoints(:,1)+TR;
@@ -534,7 +535,7 @@ IM_target_max=max(IM_Target,[],3);
 %             end
 %         end
 %         plot3(TargetPoints_onTrace(:,2),TargetPoints_onTrace(:,1),ones(1,length(TargetPoints_onTrace(:,2))),'or')
-%         
+%
 %         %         if ID==1
 %         %             line([SourcePoints_onTrace(:,2) TargetPoints_onTrace(:,2)]', ...
 %         %                 [SourcePoints_onTrace(:,1) TargetPoints_onTrace(:,1)]',[1;1]*ones(1,length(TargetPoints_onTrace(:,1))), 'Color', 'c');
@@ -542,9 +543,9 @@ IM_target_max=max(IM_Target,[],3);
 %         %             line([SourcePoints_onTrace(:,2) TargetPoints_onTrace(:,2)]', ...
 %         %                 [SourcePoints_onTrace(:,1)+TR+AddSpace TargetPoints_onTrace(:,1)]',[1;1]*ones(1,length(TargetPoints_onTrace(:,1))), 'Color', 'c');
 %         %         end
-%         
-%         
-%         
+%
+%
+%
 %         SourcePoints_onTrace(:,1) = SourcePoints_onTrace(:,1)+TR;
 %         HC = [];
 %         for i=1:size(SourcePoints_onTrace,1)
@@ -552,7 +553,7 @@ IM_target_max=max(IM_Target,[],3);
 %                 HC(i,j) = mean(sum((SourcePoints_onTrace(i,:)-TargetPoints_onTrace(j,:)).^2,2).^0.5);
 %             end
 %         end
-%         
+%
 %         Am = Hungarian_fast(HC,5,5);
 %         [idx1,idx2]=find(Am);
 %         x_Source = SourcePoints_onTrace(idx1,1)-TR;
@@ -563,7 +564,7 @@ IM_target_max=max(IM_Target,[],3);
 %         z_Target = TargetPoints_onTrace(idx2,3);
 %         matchLoc_Target = [x_Target,y_Target,z_Target];
 %         matchLoc_Source = [x_Source,y_Source,z_Source];
-%         
+%
 %         if ID==1
 %             line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
 %                 [matchLoc_Source(:,1) matchLoc_Target(:,1)]',...
@@ -574,18 +575,18 @@ IM_target_max=max(IM_Target,[],3);
 %                 [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', 'c');
 %         end
 %         %         axis equal
-%         
-%         
+%
+%
 %         count = count + size(idx1,1);
-%         
-%         
-%         
-%         
-%         
-%         
+%
+%
+%
+%
+%
+%
 %         drawnow
 %     end
-%     
+%
 % end
 % count
 % % figure(N);imshow(IMAll,[0 20])
@@ -596,47 +597,47 @@ m2 = 3;
 for ID = 1: size(StackList,1)-1
     sourceID = ID;
     targetID = ID+1;
-
-        
-       
-        
-        B1 = Boutons{sourceID,1};
-        SourcePoints = B1.r1;
-        TargetPoints = B1.r2;
-  
-        plot3(SourcePoints(:,2),SourcePoints(:,1),ones(1,length(SourcePoints(:,2))),'or')
-        hold on
-        plot3(TargetPoints(:,2),TargetPoints(:,1),ones(1,length(TargetPoints(:,2))),'og')
-        hold on
-
-         HC = [];
-         for i=1:size(SourcePoints,1)
-             for j=1:size(TargetPoints,1)
-                 HC(i,j) = sum((SourcePoints(i,:)-TargetPoints(j,:)).^2,2).^0.5;
-             end
-         end
-         
-         Am = Hungarian_fast(HC,m1,m2);
-         [idx1,idx2]=find(Am);
-         x_Source = SourcePoints(idx1,1);
-         x_Target = TargetPoints(idx2,1);
-         y_Source = SourcePoints(idx1,2);
-         y_Target = TargetPoints(idx2,2);
-         z_Source = SourcePoints(idx1,3);
-         z_Target = TargetPoints(idx2,3);
-         matchLoc_Target = [x_Target,y_Target,z_Target];
-         matchLoc_Source = [x_Source,y_Source,z_Source];
-         
-%          if ID==1
-%              line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
-%                  [matchLoc_Source(:,1) matchLoc_Target(:,1)]',...
-%                  [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', 'c');
-%          else
-%              line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
-%                  [matchLoc_Source(:,1)+TR+AddSpace matchLoc_Target(:,1)]',...
-%                  [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', 'c');
-%          end
-         %         axis equal
+    
+    
+    
+    
+    B1 = Boutons{sourceID,1};
+    SourcePoints = B1.r1;
+    TargetPoints = B1.r2;
+    
+    plot3(SourcePoints(:,2),SourcePoints(:,1),ones(1,length(SourcePoints(:,2))),'or')
+    hold on
+    plot3(TargetPoints(:,2),TargetPoints(:,1),ones(1,length(TargetPoints(:,2))),'og')
+    hold on
+    
+    HC = [];
+    for i=1:size(SourcePoints,1)
+        for j=1:size(TargetPoints,1)
+            HC(i,j) = sum((SourcePoints(i,:)-TargetPoints(j,:)).^2,2).^0.5;
+        end
+    end
+    
+    Am = Hungarian_fast(HC,m1,m2);
+    [idx1,idx2]=find(Am);
+    x_Source = SourcePoints(idx1,1);
+    x_Target = TargetPoints(idx2,1);
+    y_Source = SourcePoints(idx1,2);
+    y_Target = TargetPoints(idx2,2);
+    z_Source = SourcePoints(idx1,3);
+    z_Target = TargetPoints(idx2,3);
+    matchLoc_Target = [x_Target,y_Target,z_Target];
+    matchLoc_Source = [x_Source,y_Source,z_Source];
+    
+    %          if ID==1
+    %              line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
+    %                  [matchLoc_Source(:,1) matchLoc_Target(:,1)]',...
+    %                  [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', 'c');
+    %          else
+    %              line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
+    %                  [matchLoc_Source(:,1)+TR+AddSpace matchLoc_Target(:,1)]',...
+    %                  [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', 'c');
+    %          end
+    %         axis equal
     
     TP_before(ID)=sum(idx1==idx2);
     FP_before(ID)=sum(idx1~=idx2);
@@ -652,151 +653,164 @@ for ID = 1: size(StackList,1)-1
     [TargetPoints_Translation,~]=Perform_Linear_Transform(TargetPoints,[],[],b);
     
     HC = [];
-         for i=1:size(SourcePoints,1)
-             for j=1:size(TargetPoints_Translation,1)
-                 HC(i,j) = sum((SourcePoints(i,:)-TargetPoints_Translation(j,:)).^2,2).^0.5;
-             end
-         end
-         
-         Am = Hungarian_fast(HC,m1,m2);
-         [idx1,idx2]=find(Am);
-         x_Source = SourcePoints(idx1,1);
-         x_Target = TargetPoints_Translation(idx2,1);
-         y_Source = SourcePoints(idx1,2);
-         y_Target = TargetPoints_Translation(idx2,2);
-         z_Source = SourcePoints(idx1,3);
-         z_Target = TargetPoints_Translation(idx2,3);
-         matchLoc_Target = [x_Target,y_Target,z_Target];
-         matchLoc_Source = [x_Source,y_Source,z_Source];
-         
+    for i=1:size(SourcePoints,1)
+        for j=1:size(TargetPoints_Translation,1)
+            HC(i,j) = sum((SourcePoints(i,:)-TargetPoints_Translation(j,:)).^2,2).^0.5;
+        end
+    end
+    
+    Am = Hungarian_fast(HC,m1,m2);
+    [idx1,idx2]=find(Am);
+    x_Source = SourcePoints(idx1,1);
+    x_Target = TargetPoints_Translation(idx2,1);
+    y_Source = SourcePoints(idx1,2);
+    y_Target = TargetPoints_Translation(idx2,2);
+    z_Source = SourcePoints(idx1,3);
+    z_Target = TargetPoints_Translation(idx2,3);
+    matchLoc_Target = [x_Target,y_Target,z_Target];
+    matchLoc_Source = [x_Source,y_Source,z_Source];
+    
     
     TP_TR(ID)=sum(idx1==idx2);
     FP_TR(ID)=sum(idx1~=idx2);
     FN_TR(ID)=size(Am,1)-length(idx1);
     Precision_TR(ID)=TP_TR(ID)/(TP_TR(ID)+FP_TR(ID))
     Recall_TR(ID)=TP_TR(ID)/(TP_TR(ID)+FN_TR(ID))
-    
-    
-        % --------------------- Rigid
+    Translation_B_Dis(ID) =  mean(sum((matchLoc_Target-matchLoc_Source).^2,2).^0.5);
+    Translation_B_Dis_Error(ID) = Translation_B_Dis(ID)/sqrt(size(matchLoc_Target,1));
+    % --------------------- Rigid
     
     [L,b]=Optimal_Rigid_Transform(Global_Matched_Source,Global_Matched_Target);
-        [TargetPoints_Rigid,~]=Perform_Linear_Transform(TargetPoints,[],L,b);
+    [TargetPoints_Rigid,~]=Perform_Linear_Transform(TargetPoints,[],L,b);
     
     HC = [];
-         for i=1:size(SourcePoints,1)
-             for j=1:size(TargetPoints_Rigid,1)
-                 HC(i,j) = sum((SourcePoints(i,:)-TargetPoints_Rigid(j,:)).^2,2).^0.5;
-             end
-         end
-         
-         Am = Hungarian_fast(HC,m1,m2);
-         [idx1,idx2]=find(Am);
-         x_Source = SourcePoints(idx1,1);
-         x_Target = TargetPoints_Rigid(idx2,1);
-         y_Source = SourcePoints(idx1,2);
-         y_Target = TargetPoints_Rigid(idx2,2);
-         z_Source = SourcePoints(idx1,3);
-         z_Target = TargetPoints_Rigid(idx2,3);
-         matchLoc_Target = [x_Target,y_Target,z_Target];
-         matchLoc_Source = [x_Source,y_Source,z_Source];
-         
+    for i=1:size(SourcePoints,1)
+        for j=1:size(TargetPoints_Rigid,1)
+            HC(i,j) = sum((SourcePoints(i,:)-TargetPoints_Rigid(j,:)).^2,2).^0.5;
+        end
+    end
+    
+    Am = Hungarian_fast(HC,m1,m2);
+    [idx1,idx2]=find(Am);
+    x_Source = SourcePoints(idx1,1);
+    x_Target = TargetPoints_Rigid(idx2,1);
+    y_Source = SourcePoints(idx1,2);
+    y_Target = TargetPoints_Rigid(idx2,2);
+    z_Source = SourcePoints(idx1,3);
+    z_Target = TargetPoints_Rigid(idx2,3);
+    matchLoc_Target = [x_Target,y_Target,z_Target];
+    matchLoc_Source = [x_Source,y_Source,z_Source];
+    
     
     TP_R(ID)=sum(idx1==idx2);
     FP_R(ID)=sum(idx1~=idx2);
     FN_R(ID)=size(Am,1)-length(idx1);
     Precision_R(ID)=TP_R(ID)/(TP_R(ID)+FP_R(ID))
     Recall_R(ID)=TP_R(ID)/(TP_R(ID)+FN_R(ID))
+    Rigid_B_Dis(ID) = mean(sum((matchLoc_Target-matchLoc_Source).^2,2).^0.5);
+    Rigid_B_Dis_Error(ID) = Rigid_B_Dis(ID)/sqrt(size(matchLoc_Target(:,1),1));
     
     
-    
-        % --------------------- Affine
+    % --------------------- Affine
     [~,LAffine,bAffine]=Optimal_Affine_Transform(Global_Matched_Source,Global_Matched_Target,1040);
     [TargetPoints_Affine,~]=Perform_Linear_Transform(TargetPoints,[],LAffine,bAffine);
-
+    
     
     HC = [];
-         for i=1:size(SourcePoints,1)
-             for j=1:size(TargetPoints_Affine,1)
-                 HC(i,j) = sum((SourcePoints(i,:)-TargetPoints_Affine(j,:)).^2,2).^0.5;
-             end
-         end
-         
-         Am = Hungarian_fast(HC,m1,m2);
-         [idx1,idx2]=find(Am);
-         x_Source = SourcePoints(idx1,1);
-         x_Target = TargetPoints_Affine(idx2,1);
-         y_Source = SourcePoints(idx1,2);
-         y_Target = TargetPoints_Affine(idx2,2);
-         z_Source = SourcePoints(idx1,3);
-         z_Target = TargetPoints_Affine(idx2,3);
-         matchLoc_Target = [x_Target,y_Target,z_Target];
-         matchLoc_Source = [x_Source,y_Source,z_Source];
-         
+    for i=1:size(SourcePoints,1)
+        for j=1:size(TargetPoints_Affine,1)
+            HC(i,j) = sum((SourcePoints(i,:)-TargetPoints_Affine(j,:)).^2,2).^0.5;
+        end
+    end
+    
+    Am = Hungarian_fast(HC,m1,m2);
+    [idx1,idx2]=find(Am);
+    x_Source = SourcePoints(idx1,1);
+    x_Target = TargetPoints_Affine(idx2,1);
+    y_Source = SourcePoints(idx1,2);
+    y_Target = TargetPoints_Affine(idx2,2);
+    z_Source = SourcePoints(idx1,3);
+    z_Target = TargetPoints_Affine(idx2,3);
+    matchLoc_Target = [x_Target,y_Target,z_Target];
+    matchLoc_Source = [x_Source,y_Source,z_Source];
+    
     
     TP_A(ID)=sum(idx1==idx2);
     FP_A(ID)=sum(idx1~=idx2);
     FN_A(ID)=size(Am,1)-length(idx1);
     Precision_A(ID)=TP_A(ID)/(TP_A(ID)+FP_A(ID))
     Recall_A(ID)=TP_A(ID)/(TP_A(ID)+FN_A(ID))
-    
+    Affine_B_Dis(ID) = mean(sum((matchLoc_Target-matchLoc_Source).^2,2).^0.5);
+    Affine_B_Dis_Error(ID) = Affine_B_Dis(ID)/sqrt(size(matchLoc_Target(:,1),1));
     
     % --------------------- Non-rigid
-
+    
     [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
     TargetPoints_temp = TargetPoints';
     [TargetPoints_NR,~]=Perform_Bspline_Transform(TargetPoints_temp,[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
     TargetPoints_NR = TargetPoints_NR';
     
     
-         HC = [];
-         for i=1:size(SourcePoints,1)
-             for j=1:size(TargetPoints_NR,1)
-                 HC(i,j) = sum((SourcePoints(i,:)-TargetPoints_NR(j,:)).^2,2).^0.5;
-             end
-         end
-         
-         Am = Hungarian_fast(HC,m1,m2);
-         [idx1,idx2]=find(Am);
-         x_Source = SourcePoints(idx1,1);
-         x_Target = TargetPoints_NR(idx2,1);
-         y_Source = SourcePoints(idx1,2);
-         y_Target = TargetPoints_NR(idx2,2);
-         z_Source = SourcePoints(idx1,3);
-         z_Target = TargetPoints_NR(idx2,3);
-         matchLoc_Target = [x_Target,y_Target,z_Target];
-         matchLoc_Source = [x_Source,y_Source,z_Source];
-         
-%          if ID==1
-%              line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
-%                  [matchLoc_Source(:,1) matchLoc_Target(:,1)]',...
-%                  [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', 'c');
-%          else
-%              line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
-%                  [matchLoc_Source(:,1)+TR+AddSpace matchLoc_Target(:,1)]',...
-%                  [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', 'c');
-%          end
-         %         axis equal
+    HC = [];
+    for i=1:size(SourcePoints,1)
+        for j=1:size(TargetPoints_NR,1)
+            HC(i,j) = sum((SourcePoints(i,:)-TargetPoints_NR(j,:)).^2,2).^0.5;
+        end
+    end
+    
+    Am = Hungarian_fast(HC,m1,m2);
+    [idx1,idx2]=find(Am);
+    x_Source = SourcePoints(idx1,1);
+    x_Target = TargetPoints_NR(idx2,1);
+    y_Source = SourcePoints(idx1,2);
+    y_Target = TargetPoints_NR(idx2,2);
+    z_Source = SourcePoints(idx1,3);
+    z_Target = TargetPoints_NR(idx2,3);
+    matchLoc_Target = [x_Target,y_Target,z_Target];
+    matchLoc_Source = [x_Source,y_Source,z_Source];
+    
+    %          if ID==1
+    %              line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
+    %                  [matchLoc_Source(:,1) matchLoc_Target(:,1)]',...
+    %                  [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', 'c');
+    %          else
+    %              line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
+    %                  [matchLoc_Source(:,1)+TR+AddSpace matchLoc_Target(:,1)]',...
+    %                  [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', 'c');
+    %          end
+    %         axis equal
     
     TP_NR(ID)=sum(idx1==idx2);
     FP_NR(ID)=sum(idx1~=idx2);
     FN_NR(ID)=size(Am,1)-length(idx1);
     Precision_NR(ID)=TP_NR(ID)/(TP_NR(ID)+FP_NR(ID))
     Recall_NR(ID)=TP_NR(ID)/(TP_NR(ID)+FN_NR(ID))
-   
-
+    NR_B_Dis(ID) = mean(sum((matchLoc_Target-matchLoc_Source).^2,2).^0.5);
+    NR_B_Dis_Error(ID) = NR_B_Dis(ID)/sqrt(size(matchLoc_Target(:,1),1));
+    
 end
 figure,
 boxplot([Precision_before(:),Precision_TR(:),Precision_R(:),...
-        Precision_A(:),Precision_NR(:)],'Whisker',inf)
-    axis square, box on
+    Precision_A(:),Precision_NR(:)],'Whisker',inf)
+axis square, box on
 figure,
 boxplot([Recall_before(:),Recall_TR(:),Recall_R(:),...
-        Recall_A(:),Recall_NR(:)],'Whisker',inf)
-    axis square, box on
-    
+    Recall_A(:),Recall_NR(:)],'Whisker',inf)
+axis square, box on
 
-    
-    
+% Table 2
+MeanBoutonDistance_Translation = mean(Translation_B_Dis)
+ErrorBoutonDistance_Translation = mean(Translation_B_Dis_Error)
+
+MeanBoutonDistance_Rigid = mean(Rigid_B_Dis)
+ErrorBoutonDistance_Rigid = mean(Rigid_B_Dis_Error)
+
+MeanBoutonDistance_Affine = mean(Affine_B_Dis)
+ErrorBoutonDistance_Affine = mean(Affine_B_Dis_Error)
+
+MeanBoutonDistance_NR = mean(NR_B_Dis)
+ErrorBoutonDistance_NR = mean(NR_B_Dis_Error)
+
 mean(Precision_before(3:end))
 std(Precision_before(3:end))
 mean(Recall_before)
@@ -856,20 +870,20 @@ std(ACC_NR)
 
 figure,
 boxplot([F1_Before(:),F1_TR(:),F1_R(:),...
-        F1_A(:),F1_NR(:)],'Whisker',inf)
-    axis square, box on
+    F1_A(:),F1_NR(:)],'Whisker',inf)
+axis square, box on
 
 figure,
 boxplot([ACC_Before(:),ACC_TR(:),ACC_R(:),...
-        ACC_A(:),ACC_NR(:)],'Whisker',inf)
-    axis square, box on
-    
+    ACC_A(:),ACC_NR(:)],'Whisker',inf)
+axis square, box on
+
 % figure,
 % boxplot([Precision_before(:),Recall_before(:),Precision_TR(:),Recall_TR(:),Precision_R(:),Recall_R(:),...
 %         Precision_A(:),Recall_A(:),Precision_NR(:),Recall_NR(:)],'OutlierSize' ,0.01)
 %     axis square, box on
 % ylim([0 1])
-   
+
 %         SourcePoints_onTrace;
 %         TargetPoints_onTrace;
 %         SourcePoints_onTrace(:,1) = SourcePoints_onTrace(:,1)+TR;
@@ -879,7 +893,7 @@ boxplot([ACC_Before(:),ACC_TR(:),ACC_R(:),...
 %                 HC(i,j) = mean(sum((SourcePoints_onTrace(i,:)-TargetPoints_onTrace(j,:)).^2,2).^0.5);
 %             end
 %         end
-%         
+%
 %         Am = Hungarian_fast(HC,5,5);
 %         [idx1,idx2]=find(Am);
 %         x_Source = SourcePoints_onTrace(idx1,1)-TR;
@@ -890,7 +904,7 @@ boxplot([ACC_Before(:),ACC_TR(:),ACC_R(:),...
 %         z_Target = TargetPoints_onTrace(idx2,3);
 %         matchLoc_Target = [x_Target,y_Target,z_Target];
 %         matchLoc_Source = [x_Source,y_Source,z_Source];
-%         
+%
 %         if ID==1
 %         line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
 %                 [matchLoc_Source(:,1) matchLoc_Target(:,1)]',...
@@ -898,19 +912,19 @@ boxplot([ACC_Before(:),ACC_TR(:),ACC_R(:),...
 %         else
 %          line([matchLoc_Source(:,2) matchLoc_Target(:,2)]', ...
 %                 [matchLoc_Source(:,1)+TR+AddSpace matchLoc_Target(:,1)]',...
-%                 [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', rand(1,3));  
+%                 [1;1]*ones(1,length(matchLoc_Source(:,1))),'Color', rand(1,3));
 %         end
 %         axis equal
-        
-        
-        
-        
 
- tp = 183;
- fp = 1;
- tn = 0;
- fn = 3
-    
+
+
+
+
+tp = 183;
+fp = 1;
+tn = 0;
+fn = 3
+
 
 Precision = tp / (tp+fp)
 Accuracy  = (tp+tn)/(tp+tn+fp+fn)
@@ -926,7 +940,7 @@ TrueNegativeRate = tn / (tn+fp)
 L=[];b=[];Cxyz=[];Grid_start=[];Nxyz=[];
 TR = -600;
 for sourceID = 1: size(StackList,1)-1
-
+    
     targetID = sourceID + 1;
     Global_Matched_Source = Matched{sourceID,targetID}(:,4:6)';
     Global_Matched_Target = Matched{sourceID,targetID}(:,1:3)';
@@ -939,9 +953,9 @@ for sourceID = 1: size(StackList,1)-1
     SourcePoints = B1.r1;
     targetPoints = B1.r2;
     
-%     for j=size(b,2):-1:1
-%     [targetPoints_NR_temp,~]=Perform_Bspline_Transform(targetPoints',[],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
-%     end
+    %     for j=size(b,2):-1:1
+    %     [targetPoints_NR_temp,~]=Perform_Bspline_Transform(targetPoints',[],L{j},b{j},Cxyz{j},Nxyz{j},nxyz,Grid_start{j},affine);
+    %     end
     targetPoints_NR_temp = targetPoints_NR_temp';
     
     fname = dir([GTpath,'Matches\Traces\DL083',T_Names{sourceID},'001-A0*']);
@@ -953,7 +967,7 @@ for sourceID = 1: size(StackList,1)-1
     s = 1;
     for j=1:size(k)
         if f(j)< 3
-%             figure(N);hold on; plot(SourcePoints(j,2)+200,SourcePoints(j,1),'or')
+            %             figure(N);hold on; plot(SourcePoints(j,2)+200,SourcePoints(j,1),'or')
             SourcePoints_onTrace(s,:) = SourcePoints(j,:);
             s = s +1;
         end
@@ -968,14 +982,14 @@ for sourceID = 1: size(StackList,1)-1
     s = 1;
     for j=1:size(k)
         if f(j)< 3
-%             figure(N);hold on; plot(SourcePoints(j,2)+200,SourcePoints(j,1),'or')
+            %             figure(N);hold on; plot(SourcePoints(j,2)+200,SourcePoints(j,1),'or')
             TargetPoints_NR_onTrace(s,:) = targetPoints_NR_temp(j,:);
             s = s +1;
         end
     end
-
     
-%     hold on; PlotAM(AM,Points_NR_temp',color(TraceNum+sourceID,:))
+    
+    %     hold on; PlotAM(AM,Points_NR_temp',color(TraceNum+sourceID,:))
     
     for i=1:size(SourcePoints_onTrace,1)
         for j=1:size(TargetPoints_NR_onTrace,1)
@@ -1000,8 +1014,8 @@ for sourceID = 1: size(StackList,1)-1
         
     end
     axis equal
-
-
+    
+    
 end
 
 
@@ -1014,7 +1028,7 @@ end
 
 for ID = 1: size(StackList,1)
     sourceID = ID - 1;
-    targetID = ID 
+    targetID = ID
     
     
     
@@ -1113,7 +1127,7 @@ end
 
 for i=1:size(SourcePoints_onTrace,1)
     for j=1:size(TargetPoints_NR_onTrace,1)
-    HC(i,j) = mean(sum((SourcePoints_onTrace(i,:)-TargetPoints_NR_onTrace(j,:)).^2,2).^0.5);
+        HC(i,j) = mean(sum((SourcePoints_onTrace(i,:)-TargetPoints_NR_onTrace(j,:)).^2,2).^0.5);
     end
 end
 Am = Hungarian_fast(HC);
@@ -1127,9 +1141,9 @@ z_Target = TargetPoints_NR_onTrace(idx2,3);
 matchLoc_Target = [x_Target,y_Target,z_Target];
 matchLoc_Source = [x_Source,y_Source,z_Source];
 for i=1:size(matchLoc_Source,1)
-figure(N);hold on;line([matchLoc_Source(i,2) matchLoc_Target(i,2)], ...
-                    [matchLoc_Source(i,1) matchLoc_Target(i,1)], 'Color', rand(1,3));    
-
+    figure(N);hold on;line([matchLoc_Source(i,2) matchLoc_Target(i,2)], ...
+        [matchLoc_Source(i,1) matchLoc_Target(i,1)], 'Color', rand(1,3));
+    
 end
 axis equal
 
@@ -1142,9 +1156,9 @@ Path = [GTpath,'Matches\Traces\',fname{TraceNum}];
 % figure(N); hold on; PlotAM(AM,r,color(TraceNum+sourceID-1,:))
 [k,f] = dsearchn(r,SourcePoints);
 for j=1:size(k)
-%     if f(j)< 3
-        figure(N);hold on; plot(SourcePoints(j,2),SourcePoints(j,1),'or')
-%     end
+    %     if f(j)< 3
+    figure(N);hold on; plot(SourcePoints(j,2),SourcePoints(j,1),'or')
+    %     end
 end
 
 fname = dir([GTpath,'Matches\Traces\DL083',T_Names{targetID},'001-A0*']);
@@ -1158,16 +1172,16 @@ r_NR = r_NR';
 [TargetPoints_NR,~]=Perform_Bspline_Transform(TargetPoints',[],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
 TargetPoints_NR = TargetPoints_NR';
 %     mean(mean((BTargetPoints-r_NR).^2,2).^0.5)
-    
-    [k,f] = dsearchn(r_NR,TargetPoints_NR);
-    for j=1:size(k)
-%         if f(j)< 3
-            figure(N);hold on; plot(TargetPoints_NR(j,2),TargetPoints_NR(j,1),'+g')
-%         end
-    end
+
+[k,f] = dsearchn(r_NR,TargetPoints_NR);
+for j=1:size(k)
+    %         if f(j)< 3
+    figure(N);hold on; plot(TargetPoints_NR(j,2),TargetPoints_NR(j,1),'+g')
+    %         end
+end
 for i=1:size(SourcePoints,1)
     for j=1:size(TargetPoints_NR,1)
-    HC(i,j) = mean(sum((SourcePoints(i,:)-TargetPoints_NR(j,:)).^2,2).^0.5);
+        HC(i,j) = mean(sum((SourcePoints(i,:)-TargetPoints_NR(j,:)).^2,2).^0.5);
     end
 end
 Am = Hungarian_fast(HC);
@@ -1181,14 +1195,14 @@ z_Target = TargetPoints_NR(idx2,3);
 matchLoc_Target = [x_Target,y_Target,z_Target];
 matchLoc_Source = [x_Source,y_Source,z_Source];
 for i=1:size(matchLoc_Source,1)
-figure(N);hold on;line([matchLoc_Source(i,2) matchLoc_Target(i,2)], ...
-                    [matchLoc_Source(i,1) matchLoc_Target(i,1)], 'Color', rand(1,3));
-result(i) = mean(sum((matchLoc_Source(i,:)-matchLoc_Target(i,:)).^2,2).^0.5);      
-if result(i)<1
-   x(i,1:2) = [result(i),1];
-else
-    x(i,1:2) = [result(i),0];
-end
+    figure(N);hold on;line([matchLoc_Source(i,2) matchLoc_Target(i,2)], ...
+        [matchLoc_Source(i,1) matchLoc_Target(i,1)], 'Color', rand(1,3));
+    result(i) = mean(sum((matchLoc_Source(i,:)-matchLoc_Target(i,:)).^2,2).^0.5);
+    if result(i)<1
+        x(i,1:2) = [result(i),1];
+    else
+        x(i,1:2) = [result(i),0];
+    end
 end
 % TP =  size(find(result<=3),2);
 % FP =  size(find(result>3),2);
@@ -1243,33 +1257,33 @@ roc(x)
 %     IM=ImportStack(char(Stack_File));
 %     IM = uint8(double(IM)./double(max(IM(:))).*255);
 %     IM_max=max(IM,[],3);
-%     
+%
 %     [KT]=FastMarchingTube(size(IM),r,3,[1,1,1]);
 %     IMmax =  max(uint8(KT).*IM,[],3);
 %     IMmax = imtranslate(IMmax,[200, 0]);
 %     r(:,2) = r(:,2) + 200;
-%     
+%
 %     TR = TR + 50;
 %     IMmax = imtranslate(IMmax,[0, TR]);
 %     r(:,1) = r(:,1) + TR;
-%     
+%
 %     IMAll = max(IMAll,IMmax);
 %     figure(N);imshow(IMAll,[0 20])
-%     
+%
 % %     figure(N); hold on; PlotAM(AM,r,color(TraceNum+i-1,:))
-% %    
+% %
 % %     if i == size(StackList,1)
 % %         B1 = Boutons{i-1,1};
 % %         SourcePoints = B1.r2;
-% %         
+% %
 % %     else
 % %         B1 = Boutons{i,1};
 % %         SourcePoints = B1.r1;
-% %         
+% %
 % %     end
-% %     
+% %
 % %     SourcePoints(:,2)+TR;
-% %     
+% %
 % %     [k,f] = dsearchn(r,SourcePoints);
 % %     for j=1:size(k)
 % %         if f(j)< 3

@@ -21,12 +21,13 @@ function registeration (varargin)
 % -------------------------------------------------------------------------
 % blendingSID,handles
 
-StackList_csv_pth = varargin{1};
-TransformationValue = varargin{2};
-Seq_Par = varargin{3};
-Par_workers = varargin{4};
+DBAddress = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
 if size(varargin,2)==6
     GUI=true;
+    StackList_csv_pth = varargin{1};
+    TransformationValue = varargin{2};
+    Seq_Par = varargin{3};
+    Par_workers = varargin{4};
     blendingSID = varargin{5};
     handles = varargin{6};
     runFeatureExtraction = handles.checkbox3.Value;
@@ -42,10 +43,15 @@ if size(varargin,2)==6
     mu = 1020;
 elseif size(varargin,2)==5
     GUI=false;
-    runFeatureExtraction = 0;
-    runFeatureMatching = 0;
+    runFeatureExtraction = 1;
+    runFeatureMatching = 1;
     runGlobalOpt = 1;
-    TyoeOfRegistration = 1; %MouseLight
+    
+    StackList_csv_pth = varargin{1};
+    TransformationValue = varargin{2};
+    Seq_Par = varargin{3}; 
+    TyoeOfRegistration = varargin{4}; %MouseLight
+    
     outputType = 2; % use NCTracerDB
     runBlending = 0;
     runRetilling = 1;
@@ -54,6 +60,26 @@ elseif size(varargin,2)==5
     v = 0;
     listbox_log = 0;
     Par_workers = 6;
+elseif size(varargin,2)==11
+    GUI=false;
+    StackList_csv_pth = varargin{1};
+    TransformationValue = varargin{2};
+    Seq_Par = varargin{3}; 
+    TyoeOfRegistration = varargin{4}; 
+    mu = varargin{5};
+    runFeatureExtraction = varargin{6};
+    runFeatureMatching = varargin{7};
+    runGlobalOpt = varargin{8};
+    runRetilling = varargin{9};
+    outputType = varargin{10};
+    DBAddress = varargin{11};
+    
+    runBlending = 0;
+    debug = 0; 
+    v = 0;
+    listbox_log = 0;
+    Par_workers = 6;
+    
 else
     error('Number of inputs to the registration function must equal 4 or 6.')
 end
@@ -362,7 +388,7 @@ if exist(StackList_csv_pth,'file') > 0
         end
         
         tic
-        Retiling({StackList{:,1}},StackPositions_pixels,StackSizes_pixels,T,DataFolder,outputType,Seq_Par,Par_workers);
+        Retiling({StackList{:,1}},StackPositions_pixels,StackSizes_pixels,T,DataFolder,outputType,Seq_Par,Par_workers,DBAddress);
         RetilingTime = toc
         
     end
@@ -372,7 +398,7 @@ if exist(StackList_csv_pth,'file') > 0
         NumTiles = inf;
         
         while NumTiles > 1
-            NumTiles = CreateZoomLevels(ZL,DataFolder,outputType);
+            NumTiles = CreateZoomLevels(ZL,DataFolder,outputType,DBAddress);
             ZL = ZL * 2;
         end
     end

@@ -37,7 +37,7 @@ showTranceonImage = 0;
 
 
 
-mu = 0:20:2000; %0:10:4000; %
+mu = 1000:1000:5*10^7; %0:10:4000; %
 
 Dis_NonRigid_voxelall = [];
 CutLength=100;
@@ -79,7 +79,7 @@ for ID = 1
     %         BoutonsDistanceOriginal = mean(mean((BTargetPoints-BSourcePoints).^2,2).^0.5)
     %
     
-    for i=1:size(fname_First,1)
+    for i=1:size(fname_First,1)-21
         sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083B001-A001.swc';
         targetPath = [GTpath,'Matches\Traces\',fname_Second{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083C001-A001.swc';
         
@@ -336,6 +336,9 @@ figure(3)
     box on
     plot([mu(1),mu(end)],(mean(TraceDistancesOriginal)-5.5).*[1,1],'r-')
 
+    
+mean(TraceDistancesAffine)
+mean(TraceDistancesNR)
 % boxplot([TraceDistancesOriginal(:),TraceDistancesTranslation(:),TraceDistancesRigid(:),...
 %         TraceDistancesAffine(:),TraceDistancesNR(:)],'OutlierSize' ,0)
 %     axis square, box on

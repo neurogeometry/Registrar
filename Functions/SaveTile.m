@@ -25,6 +25,27 @@ elseif usedDB == 2
     options.overwrite = 1;
     saveastiff(Tile, [SaveFolder,TileName,'/',TileName,'.tif'],options);
     
+    %     % for save as JPEG (separated z) for Joe
+    %     for i=1:size(Tile,3)
+    %         TileName1=[num2str(TilePositions(1)),'_',num2str(TilePositions(2)),'_',num2str(TilePositions(3)+i-1)];
+    %         imwrite(Tile(:,:,i),[SaveFolder,TileName,'/',TileName1,'.jpg'],'jpg');
+    %     end
+    
+
+    % for save as JPEG (Like Neuroglancer) for Joe
+    C1 = permute(Tile,[1 3 2]);
+    Tile_glancer1 = reshape(C1,[],size(Tile,2),1);
+    xstart1 = TilePositions(2)-1;
+    xend1 = xstart1+size(Tile,1);
+    ystart1 = TilePositions(1)-1;
+    yend1 = ystart1+size(Tile,2);
+    zstart1 = TilePositions(3)-1;
+    zend1 = zstart1+size(Tile,3);
+    TileName1 = [num2str(xstart1),'-',num2str(xend1),'_',num2str(ystart1),'-',num2str(yend1),'_',num2str(zstart1),'-',num2str(zend1)];
+    %                 saveastiff(im2uint8(Tile_glancer), [SaveFolder,'image/',TileName]);
+    SaveFolder1 = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-Neocortical2_StackList\forJoe\Zoom1\';
+    imwrite(Tile_glancer1,[SaveFolder1,TileName1,'.jpg'],'jpg');
+    
     disp(['Tile ',TileName,' created.']);
 elseif usedDB == 3 % Neuroglancer
     %                 TileName=num2str(i,['%0',num2str(fix(log10(prod(N_tiles)))+1),'.0f']);
