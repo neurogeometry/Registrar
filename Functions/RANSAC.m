@@ -29,7 +29,7 @@ elseif TransformationValue == 2 % Rigid
 elseif TransformationValue == 3 % Affine
     NumRandPoints = 2;
     MaxNumSamples=10^5;
-    MaxNumMatches=inf;
+    MaxNumMatches=10; % inf
     MaxErrorDistance = 2;
     InlierRatio = 0.20;
 elseif TransformationValue == 4 % Non-Rigid
@@ -43,7 +43,7 @@ elseif TransformationValue == 4 % Non-Rigid
     nxyz = [256;256;156];
 %     Nxyz = ceil((Maximum-Minimum)./nxyz');
     affine = 1;
-    InlierRatio = 0.20;
+    InlierRatio = 0.05; % 0.10
 %     mu = 1;
 end
 
@@ -59,7 +59,7 @@ end
 
 NumCorrectHungarian = ceil(InlierRatio*NumAllMatches);
 MaxNumMatches=max(MaxNumMatches,NumCorrectHungarian);
-MaxNumMatches=min(MaxNumMatches,NumAllMatches)
+MaxNumMatches=min(MaxNumMatches,NumAllMatches);
 
 
 

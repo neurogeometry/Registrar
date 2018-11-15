@@ -29,7 +29,7 @@ if nnz(StackStart1<=StackEnd1)==3
     ind=(Temp1>0 & Temp2>0);
     
     CC=corrcoef(double(Temp1(ind)),double(Temp2(ind)));
-    CC=CC(1,2);
+    CC=abs(CC(1,2));
 else
     CC=NaN;
 end

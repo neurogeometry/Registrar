@@ -155,7 +155,7 @@ if exist(StackList_csv_pth,'file') > 0
     
     % This part is not fixed yet, should be based on correct positions from csv
     % file
-    if strfind(char(StackList_csv_pth),'MouseLight') > 0%strfind(char(StackList(1,1)),'ngc') > 0
+    if TyoeOfRegistration == 1%strfind(char(StackList_csv_pth),'MouseLight') > 0%strfind(char(StackList(1,1)),'ngc') > 0
         temp=StackPositions_pixels;
         StackPositions_pixels(:,1) = max(temp(:,2))-temp(:,2);
         StackPositions_pixels(:,2) = max(temp(:,1))-temp(:,1);

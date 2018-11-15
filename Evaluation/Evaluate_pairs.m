@@ -4,11 +4,11 @@ clear all;
 % clc;
 addpath ('NeuronTracerV20');
 addpath ('C:\Users\Seyed\Documents\DatasetTests\GUI\NCT_Registration\Functions');
-CalculateOtherMEthods = 1;
+CalculateOtherMEthods = 0;
 usePoints = 0;
 % DatasetList = {'Holtmaat','Neuromuscular','Neocortical_1','MouseLight','Visual'};
 showCorr = 0;
-DatasetList = {'MouseLight'};
+DatasetList = {'Visual'};
 doCorrelation = 1;
 CSVData = 'C:\Users\Seyed\Documents\NeurogeometryLab\NeurogeometryLab\Seyed\Evaluation\data\evaluation\';
 db = 1;
@@ -67,7 +67,7 @@ for Dataset = DatasetList
         pixelSize = [0.377607421875 0.277486979166667 0.99601593625498];
         load('data/StackData.mat');
         Dataset = 'MouseLight';
-        pad = [0 30 0];
+        pad = [0 60 0];
         
         Evaluation_csv_pth = [CSVData,'MouseLight\MouseLight_Evaluation.csv'];
         ResultFolder = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-MouseLight_StackList\';
@@ -98,7 +98,7 @@ for Dataset = DatasetList
     Transformation_A = load([ResultFolder,'T_Affine.mat']);
     EvaluationInfo = table2cell(readtable(Evaluation_csv_pth,'Delimiter',','));
     
-    for k = 1: size(EvaluationInfo,1)
+    for k = 3: size(EvaluationInfo,1)
         sourceID = EvaluationInfo{k,1};
         targetID = EvaluationInfo{k,2};
         
@@ -359,4 +359,36 @@ for Dataset = DatasetList
     end
 
 end
+
+
+
+
+
+
+% for correlation
+M_Old1 = M_Old(db,:,3)';
+M_Translation1 = M_Translation(db,:,3);
+M_Rigid1 = M_Rigid(db,:,3);
+M_Affine1 = M_Affine(db,:,3)';
+M_NonRigid1 = M_NonRigid(db,:,3)';
+
+
+
+
+% matrix = [M_Old1';M_Translation1';M_Rigid1';M_Affine1';M_NonRigid1']'
+
+% figure,
+% errorbar(1:size(matrix,2),mean(matrix),std(matrix,[],1)/sqrt(size(matrix,1)),'.')
+% axis square, xlim([0,size(matrix,2)+1])
+
+mean(M_Old1)
+mean(M_Translation1)
+mean(M_Rigid1)
+mean(M_Affine1)
+mean(M_NonRigid1)
+
+figure,hold on
+boxplot([M_Old1(:),M_Translation1(:),M_Rigid1(:),...
+    M_Affine1(:),M_NonRigid1(:)],'Whisker',inf)
+axis square, box on
 

@@ -33,7 +33,7 @@ Transformation_A = load([ResultFolder,'T_Affine.mat']);
 EvaluationInfo = table2cell(readtable(Evaluation_csv_pth,'Delimiter',','));
 mm=1;
 numTraces = 0;
-for k = 1: size(EvaluationInfo,1)
+for k = 1%1: size(EvaluationInfo,1)
     sourceID = EvaluationInfo{k,1};
     targetID = EvaluationInfo{k,2};
     
@@ -110,46 +110,58 @@ for k = 1: size(EvaluationInfo,1)
     [Distances_Rigid_um,Distances_Rigid_voxel] = TraceDistance(AM_Source, r_Source_Rigid, AM_Target, r_Target_Rigid,pixelSize,0);
     Rigid_voxel = mean(Distances_Rigid_voxel);
     Rigid_um = mean(Distances_Rigid_um);
-    
-    % Affine
-    if usePoints
+    mu = 2500;
+    kk = 1;
+    for mu = [0,2.^(0:0.5:50)]%1:100:5000
+        % Affine
+        if usePoints
+            Global_Matched_Source = FeaturePositions_A.Matched{sourceID,targetID}(:,1:3)'+Source_StackPositions'-1;
+            Global_Matched_Target = FeaturePositions_A.Matched{sourceID,targetID}(:,4:6)'+Target_StackPositions'-1;
+            [~,L,b]=Optimal_Affine_Transform(Global_Matched_Source,Global_Matched_Target,mu);
+            r_Source_Affine = (L*(r_Source+Source_StackPositions-1)'+b)';
+            r_Target_Affine = r_Target+Target_StackPositions-1;
+        else
+            b = Transformation_A.T.b;
+            L_source = Transformation_A.T.L(:,(3*sourceID)-2:3*sourceID);
+            L_target = Transformation_A.T.L(:,(3*targetID)-2:3*targetID);
+            
+            r_Source_Affine = (L_source*(r_Source+Source_StackPositions-1)'+b(:,sourceID))';
+            r_Target_Affine = (L_target*(r_Target+Target_StackPositions-1)'+b(:,targetID))';
+            
+            Global_Matched_Source = FeaturePositions_A.Matched{sourceID,targetID}(:,1:3)'+Source_StackPositions'-1;
+            Global_Matched_Target = FeaturePositions_A.Matched{sourceID,targetID}(:,4:6)'+Target_StackPositions'-1;
+            
+            [~,L_source,b]=Optimal_Affine_Transform(Global_Matched_Source,Global_Matched_Target,mu);
+            r_Source_Affine = (L_source*(r_Source+Source_StackPositions-1)'+b)';
+            r_Target_Affine = r_Target+Target_StackPositions-1;
+            
+        end
+        
+        [Distances_Affine_um,Distances_Affine_voxel] = TraceDistance(AM_Source, r_Source_Affine, AM_Target, r_Target_Affine,pixelSize,0);
+        
+        Affine_voxel(kk) = mean(Distances_Affine_voxel);
+        Affine_um = mean(Distances_Affine_um);
+        
+        % AffineNonRigid
         Global_Matched_Source = FeaturePositions_A.Matched{sourceID,targetID}(:,1:3)'+Source_StackPositions'-1;
         Global_Matched_Target = FeaturePositions_A.Matched{sourceID,targetID}(:,4:6)'+Target_StackPositions'-1;
         [~,L,b]=Optimal_Affine_Transform(Global_Matched_Source,Global_Matched_Target,mu);
+        b = b  - 0.5;
         r_Source_Affine = (L*(r_Source+Source_StackPositions-1)'+b)';
         r_Target_Affine = r_Target+Target_StackPositions-1;
-    else
-        b = Transformation_A.T.b;
-        L_source = Transformation_A.T.L(:,(3*sourceID)-2:3*sourceID);
-        L_target = Transformation_A.T.L(:,(3*targetID)-2:3*targetID);
-        r_Source_Affine = (L_source*(r_Source+Source_StackPositions-1)'+b(:,sourceID))';
-        r_Target_Affine = (L_target*(r_Target+Target_StackPositions-1)'+b(:,targetID))';
+        
+        N_L=1;
+        temp = (L*Global_Matched_Source+b);
+        Min=min([min(temp,[],2),min(Global_Matched_Target,[],2)],[],2);
+        Max=max([max(temp,[],2),max(Global_Matched_Target,[],2)],[],2);
+        [~,XYZlmn,N_L,Min,Max]=Optimal_Nonrigid_Transform(temp,Global_Matched_Target,N_L,Min,Max);
+        r_Source_Affine=Perform_Nonrigid_Transform(r_Source_Affine',XYZlmn,N_L,Min,Max)';
+        [Distances_AffineNonRigid_um,Distances_AffineNonRigid_voxel] = TraceDistance(AM_Source, r_Source_Affine, AM_Target, r_Target_Affine,pixelSize,0);
+        
+        AffineNonRigid_voxel(kk) = mean(Distances_AffineNonRigid_voxel);
+        AffineNonRigid_um = mean(Distances_AffineNonRigid_um);
+        kk = kk + 1;
     end
-    
-    [Distances_Affine_um,Distances_Affine_voxel] = TraceDistance(AM_Source, r_Source_Affine, AM_Target, r_Target_Affine,pixelSize,0);
-    
-    Affine_voxel = mean(Distances_Affine_voxel);
-    Affine_um = mean(Distances_Affine_um);
-    mu = 2500;
-    % AffineNonRigid
-    Global_Matched_Source = FeaturePositions_A.Matched{sourceID,targetID}(:,1:3)'+Source_StackPositions'-1;
-    Global_Matched_Target = FeaturePositions_A.Matched{sourceID,targetID}(:,4:6)'+Target_StackPositions'-1;
-    [~,L,b]=Optimal_Affine_Transform(Global_Matched_Source,Global_Matched_Target,mu);
-    b = b  - 0.5;
-    r_Source_Affine = (L*(r_Source+Source_StackPositions-1)'+b)';
-    r_Target_Affine = r_Target+Target_StackPositions-1;
-    
-    N_L=1;
-    temp = (L*Global_Matched_Source+b);
-    Min=min([min(temp,[],2),min(Global_Matched_Target,[],2)],[],2);
-    Max=max([max(temp,[],2),max(Global_Matched_Target,[],2)],[],2);
-    [~,XYZlmn,N_L,Min,Max]=Optimal_Nonrigid_Transform(temp,Global_Matched_Target,N_L,Min,Max);
-    r_Source_Affine=Perform_Nonrigid_Transform(r_Source_Affine',XYZlmn,N_L,Min,Max)';
-    [Distances_AffineNonRigid_um,Distances_AffineNonRigid_voxel] = TraceDistance(AM_Source, r_Source_Affine, AM_Target, r_Target_Affine,pixelSize,0);
-    
-    AffineNonRigid_voxel = mean(Distances_AffineNonRigid_voxel);
-    AffineNonRigid_um = mean(Distances_AffineNonRigid_um);
-    
     showTraces = 0;
     r_Source_old = r_Source + [StackPositions_pixels(sourceID,1),StackPositions_pixels(sourceID,2),StackPositions_pixels(sourceID,3)]-1;
     r_Target_old = r_Target + [StackPositions_pixels(targetID,1),StackPositions_pixels(targetID,2),StackPositions_pixels(targetID,3)]-1;
@@ -210,7 +222,7 @@ for k = 1: size(EvaluationInfo,1)
     
     [M_Old(k,1),M_Translation(k,1),M_Rigid(k,1),M_Affine(k,1),M_NonRigid(k,1),M_Fiji(k,1),M_XUV(k,1),M_Tera(k,1)]
     [M_Old(k,2),M_Translation(k,2),M_Rigid(k,2),M_Affine(k,2),M_NonRigid(k,2),M_Fiji(k,2),M_XUV(k,2),M_Tera(k,2)]
-
+    
 end
 All_voxels(:) = [mean(M_Old(:,1)),mean(M_Translation(:,1)),mean(M_Rigid(:,1)),mean(M_Affine(:,1)),mean(M_NonRigid(:,1)),mean(M_Fiji(:,1)),mean(M_XUV(:,1)),mean(M_Tera(:,1))]
 All_um(:) = [mean(M_Old(:,2)),mean(M_Translation(:,2)),mean(M_Rigid(:,2)),mean(M_Affine(:,2)),mean(M_NonRigid(:,2)),mean(M_Fiji(:,2)),mean(M_XUV(:,2)),mean(M_Tera(:,2))];
@@ -245,3 +257,14 @@ boxplot([M_Old1(:),M_Translation1(:),M_Rigid1(:),...
     M_Affine1(:),M_NonRigid1(:)],'Whisker',inf)
 axis square, box on
 ylim([0 10])
+
+
+figure(3),hold on
+plot(Affine_voxel(:),'b-')
+hold on
+plot(AffineNonRigid_voxel(:),'g-')
+plot([1,size(Affine_voxel(:),1)],mean(M_Old(:,1)).*[1,1],'r-')
+plot([1,size(Affine_voxel(:),1)],mean(M_Translation(:,1)).*[1,1],'m-')
+plot([1,size(Affine_voxel(:),1)],mean(M_Rigid(:,1)).*[1,1],'c-')
+
+

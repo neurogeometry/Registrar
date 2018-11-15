@@ -93,11 +93,11 @@ for i = 2:size(StackList,1)
 end
 % figure,imshow(max(StackRegistered_Affine,[],3),[0 100]);title('Affine');
 k = 0;
-mult = 600;
+mult = 400;
 for j = 90:size(StackRegistered_Affine,3)-1
     
     k = k + 1;
-    figure(k),imshowpair(uint16(Stack(:,:,j)).*mult,uint16(Stack(:,:,j+1)).*mult,'Scaling','independent')
+    figure(k),imshowpair(uint16(Stack(:,:,j+1)).*mult,uint16(Stack(:,:,j)).*mult,'Scaling','independent')
     k = k + 1;
     figure(k),imshowpair(StackRegistered_Affine(:,:,j).*mult,StackRegistered_Affine(:,:,j+1).*mult,'Scaling','independent')
 
@@ -114,8 +114,8 @@ for i = 1:size(StackList,1)
     
     IM = imread(char(StackList(i,1)));
 %     Stack(:,:,i) = IM; 
-    [IMs{i},StackPosition_registered(i,:)]=Perform_Linear_Transform(IM,[1,1,1],T_Affine.T.L(:,3*(i-1)+1:3*(i-1)+3),T_Affine.T.b(:,i));
-    Sizes(i,:)=[size(IMs{i}),1];
+%     [IMs{i},StackPosition_registered(i,:)]=Perform_Linear_Transform(IM,[1,1,1],T_Affine.T.L(:,3*(i-1)+1:3*(i-1)+3),T_Affine.T.b(:,i));
+%     Sizes(i,:)=[size(IMs{i}),1];
     
     
     

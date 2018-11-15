@@ -71,27 +71,27 @@ IM_source_max=max(IM_Source,[],3);
 IM_target_max=max(IM_Target,[],3);
 
 %% Show All Traces  ----------------- Fig 1. A
-% N = N + 1;
-% figure(N);imshow(IM_source_max,[0 50]);
-% N = N + 1;
-% figure(N);imshow(IM_target_max,[0 50]);
-% for i=1:size(fname_First,1)
-%     % Using Trace
-%
-%     sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];
-%     targetPath = [GTpath,'Matches\Traces\',fname_Second{i}];
-%
-%     [AM_Source,r_Source,R_Source]=swc2AM(sourcePath);
-%     [AM_Target,r_Target,R_Target]=swc2AM(targetPath);
-%     [AM_Source,r_Source,~] = AdjustPPM(AM_Source,r_Source,R_Source,ppm);
-%     [AM_Target,r_Target,~] = AdjustPPM(AM_Target,r_Target,R_Target,ppm);
-%
-%     figure(N-1);hold on; PlotAM(AM_Source,r_Source,color(i,:))
-%     text(r_Source(round(size(r_Source,1)/3),2),r_Source(round(size(r_Source,1)/3),1),['Axon #',num2str(i)],'Color',color(i,:))
-%     figure(N);hold on; PlotAM(AM_Target,r_Target,color(i,:))
-%     text(r_Target(round(size(r_Target,1)/3),2),r_Target(round(size(r_Target,1)/3),1),['Axon #',num2str(i)],'Color',color(i,:))
-%
-% end
+N = N + 1;
+figure(N);imshow(IM_source_max,[0 50]);
+N = N + 1;
+figure(N);imshow(IM_target_max,[0 50]);
+for i=1:size(fname_First,1)
+    % Using Trace
+
+    sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];
+    targetPath = [GTpath,'Matches\Traces\',fname_Second{i}];
+
+    [AM_Source,r_Source,R_Source]=swc2AM(sourcePath);
+    [AM_Target,r_Target,R_Target]=swc2AM(targetPath);
+    [AM_Source,r_Source,~] = AdjustPPM(AM_Source,r_Source,R_Source,ppm);
+    [AM_Target,r_Target,~] = AdjustPPM(AM_Target,r_Target,R_Target,ppm);
+
+    figure(N-1);hold on; PlotAM(AM_Source,r_Source,color(i,:))
+    text(r_Source(round(size(r_Source,1)/3),2),r_Source(round(size(r_Source,1)/3),1),['Axon #',num2str(i)],'Color',color(i,:))
+    figure(N);hold on; PlotAM(AM_Target,r_Target,color(i,:))
+    text(r_Target(round(size(r_Target,1)/3),2),r_Target(round(size(r_Target,1)/3),1),['Axon #',num2str(i)],'Color',color(i,:))
+
+end
 
 % %% Show One Trace  ----------------- Fig 1. B
 % TraceNum = 2;

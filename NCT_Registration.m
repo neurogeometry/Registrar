@@ -112,7 +112,9 @@ blendingSID = str2double(get(handles.edit15,'String'));
 StackList_csv_pth = get(handles.edt_stacklist,'String');
 addpath('Functions');
 parameters;
+tic
 registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles)
+TotalTime = toc
 
 
 

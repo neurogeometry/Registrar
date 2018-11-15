@@ -37,7 +37,8 @@ showTranceonImage = 0;
 
 
 
-mu = 1000:1000:5*10^7; %0:10:4000; %
+% mu = 1000:1000:5*10^7; %0:10:4000; %
+mu = [0,2.^(0:0.5:25)]; %0:10:4000; % 
 
 Dis_NonRigid_voxelall = [];
 CutLength=100;
@@ -61,7 +62,7 @@ xlabel('\mu');
 hold on
 drawnow
 
-for ID = 1
+for ID = 1:12
     sourceID = ID ;
     targetID = sourceID + 1;
     Global_Matched_Source = FeaturePositions_NR.Matched{sourceID,targetID}(:,1:3)';
@@ -79,14 +80,14 @@ for ID = 1
     %         BoutonsDistanceOriginal = mean(mean((BTargetPoints-BSourcePoints).^2,2).^0.5)
     %
     
-    for i=1:size(fname_First,1)-21
+    for i=1:size(fname_First,1)%-21[1,3,5,14,20]%
         sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083B001-A001.swc';
         targetPath = [GTpath,'Matches\Traces\',fname_Second{i}];%'E:\Datasets\TimeLaps\Matches\Traces\DL083C001-A001.swc';
         
-        [AM_Source_temp,r_Source_temp,~]=swc2AM(sourcePath);
-        [AM_Target_temp,r_Target_temp,~]=swc2AM(targetPath);
-        [AM_Source_temp,r_Source_temp,~] = AdjustPPM(AM_Source_temp,r_Source_temp,zeros(size(r_Source_temp,1),1),ppm);
-        [AM_Target_temp,r_Target_temp,~] = AdjustPPM(AM_Target_temp,r_Target_temp,zeros(size(r_Target_temp,1),1),ppm);
+        [AM_Source_temp,r_Source_temp,~]=swc2AM_fast(sourcePath);
+        [AM_Target_temp,r_Target_temp,~]=swc2AM_fast(targetPath);
+        [AM_Source_temp,r_Source_temp,~] = AdjustPPM_fast(AM_Source_temp,r_Source_temp,zeros(size(r_Source_temp,1),1),ppm);
+        [AM_Target_temp,r_Target_temp,~] = AdjustPPM_fast(AM_Target_temp,r_Target_temp,zeros(size(r_Target_temp,1),1),ppm);
         
         SourcePoints{i} = r_Source_temp;
         TargetPoints{i} = r_Target_temp;
@@ -153,11 +154,7 @@ for ID = 1
         % --------------------------------------------------- End Fiji
         
     end
-    plot([mu(1),mu(end)],mean(TraceDistancesOriginal).*[1,1],'r-')
-    plot([mu(1),mu(end)],mean(TraceDistancesTranslation).*[1,1],'m-')
-    plot([mu(1),mu(end)],mean(TraceDistancesRigid).*[1,1],'c-')
-%     plot([mu(1),mu(end)],mean(TraceDistancesAffine).*[1,1],'k-')
-    drawnow
+  
     TraceDistancesNR = [];
     TraceDistancesAffine = [];
     for nummu = 1:size(mu,2)
@@ -204,7 +201,7 @@ for ID = 1
         
         
         
-        for i=1:size(fname_First,1)-21
+        for i=1:size(fname_First,1)%-21[1,3,5,14,20]%
 
             [SourcePoints_Affine_temp,~]=Perform_Linear_Transform(SourcePoints{i},[],LAffine,bAffine);
         
@@ -264,26 +261,26 @@ for ID = 1
 %         plot(mu(nummu),mean(TraceDistancesAffine(nummu,sourceID,:),3),'k*')
 %         plot(mu(nummu),mean(TraceDistancesNR(nummu,sourceID,:),3),'b*')
 %         drawnow
-    plot(mean(TraceDistancesAffine(:,ID,:),3),'r-')
-    plot(mean(TraceDistancesNR(:,ID,:),3),'b-')
-    drawnow
+%     plot(mean(TraceDistancesAffine(:,ID,:),3),'r-')
+%     plot(mean(TraceDistancesNR(:,ID,:),3),'b-')
+%     drawnow
     % --------------------------------------------------- End Trace
     end
-    figure(2)
-    ylabel({'Distance in Pixels',''});
-    xlabel('\mu');
-    % xlim([0 max(mu)])
-     ylim([0 5])
-    hold on
-    drawnow
-    plot(mu(:),mean(TraceDistancesAffine(:,ID,:),3),'b-')
-    plot(mu(:),mean(TraceDistancesNR(:,ID,:),3),'g-')
-%     plot([mu(1),mu(end)],mean(TraceDistancesOriginal).*[1,1],'r-')
-    plot([mu(1),mu(end)],mean(TraceDistancesTranslation).*[1,1],'m-')
-    plot([mu(1),mu(end)],mean(TraceDistancesRigid).*[1,1],'c-')
-    axis square 
-    box on
-    plot([mu(1),mu(end)],(mean(TraceDistancesOriginal)-5.5).*[1,1],'r-')
+%     figure(2)
+%     ylabel({'Distance in Pixels',''});
+%     xlabel('\mu');
+%     % xlim([0 max(mu)])
+%      ylim([0 5])
+%     hold on
+%     drawnow
+%     plot(mu(:),mean(TraceDistancesAffine(:,ID,:),3),'b-')
+%     plot(mu(:),mean(TraceDistancesNR(:,ID,:),3),'g-')
+% %     plot([mu(1),mu(end)],mean(TraceDistancesOriginal).*[1,1],'r-')
+%     plot([mu(1),mu(end)],mean(TraceDistancesTranslation).*[1,1],'m-')
+%     plot([mu(1),mu(end)],mean(TraceDistancesRigid).*[1,1],'c-')
+%     axis square 
+%     box on
+%     plot([mu(1),mu(end)],(mean(TraceDistancesOriginal)-5.5).*[1,1],'r-')
     
 %     figure,hold on
 %     xx=[0.5:1:13.5];
@@ -317,128 +314,24 @@ xlabel('\mu');
 hold on
 drawnow
 
-plot([mu(1),mu(end)],mean(TraceDistancesOriginal).*[1,1],'r-')
-    plot([mu(1),mu(end)],mean(TraceDistancesTranslation).*[1,1],'m-')
-    plot([mu(1),mu(end)],mean(TraceDistancesRigid).*[1,1],'c-')
+% plot([mu(1),mu(end)],mean(TraceDistancesOriginal).*[1,1],'r-')
+%     plot([mu(1),mu(end)],mean(TraceDistancesTranslation).*[1,1],'m-')
+%     plot([mu(1),mu(end)],mean(TraceDistancesRigid).*[1,1],'c-')
+ID = 2;
 figure(3)
-    ylabel({'Distance in Pixels',''});
-    xlabel('\mu');
-    % xlim([0 max(mu)])
-     ylim([0 5])
-    hold on
-    drawnow
-    plot(mu(:),mean(TraceDistancesAffine(:,ID,:),3),'b-')
-    plot(mu(:),mean(TraceDistancesNR(:,ID,:),3),'g-')
+ylabel({'Distance in Pixels',''});
+xlabel('\mu');
+% xlim([0 max(mu)])
+ylim([0 17])
+hold on
+drawnow
+plot([0,log2(mu(2:end))],mean(TraceDistancesAffine(:,ID,:),3),'b-')
+plot([0,log2(mu(2:end))],mean(TraceDistancesNR(:,ID,:),3),'g-')
 %     plot([mu(1),mu(end)],mean(TraceDistancesOriginal).*[1,1],'r-')
-    plot([mu(1),mu(end)],mean(TraceDistancesTranslation).*[1,1],'m-')
-    plot([mu(1),mu(end)],mean(TraceDistancesRigid).*[1,1],'c-')
-    axis square 
-    box on
-    plot([mu(1),mu(end)],(mean(TraceDistancesOriginal)-5.5).*[1,1],'r-')
+plot([0,log2(mu(end))],mean(TraceDistancesTranslation(ID,:)).*[1,1],'m-')
+plot([0,log2(mu(end))],mean(TraceDistancesRigid(ID,:)).*[1,1],'c-')
+axis square
+box on
+plot([0,log2(mu(end))],(mean(TraceDistancesOriginal(ID,:))).*[1,1],'r-')
 
     
-mean(TraceDistancesAffine)
-mean(TraceDistancesNR)
-% boxplot([TraceDistancesOriginal(:),TraceDistancesTranslation(:),TraceDistancesRigid(:),...
-%         TraceDistancesAffine(:),TraceDistancesNR(:)],'OutlierSize' ,0)
-%     axis square, box on
-% ylim([0 20])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-% % Trnslation
-%         Global_Matched_Source = FeaturePositions_T.Matched{SourceID,TargetID}(:,1:3)';
-%         Global_Matched_Target = FeaturePositions_T.Matched{SourceID,TargetID}(:,4:6)';
-%         b=Optimal_Translation_Transform(Global_Matched_Source,Global_Matched_Target);
-%
-%         SourcePoints_TranslationPairs = SourcePoints+b';
-%         TargetPoints_TranslationPairs = TargetPoints;
-%
-%         if useTrace
-%             [Distances_Translation,~] = TraceDistance(AM_Source, SourcePoints_TranslationPairs, AM_Target, TargetPoints_TranslationPairs,pixelSize,0);
-%             D_Translation = mean(Distances_Translation)
-%         else
-%             D_Translation = mean(mean((SourcePoints_TranslationPairs-TargetPoints_TranslationPairs).^2,1).^0.5)
-%         end
-%
-%         % Rigid
-%         Global_Matched_Source = FeaturePositions_R.Matched{SourceID,TargetID}(:,1:3)';
-%         Global_Matched_Target = FeaturePositions_R.Matched{SourceID,TargetID}(:,4:6)';
-%         [R,b]=Optimal_Rigid_Transform(Global_Matched_Source,Global_Matched_Target);
-%
-%         SourcePoints_Rigid = (R*(SourcePoints)'+b)';
-%         TargetPoints_Rigid = TargetPoints;
-%         if useTrace
-%             [Distances_Rigid,~] = TraceDistance(AM_Source, SourcePoints_Rigid, AM_Target, TargetPoints_Rigid,pixelSize,0);
-%             D_Rigid = mean(Distances_Rigid)
-%         else
-%             D_Rigid = mean(mean((SourcePoints_Rigid-TargetPoints_Rigid).^2,1).^0.5)
-%         end
-%
-%         % Affine
-%         Global_Matched_Source = FeaturePositions_A.Matched{SourceID,TargetID}(:,1:3)';
-%         Global_Matched_Target = FeaturePositions_A.Matched{SourceID,TargetID}(:,4:6)';
-%         [L,b]=Optimal_Affine_Transform(Global_Matched_Source,Global_Matched_Target);
-%
-%         SourcePoints_Affine = (L*(SourcePoints)'+b)';
-%         TargetPoints_Affine = TargetPoints;
-%         if useTrace
-%             [Distances_Affine,~] = TraceDistance(AM_Source, SourcePoints_Affine, AM_Target, TargetPoints_Affine,pixelSize,0);
-%             D_Affine = mean(Distances_Affine)
-%         else
-%             D_Affine = mean(mean((SourcePoints_Affine-TargetPoints_Affine).^2,1).^0.5)
-%         end
-%
-%
-%
-%         % AffineNonRigid
-%         Global_Matched_Source = FeaturePositions_A.Matched{SourceID,TargetID}(:,1:3)';
-%         Global_Matched_Target = FeaturePositions_A.Matched{SourceID,TargetID}(:,4:6)';
-%         [L,b]=Optimal_Affine_Transform(Global_Matched_Source,Global_Matched_Target);
-%
-%         SourcePoints_Affine = (L*(SourcePoints)'+b)';
-%         TargetPoints_Affine = TargetPoints;
-%
-%         N_L=3;
-%         temp = (L*Global_Matched_Source+b);
-%         Min=min([min(temp,[],2),min(Global_Matched_Target,[],2)],[],2);
-%         Max=max([max(temp,[],2),max(Global_Matched_Target,[],2)],[],2);
-%         [~,XYZlmn,N_L,Min,Max]=Optimal_Nonrigid_Transform(temp,Global_Matched_Target,N_L,Min,Max);
-%         SourcePoints_Affine=Perform_Nonrigid_Transform(SourcePoints_Affine',XYZlmn,N_L,Min,Max)';
-%         if useTrace
-%             [Distances_NonRigid,~] = TraceDistance(AM_Source, SourcePoints_Affine, AM_Target, TargetPoints_Affine,pixelSize,0);
-%             D_NonRigidAffine = mean(Distances_NonRigid)
-%         else
-%             D_NonRigidAffine = mean(mean((SourcePoints_Affine-TargetPoints_Affine).^2,1).^0.5)
-%         end
-%
-%
-%
-%         % NonRigid
-%         Global_Matched_Source = FeaturePositions_NR.Matched{SourceID,TargetID}(:,1:3)';
-%         Global_Matched_Target = FeaturePositions_NR.Matched{SourceID,TargetID}(:,4:6)';
-%         N_L=3;
-%         Min=min([min(Global_Matched_Source,[],2),min(Global_Matched_Target,[],2)],[],2);
-%         Max=max([max(Global_Matched_Source,[],2),max(Global_Matched_Target,[],2)],[],2);
-%         [~,XYZlmn,N_L,Min,Max]=Optimal_Nonrigid_Transform(Global_Matched_Source,Global_Matched_Target,N_L,Min,Max);
-%         SourcePoints_NR=Perform_Nonrigid_Transform(SourcePoints',XYZlmn,N_L,Min,Max);
-%         if useTrace
-%             [Distances_NonRigid,~] = TraceDistance(AM_Source, SourcePoints_NR', AM_Target, TargetPoints,pixelSize,0);
-%             D_NonRigid = mean(Distances_NonRigid);
-%         else
-%             D_NonRigid = mean(mean((SourcePoints_NR-Global_Matched_Target).^2,1).^0.5)
-%         end
-%         disp('-------------------------------------');
