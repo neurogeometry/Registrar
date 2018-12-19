@@ -1,5 +1,6 @@
 # Registrar
 2017 Northeastern University
+</br>
 Registrar is a software for registration of 3D images in time and space.
 
 <img src="https://web.northeastern.edu/kahaki/reg_before_after.PNG" alt="Registrar" align="middle">
