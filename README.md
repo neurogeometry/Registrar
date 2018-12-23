@@ -1,5 +1,6 @@
 # Registrar
-2017 Northeastern University
+Copyright 2017 Northeastern University
+This project has been supported by the National Institude of Health (NIH)
 </br>
 Registrar is a software for registration of spatial and temporal 3D light microscopy images
 
