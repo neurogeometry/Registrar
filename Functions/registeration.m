@@ -116,7 +116,6 @@ if exist(StackList_csv_pth,'file') > 0
     end
     
     % Find stacks overlap
-    % overlap = round((params.FE.overlap/100) * StackSizes_pixels(1,:));
     handles.axes2.Visible = 'on';
     All_overlaps = FindOverlaps(StackPositions_pixels,StackSizes_pixels,StackList,debug);
     

@@ -1,19 +1,31 @@
 function varargout = NCT_Registration(varargin)
+% ============================== About ====================================
+% ----------------Copyright 2019 Northeastern University-------------------
+%
+% Purpose: Registrar GUI handler
+% -------------------------------------------------------------------------
+% Author: Seyed Mostafa Mousavi Kahaki and Armen Stepanyants
+% Northeastern University, Boston, MA, USA
+% kahaki@neu.edu, a.stepanyants.neu.edu
+% =========================================================================
+% -------------------------------------------------------------------------
 % NCT_REGISTRATION MATLAB code for NCT_Registration.fig
-%      NCT_REGISTRATION, by itself, creates a new NCT_REGISTRATION or raises the existing
-%      singleton*.
+%      NCT_REGISTRATION, by itself, creates a new NCT_REGISTRATION or 
+%      raises the existing singleton*.
 %
-%      H = NCT_REGISTRATION returns the handle to a new NCT_REGISTRATION or the handle to
-%      the existing singleton*.
+%      H = NCT_REGISTRATION returns the handle to a new NCT_REGISTRATION or 
+%      the handle to the existing singleton*.
 %
-%      NCT_REGISTRATION('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in NCT_REGISTRATION.M with the given input arguments.
+%      NCT_REGISTRATION('CALLBACK',hObject,eventData,handles,...) calls the 
+%      local function named CALLBACK in NCT_REGISTRATION.M with the given 
+%      input arguments.
 %
-%      NCT_REGISTRATION('Property','Value',...) creates a new NCT_REGISTRATION or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before NCT_Registration_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to NCT_Registration_OpeningFcn via varargin.
+%      NCT_REGISTRATION('Property','Value',...) creates a new 
+%      NCT_REGISTRATION or raises the existing singleton*.  Starting from 
+%      the left, property value pairs are applied to the GUI before 
+%      NCT_Registration_OpeningFcn gets called.  An unrecognized property 
+%      name or invalid value makes property application stop.  All inputs 
+%      are passed to NCT_Registration_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".

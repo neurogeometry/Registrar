@@ -21,32 +21,15 @@ ImportTime = 0;
 numberofFeatures = 0;
 FeatureExtractionTime =0;
 parameters;
+tic
 if v ~= 0
     tb = findobj(NCT_Registration,'Tag', 'listbox1');
 end
 tic
 
-
 IM_Original=ImportStack(char(File),StackSizes_pixels(1,:));
 if paramsREuseHDF5
-    tic,
     hdf5write([DataFolder,'/tmp/temp_',num2str(stackID),'.h5'], '/dataset1', IM_Original);
-    toc
-    %
-    %     tic,
-    %     X = hdf5read([DataFolder,'/tmp/temp_',num2str(stackID),'.h5'], '/dataset1');
-    %     toc
-    %
-    %     IM_Original2D = reshape(IM_Original,[11*512 7*512]);
-    %     tic,
-    %     imwrite(IM_Original2D,[DataFolder,'/test.jpg'],'jpg');
-    %     toc
-    %
-    %     tic,imread([DataFolder,'/test.jpg']);toc
-    
-    
-    
-    
 end
 
 ImportTime = toc;
@@ -74,38 +57,6 @@ end
 rem_ind_1 = (r_seed(:,1) <=params.FE.windowsize(1) | r_seed(:,1) > (X1-params.FE.windowsize(1)) | r_seed(:,2) <=params.FE.windowsize(2) | r_seed(:,2) > (Y1-params.FE.windowsize(2)) | r_seed(:,3) <=params.FE.windowsize(3) | r_seed(:,3) > (Z1-params.FE.windowsize(3)));
 r_seed(rem_ind_1,:) = [];
 
-%     if ign oreCenter
-%     T_eli = [X1 * el_perc,Y1 * el_perc,Z1 * el_perc];
-%     Stack_center=size(IM_Original)./2;
-%     rem_ind_2 = (r_seed(:,1) <=Stack_center(1)+T_eli(1) & r_seed(:,1) >=Stack_center(1)-T_eli(1) &...
-%                  r_seed(:,2) <=Stack_center(2)+T_eli(2) & r_seed(:,2) >=Stack_center(2)-T_eli(2) &...
-%                  r_seed(:,3) <=Stack_center(3)+T_eli(3) & r_seed(:,3) >=Stack_center(3)-T_eli(3));
-%
-% %     rem_ind_2 = sum((r_seed <=Stack_center+T_eli & r_seed >= Stack_center-T_eli),2);
-% %     r_seed(~xor(rem_ind_2,2),:) = [];
-%     r_seed(rem_ind_2,:) = [];
-%     end
-
-
-%         if ~strcmp(Dataset, 'Svoboda')
-%
-%             if strcmp(Dataset, 'Holtmaat_2_1')
-%                 figure,imshow(max(IM_Original,[],3),[0 500])
-%             else
-%                 figure,imshow(max(IM_Original,[],3),[0 max(IM_Original(:))])
-%             end
-%             hold on
-%             plot(r_seed(:,1),r_seed(:,2),'r*');
-%         else
-%             featuresFig = figure;imshow(max(im2double(IM_Original),[],3),[0 1]);
-%             hold on
-%             plot(r_seed(:,1),r_seed(:,2),'r*');
-%         end
-% Show Features
-%         figure,imshow(max(IM_Original,[],3),[0 max(IM_Original(:))])
-%         hold on;plot(r_seed(:,2),r_seed(:,1),'r*');
-% -----------------------
-
 if debug
     tb1 = findobj(NCT_Registration,'Tag', 'axes1');
     
@@ -130,7 +81,7 @@ if v ~= 0
     set(tb, 'String', listboxItems);drawnow
     tb.Value = v-1;drawnow
 end
-FeatureVector=[];%zeros(size(r_seed,1),(2*w+1)^3);
+FeatureVector=[];
 
 tic
 FeatureVector = zeros(size(r_seed,1),prod(2*params.FE.windowsize+1));
@@ -147,34 +98,9 @@ for i=1:size(r_seed,1)
             tb.Value = v-1;drawnow
             break;
         end
-    end
-    %Hessian Matrix
-%     if paramsFMEigen
-%         w=params.FE.windowsize;
-%         Hxx=temp(w(1)+1,w(2),w(3))+temp(w(1)-1,w(2),w(3))-2.*temp(w(1),w(2),w(3));
-%         Hyy=temp(w(1),w(2)+1,w(3))+temp(w(1),w(2)-1,w(3))-2.*temp(w(1),w(2),w(3));
-%         Hzz=temp(w(1),w(2),w(3)+1)+temp(w(1),w(2),w(3)-1)-2.*temp(w(1),w(2),w(3));
-%         Hxy=(temp(w(1)+1,w(2)+1,w(3))+temp(w(1)-1,w(2)-1,w(3))-temp(w(1)+1,w(2)-1,w(3))-temp(w(1)-1,w(2)+1,w(3)))./4;
-%         Hxz=(temp(w(1)+1,w(2),w(3)+1)+temp(w(1)-1,w(2),w(3)-1)-temp(w(1)+1,w(2),w(3)-1)-temp(w(1)-1,w(2),w(3)+1))./4;
-%         Hyz=(temp(w(1),w(2)+1,w(3)+1)+temp(w(1),w(2)-1,w(3)-1)-temp(w(1),w(2)+1,w(3)-1)-temp(w(1),w(2)-1,w(3)+1))./4;
-%         H=[Hxx,Hxy,Hxz;Hxy,Hyy,Hyz;Hxz,Hyz,Hzz];
-%         [vec,l] = eig(H);
-%         FeatureVector =  [FeatureVector;vec(:)',l(:)'];
-%         %         [Lambda1i,Lambda2i,Lambda3i]=eig3volume(Hxx,Hxy,Hxz,Hyy,Hyz,Hzz);
-%         %             FeatureVector =  [FeatureVector;H(:)'];
-%         
-%     else
+    end   
         FeatureVector(i,:) =  temp(:)';
-%     end
-    
 end
-
-%     % GPU
-%     I = gpuArray(IM_Original);
-%     for i=1:size(r_seed,1)
-%         temp = double(I(r_seed(i,2)-w:r_seed(i,2)+w,r_seed(i,1)-w:r_seed(i,1)+w,r_seed(i,3)-w:r_seed(i,3)+w));
-%         FeatureVector =  [FeatureVector;temp(:)'];
-%     end
 
 NeighborExtractionTime = toc;
 if v ~= 0
@@ -192,17 +118,10 @@ if v ~= 0
     tb.Value = v-1;drawnow
 end
 
-% save([featuresFolder,File{1}(1:5),'_seeds'],'r_seed','FeatureVector','-v7.3')
-% [PathStr,seedsFileName]=fileparts(File{1});
-% if isempty(seedsFileName)
-%     seedsFileName = num2str(stackID);
-% end
-% seedsFileName = regexp(File{1},'//([^//]*)$','tokens','once');
 hdf5write([DataFolder,'/tmp/Feature_seeds',num2str(stackID),'.h5'], '/dataset1', r_seed);
 hdf5write([DataFolder,'/tmp/Feature_vector',num2str(stackID),'.h5'], '/dataset1', FeatureVector);
 seedsFile = [DataFolder,'/tmp/Feature_',num2str(stackID),'.h5'];
-% save([featuresFolder,char(seedsFileName),'_seeds.mat'],'r_seed','FeatureVector','-v7.3')
-% seedsFile = [featuresFolder,char(seedsFileName),'_seeds.mat'];
+
 if v ~= 0
     listboxItems{v}  = ['Seeds are saved as: ',seedsFile];
     v = v + 1;
