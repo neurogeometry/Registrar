@@ -19,7 +19,7 @@ function [Registrationtime,MatchLocations,MatchLocationsHang,listboxItems,v,Tran
 % kahaki@neu.edu, a.stepanyants.neu.edu
 % =========================================================================
 % -------------------------------------------------------------------------
-addpath('Functions');
+
 parameters;
 tic
 
@@ -32,7 +32,6 @@ if debug ==1 && Seq_Par ~= 2
     IM_Source=ImportStack(char(Source_Stack_File),SourceStackSize);
     IM_Target=ImportStack(char(Target_Stack_File),TargetStackSize);
     
-    
     IM_source_max=max(IM_Source,[],3);
     IM_target_max=max(IM_Target,[],3);
     M_source=max(IM_Source(:));
@@ -44,18 +43,11 @@ if debug ==1 && Seq_Par ~= 2
     else
         Direction='vertical';
     end
-    %
+    
     [X1,Y1,~]=size(IM_Source);
     [X2,Y2,~]=size(IM_Target);
     
 end
-
-
-
-
-
-
-
 
 hungInput = zeros(size(Source_seed,1),size(Target_seed,1));
 
@@ -70,8 +62,6 @@ hungInput = zeros(size(Source_seed,1),size(Target_seed,1));
 % RMSD = Root Mean Square Distance
 % SSIM = StructuralSimilarity
 % SSD = Sum of Square Differences (SSD)
-
-
 if strcmp(paramsFMMetric,'ZMAD')
     nTargetFeatures=bsxfun(@rdivide,TargetFeatures,mean(TargetFeatures,2));
     nSourceFeatures=bsxfun(@rdivide,SourceFeatures,mean(SourceFeatures,2));
@@ -135,53 +125,53 @@ elseif strcmp(paramsFMMetric,'EigenVector')
     hungInput(isnan(hungInput)) = 10^12;
     hungInput(abs(TempDisp.^0.5-Dthr)>paramsFMDT)=10^12;
     
-%     for i = 1 : size(Source_seed,1)
-%         for j = 1 : size(Target_seed,1)
-%             if v ~= 0
-%             if get(tb11,'userdata') || stop% stop condition
-%                 disp(num2str(tb11.UserData));
-%                 stop = 1;
-%                 listboxItems{v}  = 'Process Stopped ';
-%                 v = v + 1;
-%                 tb = findobj(NCT_Registration,'Tag', 'listbox1');
-%                 set(tb, 'String', listboxItems);drawnow
-%                 tb.Value = v-1;drawnow
-%                 break;
-%             end
-%             end
-%             TempDisp = sum((Target_seed(j,:)-Source_seed(i,:))-Displacement);
-%             
-%             if  TempDisp > paramsFMDT
-%                 hungInput(i,j) = 10^12;
-%             else
-%                 switch  paramsFMMetric
-%                     case 'ZMAD'
-%                         hungInput(i,j) = mean(abs(TargetFeatures(j,:)./mean(TargetFeatures(j,:))-SourceFeatures(i,:)./mean(SourceFeatures(i,:))));
-%                     case 'MSE'
-%                         %                     error = TargetFeatures(j,:) - SourceFeatures(i,:);
-%                         %                     hungInput(i,j) = sum(error .* error) / (size(TargetFeatures(j,:),1) * size(TargetFeatures(j,:),2));
-%                         hungInput(i,j) = immse(TargetFeatures(j,:),SourceFeatures(i,:));
-%                     case 'AD'
-%                         hungInput(i,j) = (sum(TargetFeatures(j,:) - SourceFeatures(i,:)))/(size(TargetFeatures(j,:),1) * size(TargetFeatures(j,:),2));
-%                     case 'NAE'
-%                         error = TargetFeatures(j,:) - SourceFeatures(i,:);
-%                         hungInput(i,j) = sum(abs(error))/ sum(TargetFeatures(j,:));
-%                     case 'NCC' % https://en.wikipedia.org/wiki/Cross-correlation
-%                         hungInput(i,j) = (sum(TargetFeatures(j,:) .* SourceFeatures(i,:)) / sum(std(TargetFeatures(j,:)) .* std(TargetFeatures(j,:))))/size(TargetFeatures(j,:),2);
-%                         %                     hungInput(i,j) = normxcorr2(TargetFeatures(j,:),SourceFeatures(i,:))
-%                     case 'ZNCC' % https://en.wikipedia.org/wiki/Cross-correlation
-%                         hungInput(i,j) = (sum((TargetFeatures(j,:)-mean(TargetFeatures(j,:))) .* (SourceFeatures(i,:)-mean(SourceFeatures(i,:)))) / sum(std(TargetFeatures(j,:)) .* std(TargetFeatures(j,:))))/size(TargetFeatures(j,:),2);
-%                     case 'SAD'
-%                         hungInput(i,j) = sum(abs(TargetFeatures(j,:)-SourceFeatures(i,:)));
-%                     case 'ZSAD'
-%                         hungInput(i,j) = sum(abs((TargetFeatures(j,:)-mean(TargetFeatures(j,:)))-(SourceFeatures(i,:)-mean(SourceFeatures(i,:)))));
-%                     otherwise % ZMAD
-%                         hungInput(i,j) = mean(abs(TargetFeatures(j,:)./mean(TargetFeatures(j,:))-SourceFeatures(i,:)./mean(SourceFeatures(i,:))));
-%                 end
-%                 
-%             end
-%         end
-%     end
+    %     for i = 1 : size(Source_seed,1)
+    %         for j = 1 : size(Target_seed,1)
+    %             if v ~= 0
+    %             if get(tb11,'userdata') || stop% stop condition
+    %                 disp(num2str(tb11.UserData));
+    %                 stop = 1;
+    %                 listboxItems{v}  = 'Process Stopped ';
+    %                 v = v + 1;
+    %                 tb = findobj(NCT_Registration,'Tag', 'listbox1');
+    %                 set(tb, 'String', listboxItems);drawnow
+    %                 tb.Value = v-1;drawnow
+    %                 break;
+    %             end
+    %             end
+    %             TempDisp = sum((Target_seed(j,:)-Source_seed(i,:))-Displacement);
+    %
+    %             if  TempDisp > paramsFMDT
+    %                 hungInput(i,j) = 10^12;
+    %             else
+    %                 switch  paramsFMMetric
+    %                     case 'ZMAD'
+    %                         hungInput(i,j) = mean(abs(TargetFeatures(j,:)./mean(TargetFeatures(j,:))-SourceFeatures(i,:)./mean(SourceFeatures(i,:))));
+    %                     case 'MSE'
+    %                         %                     error = TargetFeatures(j,:) - SourceFeatures(i,:);
+    %                         %                     hungInput(i,j) = sum(error .* error) / (size(TargetFeatures(j,:),1) * size(TargetFeatures(j,:),2));
+    %                         hungInput(i,j) = immse(TargetFeatures(j,:),SourceFeatures(i,:));
+    %                     case 'AD'
+    %                         hungInput(i,j) = (sum(TargetFeatures(j,:) - SourceFeatures(i,:)))/(size(TargetFeatures(j,:),1) * size(TargetFeatures(j,:),2));
+    %                     case 'NAE'
+    %                         error = TargetFeatures(j,:) - SourceFeatures(i,:);
+    %                         hungInput(i,j) = sum(abs(error))/ sum(TargetFeatures(j,:));
+    %                     case 'NCC' % https://en.wikipedia.org/wiki/Cross-correlation
+    %                         hungInput(i,j) = (sum(TargetFeatures(j,:) .* SourceFeatures(i,:)) / sum(std(TargetFeatures(j,:)) .* std(TargetFeatures(j,:))))/size(TargetFeatures(j,:),2);
+    %                         %                     hungInput(i,j) = normxcorr2(TargetFeatures(j,:),SourceFeatures(i,:))
+    %                     case 'ZNCC' % https://en.wikipedia.org/wiki/Cross-correlation
+    %                         hungInput(i,j) = (sum((TargetFeatures(j,:)-mean(TargetFeatures(j,:))) .* (SourceFeatures(i,:)-mean(SourceFeatures(i,:)))) / sum(std(TargetFeatures(j,:)) .* std(TargetFeatures(j,:))))/size(TargetFeatures(j,:),2);
+    %                     case 'SAD'
+    %                         hungInput(i,j) = sum(abs(TargetFeatures(j,:)-SourceFeatures(i,:)));
+    %                     case 'ZSAD'
+    %                         hungInput(i,j) = sum(abs((TargetFeatures(j,:)-mean(TargetFeatures(j,:)))-(SourceFeatures(i,:)-mean(SourceFeatures(i,:)))));
+    %                     otherwise % ZMAD
+    %                         hungInput(i,j) = mean(abs(TargetFeatures(j,:)./mean(TargetFeatures(j,:))-SourceFeatures(i,:)./mean(SourceFeatures(i,:))));
+    %                 end
+    %
+    %             end
+    %         end
+    %     end
     
 end
 
@@ -244,13 +234,13 @@ MatchLocationsHang = [Global_Matched_Source',Global_Matched_Target'];
 %         break;
 %     end
 %     end
-%     if TransformationValue == 4 
+%     if TransformationValue == 4
 %         TransformationValue = 3;
 %         Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
 %         TransformationValue = 4;
 %         Match_Indexes = RANSAC(Global_Matched_Source(:,Match_Indexes),Global_Matched_Target(:,Match_Indexes),TransformationValue);
 %     else
-        Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue,mu);
+Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue,mu);
 %     end
 %     Match_Indexes_temp = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
 %     if numel(Match_Indexes_temp)<paramsFMminmatches
@@ -261,8 +251,6 @@ MatchLocationsHang = [Global_Matched_Source',Global_Matched_Target'];
 %         Match_Indexes=Match_Indexes_temp;
 %     end
 % end
-
-toc
 
 if Seq_Par ~= 2 && v ~= 0
     tb = findobj(NCT_Registration,'Tag', 'listbox1');

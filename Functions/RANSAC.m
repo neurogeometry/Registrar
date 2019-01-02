@@ -18,7 +18,7 @@ if TransformationValue == 1 % Translation
     NumRandPoints = 1;
     MaxNumSamples=10^6;
     MaxNumMatches=inf;
-    MaxErrorDistance = 3;
+    MaxErrorDistance = 2;
     InlierRatio = 0.20;
 elseif TransformationValue == 2 % Rigid
     NumRandPoints = 2;
@@ -34,21 +34,13 @@ elseif TransformationValue == 3 % Affine
     InlierRatio = 0.20;
 elseif TransformationValue == 4 % Non-Rigid
     NumRandPoints = 4;
-%     N_L = 3;
     MaxNumSamples=10^3;
     MaxNumMatches=10;
     MaxErrorDistance = 3;
-%     Minimum = min(SourceLocations,[],2);
-%     Maximum = max(SourceLocations,[],2);
     nxyz = [256;256;156];
-%     Nxyz = ceil((Maximum-Minimum)./nxyz');
     affine = 1;
     InlierRatio = 0.05; % 0.10
-%     mu = 1;
 end
-
-
-
 
 NumAllMatches = size(TargetLocations,2);
 if nchoosek(NumAllMatches,NumRandPoints)<=MaxNumSamples
