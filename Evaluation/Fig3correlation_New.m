@@ -3,23 +3,19 @@ close all;
 clear all;
 % clc;
 addpath ('NeuronTracerV20');
-addpath ('C:\Users\Seyed\Documents\DatasetTests\GUI\NCT_Registration\Functions');
+addpath ('C:\Users\Seyed\Documents\DatasetTests\registrar\registrar\Functions');
 
 showCorr = 0;
 pad = [0 60 0];
 
 csv_pth = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\CorrelationResults\';
 files = dir(csv_pth);
-for i = 5:size(files,1)-1
+for i = 3:size(files,1)-1
     
     ResultFolder = [files(i).folder,'\',files(i).name,'\Results-',files(i).name,'\'];
     csvFile = [files(i).folder,'\',files(i).name,'\',files(i).name,'.csv'];
     PositionsCSV = table2cell(readtable(csvFile,'Delimiter',','));
     StackPositions_pixels = cell2mat(PositionsCSV(:,2:4));
-
-
-
-
 
 
 temp=StackPositions_pixels;
@@ -116,3 +112,18 @@ corr_NonRigid=Stack_Correlation(IM_Source_prime,IM_Target,Source_StackPositions_
 
 save([files(i).folder,'\',files(i).name,'\','corr.mat'],'corr_old','corr_Translation','corr_Rigid','corr_Affine','corr_NonRigid');
 end
+
+k = 1;
+correllation = {};
+for i = 3:size(files,1)-1
+correllation{k} = load([files(i).folder,'\',files(i).name,'\','corr.mat']);
+k=k+1;
+end
+
+
+
+
+
+
+
+

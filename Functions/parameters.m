@@ -54,6 +54,11 @@ paramsFMminReqFeatures = 15; % minimum features to run feature matching
 % SAD =  Sum of Squared Differences
 paramsFMMetric = 'ZMAD';        %default:	paramsFMMetric = 'ZMAD'  EigenVector;
 
+    % Parameter to have a cost for matching by Hungarian
+paramsFM_C1 = 200;        %default:	paramsFM_C1 = 200
+paramsFM_C2 = 200;        %default:	paramsFM_C2 = 200
+
+
     % Parameter to control the maximum iteration of Ransac
 paramsFMmaxiter=1000;           %default:	paramsFMmaxiter = 1000;
 
@@ -134,5 +139,7 @@ paramsRERemoveBlack = 1;
 paramsBigTileSize = [512 512 64]; % powers of 2 only
 paramsFinalTileSize = [128*2 128*2 64]; % powers of 2 only
 paramsEmptyVoxelsValue=111;
+
+DBAddress = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
                          
                          

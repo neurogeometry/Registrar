@@ -21,8 +21,8 @@ function registeration (varargin)
 % -------------------------------------------------------------------------
 % blendingSID,handles
 
-DBAddress = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
-if size(varargin,2)==6
+
+if size(varargin,2)==6 %For GUI
     GUI=true;
     StackList_csv_pth = varargin{1};
     TransformationValue = varargin{2};
@@ -33,7 +33,7 @@ if size(varargin,2)==6
     runFeatureExtraction = handles.checkbox3.Value;
     runFeatureMatching = handles.checkbox4.Value;
     runGlobalOpt = handles.checkbox5.Value;
-    TyoeOfRegistration = handles.v.Value;
+    TypeOfRegistration = handles.v.Value;
     runBlending = handles.checkbox6.Value;
     runRetilling = handles.chkretilling.Value;
     outputType = handles.popupretilling.Value;
@@ -41,7 +41,7 @@ if size(varargin,2)==6
     AllGUI = NCT_Registration;
     v = 1;
     mu = 1020;
-elseif size(varargin,2)==5
+elseif size(varargin,2)==5 % For NCTracer Web
     GUI=false;
     runFeatureExtraction = 1;
     runFeatureMatching = 1;
@@ -50,7 +50,7 @@ elseif size(varargin,2)==5
     StackList_csv_pth = varargin{1};
     TransformationValue = varargin{2};
     Seq_Par = varargin{3}; 
-    TyoeOfRegistration = varargin{4}; %MouseLight
+    TypeOfRegistration = varargin{4}; %MouseLight
     
     outputType = 2; % use NCTracerDB
     runBlending = 0;
@@ -59,13 +59,13 @@ elseif size(varargin,2)==5
     mu = varargin{5};
     v = 0;
     listbox_log = 0;
-    Par_workers = 6;
+    Par_workers = 6; % For Run in Cluster
 elseif size(varargin,2)==11
     GUI=false;
     StackList_csv_pth = varargin{1};
     TransformationValue = varargin{2};
     Seq_Par = varargin{3}; 
-    TyoeOfRegistration = varargin{4}; 
+    TypeOfRegistration = varargin{4}; 
     mu = varargin{5};
     runFeatureExtraction = varargin{6};
     runFeatureMatching = varargin{7};
@@ -94,6 +94,10 @@ if exist(StackList_csv_pth,'file') > 0
     
     [PathStr,FolderName]=fileparts(StackList_csv_pth);
     DataFolder=[PathStr,'/Results-',FolderName];
+    
+    
+    
+    
     
     if GUI
         handles.axes1.YLabel.String = '';
@@ -155,7 +159,7 @@ if exist(StackList_csv_pth,'file') > 0
     
     % This part is not fixed yet, should be based on correct positions from csv
     % file
-    if TyoeOfRegistration == 1%strfind(char(StackList_csv_pth),'MouseLight') > 0%strfind(char(StackList(1,1)),'ngc') > 0
+    if TypeOfRegistration == 1%strfind(char(StackList_csv_pth),'MouseLight') > 0%strfind(char(StackList(1,1)),'ngc') > 0
         temp=StackPositions_pixels;
         StackPositions_pixels(:,1) = max(temp(:,2))-temp(:,2);
         StackPositions_pixels(:,2) = max(temp(:,1))-temp(:,1);
@@ -171,7 +175,7 @@ if exist(StackList_csv_pth,'file') > 0
     end
     All_overlaps = FindOverlaps(StackPositions_pixels,StackSizes_pixels,StackList,debug);
     
-    if TyoeOfRegistration == 8 || TyoeOfRegistration == 7
+    if TypeOfRegistration == 8 || TypeOfRegistration == 7
         All_overlaps = zeros(size(All_overlaps));
         All_overlaps(2:size(All_overlaps,1)+1:end) = 1;
         All_overlaps = All_overlaps';
@@ -267,7 +271,7 @@ if exist(StackList_csv_pth,'file') > 0
             end
             
             if runGlobal && ~stop
-                if TyoeOfRegistration == 8
+                if TypeOfRegistration == 8
                     StackPositions_pixels(:,3) = 0;
                 end
                 switch TransformationValue
@@ -320,7 +324,7 @@ if exist(StackList_csv_pth,'file') > 0
         tic
         
         % 8 for Allignement of Stacks
-        if TyoeOfRegistration == 8 && GUI
+        if TypeOfRegistration == 8 && GUI
             %             StackPositions_Registered(:,3) = 0;
             [Tile3D_org,Tile3D,stop] = blending_stackreg(StackPositions_Registered,StackSizes_pixels,StackList,T.L,T.b,DataFolder);
         else

@@ -69,7 +69,11 @@ if debug
             %     ind1=find(StackList{j,1}=='\',1,'last');
             %     ind2=find(StackList{j,1}=='.',1,'last');
             %     StackName=StackList{j,1}(ind1+1:ind2-1);
-            [PathStr,StackName]=fileparts(StackList{j,1});
+            if ~isempty(StackList)
+                [PathStr,StackName]=fileparts(StackList{j,1});
+            else
+                StackName = '';
+            end
             %FileName = regexp(StackList(j,1),'\\([^\\]*)$','tokens','once');
             %StackName = regexp(FileName{1},'.([^.]*)$','tokens','once');
             text(StackPositions_pixels(j,1)+boxsize(1)/2,StackPositions_pixels(j,2)+boxsize(2)/2,StackPositions_pixels(j,3)+boxsize(3)/2,[num2str(j),'-',StackName],'FontSize',6),hold on

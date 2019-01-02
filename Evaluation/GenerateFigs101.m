@@ -1,18 +1,21 @@
 clear all;
 close all;
 clc;
-
+N = 1;
 sourceID = 1;
 targetID = 2;
+% for k = 1:17
+%     sourceID = k;
+%     targetID = k + 1;
 TraceNum = 2;
 mu = 1040;
 affine = 1;
 ppm = 1;
-N = 1; %Image Numbers
+ %Image Numbers
 addpath('NeuronTracerV20');
 csvPath = '..\..\RegistrationEvaluation\TimeLapse_Holtmaat_101_StackList.csv';
-% for matching
-csvPath = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\TimeLapse_Holtmaat_101_StackList_forMatchingResults.csv';
+% for matching, comment otherwise
+ csvPath = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\TimeLapse_Holtmaat_101_StackList_forMatchingResults.csv';
 
 StackList = table2cell(readtable(csvPath,'Delimiter',','));
 GTpath = 'E:\Datasets\TimeLaps\Mouse101\original\Profile\';
@@ -20,7 +23,7 @@ Functionspath = '..\';
 
 resultpath = '..\..\RegistrationEvaluation\Results-TimeLapse_Holtmaat_101_StackList\';
 % for matching , comment otherwise
-resultpath = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-TimeLapse_Holtmaat_101_StackList_forMatchingResults\';
+ resultpath = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-TimeLapse_Holtmaat_101_StackList_forMatchingResults\';
 
 addpath([Functionspath,'Functions']);
 
@@ -156,9 +159,9 @@ IM_target_max=max(IM_Target,[],3);
 % N = N+1;
 % figure(N),imshowpair(IM_source_max,IM_target_max,'Scaling','independent')
 
-%% Show One Trace All sessions  ----------------- Fig 2. D
-% %
-% for TraceNum = 4:20
+% Show One Trace All sessions  ----------------- Fig 2. D
+%
+% for TraceNum = 12:12
 %      TraceNum 
 % for i = 1: size(StackList,1)
 %     
@@ -200,7 +203,7 @@ IM_target_max=max(IM_Target,[],3);
 % %     end
 % %     figure(N);hold on; plot(SourcePoints(:,2),SourcePoints(:,1),'or')
 % end
-% saveas(figure(N),['C:\Users\Seyed\Documents\Meetings\Research\SPIE\Conference\Figs\Traces\',num2str(TraceNum),'_Before.fig']);
+% % saveas(figure(N),['C:\Users\Seyed\Documents\Meetings\Research\SPIE\Conference\Figs\Traces\',num2str(TraceNum),'_Before.fig']);
 % end
 
 
@@ -210,14 +213,14 @@ IM_target_max=max(IM_Target,[],3);
 stitched = appendimages(IM_target_max,IM_source_max,'horizontal');
 %                   ----------------- Fig 2. A
 N = N + 1;
-matchesStep = 5;
-figure(N);imshow(stitched,[0 20])
-figure(N);hold on;plot(Matched_hung{sourceID,targetID}(1:matchesStep:end,5),Matched_hung{sourceID,targetID}(1:matchesStep:end,4),'*r');
-figure(N);hold on;plot(Matched_hung{sourceID,targetID}(1:matchesStep:end,2)+size(IM_target_max,1)+45,Matched_hung{sourceID,targetID}(1:matchesStep:end,1),'*r');
+matchesStep = 6;
+figure(N);imshow(stitched,[0 40])
+figure(N);hold on;plot(Matched_hung{sourceID,targetID}(1:matchesStep:end,5)+1,Matched_hung{sourceID,targetID}(1:matchesStep:end,4)+1,'*r');
+figure(N);hold on;plot(Matched_hung{sourceID,targetID}(1:matchesStep:end,2)+size(IM_target_max,1)+45+1,Matched_hung{sourceID,targetID}(1:matchesStep:end,1),'*r');
 figure(N);hold on;
 for i = 1:matchesStep:length(Matched_hung{sourceID,targetID})
-line([Matched_hung{sourceID,targetID}(i,5) Matched_hung{sourceID,targetID}(i,2)+size(IM_target_max,1)+45], ...
-                    [Matched_hung{sourceID,targetID}(i,4) Matched_hung{sourceID,targetID}(i,1)], 'Color', rand(1,3));
+line([Matched_hung{sourceID,targetID}(i,5)+1 Matched_hung{sourceID,targetID}(i,2)+size(IM_target_max,1)+45+1], ...
+                    [Matched_hung{sourceID,targetID}(i,4)+1 Matched_hung{sourceID,targetID}(i,1)], 'Color', rand(1,3));
 end
 
 %                   ----------------- Fig 2. B
@@ -230,8 +233,8 @@ for i = 1: length(Matched{sourceID,targetID})
 line([Matched{sourceID,targetID}(i,5) Matched{sourceID,targetID}(i,2)+size(IM_target_max,1)+45], ...
                     [Matched{sourceID,targetID}(i,4) Matched{sourceID,targetID}(i,1)], 'Color', rand(1,3));
 end
-
 i
+
 
 %%                   ----------------- Fig 2. C Show Grid
 % [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
@@ -256,7 +259,7 @@ i
 [IM_Target_NR,StackPosition_prime,~]=Perform_Bspline_Transform(IM_Target,[1;1;1],L,b,Cxyz,Nxyz,nxyz,Grid_start,affine);
 IM_Target_NR_max=max(IM_Target_NR,[],3);
 MIN=min([1;1],StackPosition_prime(1:2));
-MAX=max(size(IM_source_max)',size(IM_target_max)'+StackPosition_prime(1:2)-1);
+MAX=max(size(IM_source_max)',size(IM_target_max)'+StackPosition_prime(1:2));
 temp=zeros(MAX(1)-MIN(1)+1,MAX(2)-MIN(2)+1,'uint8');
 
 IM_Target_NR_max_P=temp;
@@ -266,7 +269,8 @@ IM_source_max_P=temp;
 IM_source_max_P(2-MIN(1):1-MIN(1)+size(IM_source_max,1),...
     2-MIN(2):1-MIN(2)+size(IM_source_max,2))=IM_source_max;
 N = N +1;
-figure(N),imshowpair(IM_Target_NR_max_P,IM_source_max_P,'Scaling','independent')
+figure(N),imshowpair(IM_source_max_P,IM_Target_NR_max_P,'Scaling','independent')
+% end
 N
 %%                    All Traces (From All Sessions) After Transform  ----------------- Fig 3.B
 % 

@@ -8,10 +8,10 @@ if strcmp(Direction,'horizontal')
     else
         image2(rows1,1) = 0;
     end
-    padd = ones(size(image1,2),20);
-    padd(:,:) = max(image1(:));
-    im = [image1 padd image2];
-%      im = [image1 image2];
+%     padd = ones(size(image1,2),20);
+%     padd(:,:) = max(image1(:));
+%     im = [image1 padd image2];
+     im = [image1 image2];
 else
     cols1 = size(image1,2);
     cols2 = size(image2,2);

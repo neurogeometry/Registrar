@@ -185,7 +185,7 @@ elseif strcmp(paramsFMMetric,'EigenVector')
     
 end
 
-Am = Hungarian_fast(hungInput);
+Am = Hungarian_fast(hungInput,paramsFM_C1,paramsFM_C2);
 Am(hungInput==10^12)=0;
 [idx1,idx2]=find(Am);
 

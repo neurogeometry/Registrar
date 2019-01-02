@@ -3,7 +3,7 @@ close all;
 clear all;
 % clc;
 addpath ('NeuronTracerV20');
-addpath ('C:\Users\Seyed\Documents\DatasetTests\GUI\NCT_Registration\Functions');
+addpath ('C:\Users\Seyed\Documents\DatasetTests\registrar\registrar\Functions');
 CalculateOtherMEthods = 0;
 usePoints = 0;
 % DatasetList = {'Holtmaat','Neuromuscular','Neocortical_1','MouseLight','Visual'};
@@ -17,16 +17,16 @@ CSVData = 'C:\Users\Seyed\Documents\NeurogeometryLab\NeurogeometryLab\Seyed\Eval
 pixelSize = [0.377607421875 0.277486979166667 0.99601593625498];
 load('data/StackData.mat');
 Dataset = 'MouseLight';
-pad = [0 60 0];
+pad = [0 50 0];
 
 Evaluation_csv_pth = [CSVData,'MouseLight\MouseLight_Evaluation.csv'];
 ResultFolder = 'C:\Users\Seyed\Documents\NeurogeometryLab\NeurogeometryLab\Seyed\Evaluation\data\evaluation\MouseLight\ForCorrelation\';
 
 
 temp=StackPositions_pixels;
-StackPositions_pixels(:,1) = max(temp(:,2))-temp(:,2);
-StackPositions_pixels(:,2) = max(temp(:,1))-temp(:,1);
-StackPositions_pixels(:,3) = max(temp(:,3))-temp(:,3); % Not Sure - Need to check
+StackPositions_pixels(:,1) = max(temp(:,2))-temp(:,2)+1;
+StackPositions_pixels(:,2) = max(temp(:,1))-temp(:,1)+1;
+StackPositions_pixels(:,3) = max(temp(:,3))-temp(:,3)+1;
 
 
 
@@ -167,10 +167,10 @@ boxplot([M_Old1(:),M_Translation1(:),M_Rigid1(:),...
 axis square, box on
 ylim([0,1])
 
-figure,hold on
-boxplot([M_Rigid1(:),M_Affine1(:),M_Old1(:),M_NonRigid1(:),...
-    M_Translation1(:)],'Whisker',inf)
-axis square, box on
+% figure,hold on
+% boxplot([M_Rigid1(:),M_Affine1(:),M_Old1(:),M_NonRigid1(:),...
+%     M_Translation1(:)],'Whisker',inf)
+% axis square, box on
 
 %matrix = [M_Old1';M_Translation1';M_Rigid1';M_Affine1';M_NonRigid1']'
 % figure,
