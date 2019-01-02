@@ -1,4 +1,4 @@
-function SaveTile(usedDB,Tile,image_id,x,TilePositions,TileSize,z_level,SaveFolder)
+function SaveTile(usedDB,Tile,image_id,x,TilePositions,TileSize,z_level,SaveFolder,N_tiles)
 
 TileName=[num2str(TilePositions(1)),'_',num2str(TilePositions(2)),'_',num2str(TilePositions(3))];
 if usedDB == 1
@@ -76,28 +76,28 @@ elseif usedDB == 4 % Nifti
     
 elseif usedDB == 5 % HDF5 - Big Data Viewer (Fiji)
     
-    resolutions =  ones(N_tiles,1);
-    subdivisions = repmat(16,N_tiles,1);
+    resolutions =  ones(prod(N_tiles),1);
+    subdivisions = repmat(16,prod(N_tiles),1);
     DbName = [SaveFolder,'HDf5/export1.h5'];
-    if namecount < 11
-        S =num2str(namecount-1,['%0',num2str(2),'.0f']);
-    else
-        S =num2str(namecount-1);
-    end
-    h5create(DbName,['/t00000/s',S,'/0/cells'],size(Tile),'ChunkSize',size(Tile));
-    h5write(DbName, ['/t00000/s',S,'/0/cells'], im2uint8(Tile));
+%     if namecount < 11
+%         S =num2str(namecount-1,['%0',num2str(2),'.0f']);
+%     else
+%         S =num2str(namecount-1);
+%     end
+    h5create(DbName,['/t00000/s',TileName,'/0/cells'],size(Tile),'ChunkSize',size(Tile));
+    h5write(DbName, ['/t00000/s',TileName,'/0/cells'], im2uint8(Tile));
     fileattrib(DbName,'+w');
-    h5writeatt(DbName,['/t00000/s',S,'/0/cells'],'element_size_um',[0.5,0.5,0.5]);
+    h5writeatt(DbName,['/t00000/s',TileName,'/0/cells'],'element_size_um',[0.5,0.5,0.5]);
     
-    h5create(DbName,['/s',S,'/resolutions'],size(resolutions),'ChunkSize',size(resolutions));
-    h5write(DbName, ['/s',S,'/resolutions'], resolutions);
+    h5create(DbName,['/s',TileName,'/resolutions'],size(resolutions),'ChunkSize',size(resolutions));
+    h5write(DbName, ['/s',TileName,'/resolutions'], resolutions);
     fileattrib(DbName,'+w');
-    h5writeatt(DbName,['/s',S,'/resolutions'],'element_size_um',[0.5,0.5,0.5]);
+    h5writeatt(DbName,['/s',TileName,'/resolutions'],'element_size_um',[0.5,0.5,0.5]);
     
-    h5create(DbName,['/s',S,'/subdivisions'],size(subdivisions),'ChunkSize',size(subdivisions));
-    h5write(DbName, ['/s',S,'/subdivisions'], subdivisions);
+    h5create(DbName,['/s',TileName,'/subdivisions'],size(subdivisions),'ChunkSize',size(subdivisions));
+    h5write(DbName, ['/s',TileName,'/subdivisions'], subdivisions);
     fileattrib(DbName,'+w');
-    h5writeatt(DbName,['/s',S,'/subdivisions'],'element_size_um',[0.5,0.5,0.5]);
+    h5writeatt(DbName,['/s',TileName,'/subdivisions'],'element_size_um',[0.5,0.5,0.5]);
 elseif usedDB == 6 % CATMAID - TrackEM
     xstart = (TilePositions(1)-2)/TileSize(1);
     ystart = (TilePositions(2)-2)/TileSize(2);

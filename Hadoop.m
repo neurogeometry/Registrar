@@ -13,5 +13,5 @@ readall(meanDelay)
 
 meanDelay = mapreduce(ds,@meanArrivalDelayMapper,@meanArrivalDelayReducer,inPool,'OutputFolder',outputFolder);
 readall(meanDelay)
-
+ 
 delete(gcp)

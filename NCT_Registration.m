@@ -97,7 +97,8 @@ end
 
 % --- Executes on button press in pushbutton7.
 function pushbutton7_Callback(hObject, eventdata, handles)
-
+addpath('Functions');
+parameters;
 set(handles.radio_before,'Enable','off');
 set(handles.radio_after,'Enable','off');
 set(handles.z_projection,'Enable','off');
@@ -110,8 +111,7 @@ Seq_Par = get(handles.popupmenu4,'Value');%1=Sequential | 2=Parallel
 Par_workers = str2double(get(handles.edit14,'String')); % Number of Workers
 blendingSID = str2double(get(handles.edit15,'String'));
 StackList_csv_pth = get(handles.edt_stacklist,'String');
-addpath('Functions');
-parameters;
+
 tic
 registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles)
 TotalTime = toc

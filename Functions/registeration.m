@@ -19,104 +19,52 @@ function registeration (varargin)
 % kahaki@neu.edu, a.stepanyants.neu.edu
 % =========================================================================
 % -------------------------------------------------------------------------
-% blendingSID,handles
 
-
-if size(varargin,2)==6 %For GUI
-    GUI=true;
-    StackList_csv_pth = varargin{1};
-    TransformationValue = varargin{2};
-    Seq_Par = varargin{3};
-    Par_workers = varargin{4};
-    blendingSID = varargin{5};
-    handles = varargin{6};
-    runFeatureExtraction = handles.checkbox3.Value;
-    runFeatureMatching = handles.checkbox4.Value;
-    runGlobalOpt = handles.checkbox5.Value;
-    TypeOfRegistration = handles.v.Value;
-    runBlending = handles.checkbox6.Value;
-    runRetilling = handles.chkretilling.Value;
-    outputType = handles.popupretilling.Value;
-    debug = handles.chkdebug.Value;
-    AllGUI = NCT_Registration;
-    v = 1;
-    mu = 1020;
-elseif size(varargin,2)==5 % For NCTracer Web
-    GUI=false;
-    runFeatureExtraction = 1;
-    runFeatureMatching = 1;
-    runGlobalOpt = 1;
-    
-    StackList_csv_pth = varargin{1};
-    TransformationValue = varargin{2};
-    Seq_Par = varargin{3}; 
-    TypeOfRegistration = varargin{4}; %MouseLight
-    
-    outputType = 2; % use NCTracerDB
-    runBlending = 0;
-    runRetilling = 1;
-    debug = 0;
-    mu = varargin{5};
-    v = 0;
-    listbox_log = 0;
-    Par_workers = 6; % For Run in Cluster
-elseif size(varargin,2)==11
-    GUI=false;
-    StackList_csv_pth = varargin{1};
-    TransformationValue = varargin{2};
-    Seq_Par = varargin{3}; 
-    TypeOfRegistration = varargin{4}; 
-    mu = varargin{5};
-    runFeatureExtraction = varargin{6};
-    runFeatureMatching = varargin{7};
-    runGlobalOpt = varargin{8};
-    runRetilling = varargin{9};
-    outputType = varargin{10};
-    DBAddress = varargin{11};
-    
-    runBlending = 0;
-    debug = 0; 
-    v = 0;
-    listbox_log = 0;
-    Par_workers = 6;
-    
-else
-    error('Number of inputs to the registration function must equal 4 or 6.')
-end
-% addpath('../Functions');
+% Load Parameters
 parameters;
+
+% Define Initial Variables
+StackList_csv_pth = varargin{1};
+TransformationValue = varargin{2};
+Seq_Par = varargin{3};
+Par_workers = varargin{4};
+blendingSID = varargin{5};
+handles = varargin{6};
+runFeatureExtraction = handles.checkbox3.Value;
+runFeatureMatching = handles.checkbox4.Value;
+runGlobalOpt = handles.checkbox5.Value;
+runBlending = handles.checkbox6.Value;
+TypeOfRegistration = handles.v.Value;
+runRetilling = handles.chkretilling.Value;
+outputType = handles.popupretilling.Value;
+debug = handles.chkdebug.Value;
+AllGUI = NCT_Registration;
+LogLine = 1;
 stop = 0;
-tic
 
 
+% Check if CSV file exist
 if exist(StackList_csv_pth,'file') > 0
     StackList = table2cell(readtable(StackList_csv_pth,'Delimiter',','));
     
     [PathStr,FolderName]=fileparts(StackList_csv_pth);
     DataFolder=[PathStr,'/Results-',FolderName];
     
-    
-    
-    
-    
-    if GUI
-        handles.axes1.YLabel.String = '';
-        handles.axes1.XLabel.String='';
-        handles.axes1.Title.String = '';
-        handles.axes5.YLabel.String = '';
-        handles.axes5.XLabel.String='';
-        handles.axes5.Title.String = '';
-        handles.axes6.YLabel.String = '';
-        handles.axes6.XLabel.String='';
-        handles.axes6.Title.String = '';
-        handles.slider2.set('Visible','off');
-        cla(handles.axes5);
-        cla(handles.axes6);
-        axes_main = findall(AllGUI,'Tag','axes1');
-        axes_main = axes_main(1);
-        
-    end
-    
+    handles.axes1.YLabel.String = '';
+    handles.axes1.XLabel.String='';
+    handles.axes1.Title.String = '';
+    handles.axes5.YLabel.String = '';
+    handles.axes5.XLabel.String='';
+    handles.axes5.Title.String = '';
+    handles.axes6.YLabel.String = '';
+    handles.axes6.XLabel.String='';
+    handles.axes6.Title.String = '';
+    handles.slider2.set('Visible','off');
+    cla(handles.axes5);
+    cla(handles.axes6);
+    axes_main = findall(AllGUI,'Tag','axes1');
+    axes_main = axes_main(1);
+
     % index to remove invalid files
     errIndxs = [];
     StackSizes_pixels = zeros(size(StackList,1),3);
@@ -148,7 +96,7 @@ if exist(StackList_csv_pth,'file') > 0
             errIndxs = [errIndxs, i];
         end
     end
-    StackList (errIndxs,:) = []; 
+    StackList (errIndxs,:) = [];
     StackSizes_pixels (errIndxs,:) = [];
     if size(StackList,2) == 7
         StackSizes_pixels = cell2mat(StackList(:,5:7));
@@ -158,8 +106,7 @@ if exist(StackList_csv_pth,'file') > 0
     StackPositions_pixels = cell2mat(StackList(:,2:4));%xlsread(StackPositions_pixels_csv_pth);
     
     % This part is not fixed yet, should be based on correct positions from csv
-    % file
-    if TypeOfRegistration == 1%strfind(char(StackList_csv_pth),'MouseLight') > 0%strfind(char(StackList(1,1)),'ngc') > 0
+    if TypeOfRegistration == 1
         temp=StackPositions_pixels;
         StackPositions_pixels(:,1) = max(temp(:,2))-temp(:,2);
         StackPositions_pixels(:,2) = max(temp(:,1))-temp(:,1);
@@ -170,9 +117,7 @@ if exist(StackList_csv_pth,'file') > 0
     
     % Find stacks overlap
     % overlap = round((params.FE.overlap/100) * StackSizes_pixels(1,:));
-    if GUI
-        handles.axes2.Visible = 'on';
-    end
+    handles.axes2.Visible = 'on';
     All_overlaps = FindOverlaps(StackPositions_pixels,StackSizes_pixels,StackList,debug);
     
     if TypeOfRegistration == 8 || TypeOfRegistration == 7
@@ -180,15 +125,14 @@ if exist(StackList_csv_pth,'file') > 0
         All_overlaps(2:size(All_overlaps,1)+1:end) = 1;
         All_overlaps = All_overlaps';
     end
-    if GUI
-        % variable 'v' is handling the log
-        
-        listbox_log{v}  = 'Registration Process Started';
-        handles.listbox1.String = listbox_log;drawnow
-        v = v + 1;
-        handles.listbox1.Value = v-1;
-        handles.axes1.Children.delete
-    end
+    
+    % variable 'LogLine' is handling the log
+    listbox_log{LogLine}  = 'Registration Process Started';
+    handles.listbox1.String = listbox_log;drawnow
+    LogLine = LogLine + 1;
+    handles.listbox1.Value = LogLine-1;
+    handles.axes1.Children.delete
+    
     if runFeatureExtraction
         if(exist(DataFolder, 'dir')>0 )
             if(exist([DataFolder,'/features/'], 'dir')>0 )
@@ -203,20 +147,20 @@ if exist(StackList_csv_pth,'file') > 0
         else
             mkdir(DataFolder);
         end
-        tic
-        [~,listbox_log,v,stop]=FeatureExtraction(v,StackList,listbox_log,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels,debug);
-        featureExtractionTime = toc
+        
+        [~,listbox_log,LogLine,stop]=FeatureExtraction(LogLine,StackList,listbox_log,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels,debug);
+        
     end
     
     if runFeatureMatching && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
-            if GUI
-                listbox_log{v}  = 'Feature Matchig Started';
-                handles.listbox1.String = listbox_log;drawnow
-                v = v + 1;
-                handles.listbox1.Value = v-1;drawnow
-            end
-            [~,Matched,listbox_log,v,stop]=Generate_Reg_MatchedPoints(listbox_log,v,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,debug,mu);
+            
+            listbox_log{LogLine}  = 'Feature Matchig Started';
+            handles.listbox1.String = listbox_log;drawnow
+            LogLine = LogLine + 1;
+            handles.listbox1.Value = LogLine-1;drawnow
+            
+            [~,Matched,listbox_log,LogLine,stop]=Generate_Reg_MatchedPoints(listbox_log,LogLine,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,debug,params.FM.mu);
         else
             warndlg('The Features Folder is not Exists! Please run Feature Extraction.','!! Warning !!');
         end
@@ -225,12 +169,10 @@ if exist(StackList_csv_pth,'file') > 0
     runGlobal = 0;
     if runGlobalOpt && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
-            if GUI
-                listbox_log{v}  = 'Global Optimization Started';
-                handles.listbox1.String = listbox_log;drawnow
-                v = v + 1;
-                handles.listbox1.Value = v-1;drawnow
-            end
+            listbox_log{LogLine}  = 'Global Optimization Started';
+            handles.listbox1.String = listbox_log;drawnow
+            LogLine = LogLine + 1;
+            handles.listbox1.Value = LogLine-1;drawnow
             switch TransformationValue
                 case 1
                     if exist([DataFolder,params.FM.MatchedLocationsFile_Translation],'file')
@@ -296,17 +238,13 @@ if exist(StackList_csv_pth,'file') > 0
                     case 4
                         Transform_Type = 'Translation';
                         [SaveLocation,T]=Global_Linear_Transform(StackPositions_pixels,Matched,Transform_Type,DataFolder);
-                        T.L = 0;
-                        
+                        T.L = 0;     
                 end
                 
-                globaltime  = toc;
-                if GUI
-                    listbox_log{v}  = ['Global Regis. Time=',num2str(globaltime),'s, Registered Positions Data saved as: ',SaveLocation];
-                    handles.listbox1.String = listbox_log;drawnow
-                    v = v + 1;
-                    handles.listbox1.Value = v-1;drawnow
-                end
+                listbox_log{LogLine}  = ['Registered Positions Data saved as: ',SaveLocation];
+                handles.listbox1.String = listbox_log;drawnow
+                LogLine = LogLine + 1;
+                handles.listbox1.Value = LogLine-1;drawnow
             else
                 warndlg('Global Optimization can not be run.','!! Warning !!');
             end
@@ -317,22 +255,17 @@ if exist(StackList_csv_pth,'file') > 0
     
     if runBlending && ~stop
         %         if exist([DataFolder,params.GT.StackPositions_Registered]) > 0 || exist([DataFolder,params.GA.StackPositions_Registered]) > 0 || exist([DataFolder,params.GR.StackPositions_Registered]) > 0
-        listbox_log{v}  = 'Blending Started';
+        listbox_log{LogLine}  = 'Blending Started';
         handles.listbox1.String = listbox_log;drawnow
-        v = v + 1;
-        handles.listbox1.Value = v-1;drawnow
-        tic
-        
+        LogLine = LogLine + 1;
+        handles.listbox1.Value = LogLine-1;drawnow
+
         % 8 for Allignement of Stacks
-        if TypeOfRegistration == 8 && GUI
-            %             StackPositions_Registered(:,3) = 0;
+        if TypeOfRegistration == 8
             [Tile3D_org,Tile3D,stop] = blending_stackreg(StackPositions_Registered,StackSizes_pixels,StackList,T.L,T.b,DataFolder);
-        else
-            
-            [Tile3D_org,Tile3D,stop] = blending(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);
-            
+        else      
+            [Tile3D_org,Tile3D,stop] = blending(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder); 
             %                 [Tile3D_org,Tile3D,stop] = blending_mine(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);
-            
         end
         %         Tile3D(all(all(Tile3D == 0,3),2),:,:) = [];
         %         Tile3D(:,all(all(Tile3D == 0,3),1),:) = [];
@@ -359,11 +292,10 @@ if exist(StackList_csv_pth,'file') > 0
         axes_main.Tag='axes1';
         axes_main.XLim = [0.5 size(h_im.CData,2)+0.5];
         axes_main.YLim = [0.5 size(h_im.CData,1)+0.5];
-        blendingtime  = toc;
-        listbox_log{v}  = ['Global Regis. Time=',num2str(blendingtime),'s, Registered Positions Data saved as: ',DataFolder];
+        listbox_log{LogLine}  = ['Registered Positions Data saved as: ',DataFolder];
         handles.listbox1.String = listbox_log;drawnow
-        v = v + 1;
-        handles.listbox1.Value = v-1;drawnow
+        LogLine = LogLine + 1;
+        handles.listbox1.Value = LogLine-1;drawnow
         if handles.checkbox10.Value
             volumeViewer(Tile3D);
         end
@@ -390,10 +322,8 @@ if exist(StackList_csv_pth,'file') > 0
             case 4
                 load([DataFolder,params.GT.Transformation],'T');
         end
-        
-        tic
+ 
         Retiling({StackList{:,1}},StackPositions_pixels,StackSizes_pixels,T,DataFolder,outputType,Seq_Par,Par_workers,DBAddress);
-        RetilingTime = toc
         
     end
     
@@ -407,14 +337,12 @@ if exist(StackList_csv_pth,'file') > 0
         end
     end
     
-    if GUI && ~stop
-        listbox_log{v}  = 'Done!';
+    if ~stop
+        listbox_log{LogLine}  = 'Done!';
         handles.listbox1.String = listbox_log;drawnow
-        v = v + 1;
-        handles.listbox1.Value = v-1;drawnow
+        LogLine = LogLine + 1;
+        handles.listbox1.Value = LogLine-1;drawnow
     end
 else
     warndlg('Please select a valid stack list file','!! Warning !!');
 end
-totalTime=toc;
-disp(totalTime);

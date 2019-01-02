@@ -89,7 +89,8 @@ params.FM.MatchedLocationsFile_Non_Rigid_Global = '/MatchedPoints_Non-Rigid_Glob
 % params.FM.TranslationTransformFile='/Translation.mat';
 params.FM.StackPositions_Registered1='/StackPositions_Registered.mat';
 
-
+% Regurilizer strength for Non-Rigid
+params.FM.mu = 1020;
                                 %% Global Optimization Parameters
 %Parameters related to generation of profiles used in gui_optimization.m and profilefilters.m
 %regularization of individual shifts

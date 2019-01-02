@@ -211,7 +211,19 @@ if strcmp(T.transform,'Translation')
     reduction=paramsBigTileSize./paramsFinalTileSize;
     [xx,yy,zz]=ind2sub(reduction,(1:prod(reduction))');
     
+    
+    
+    FinalTilePositions=zeros(prod(reduction)*prod(N_tiles),3);
+    for i=1:prod(N_tiles)
+        FinalTilePositions((i-1)*prod(reduction)+1:i*prod(reduction),:)=TilePositions(i,:)+([xx,yy,zz]-1).*(ones(prod(reduction),1)*paramsFinalTileSize);
+    end
+%     remove_FinalTile_ind=(FinalTilePositions(:,1)>Max(1) | FinalTilePositions(:,2)>Max(2) | FinalTilePositions(:,3)>Max(3));
+%     FinalTile_name=(1:length(remove_FinalTile_ind))';
+%     FinalTile_name(remove_FinalTile_ind)=nan;
+%     FinalTile_name=FinalTile_name-cumsum(remove_FinalTile_ind);
+%     FinalN_tiles=N_tiles.*reduction;
     FinalTilePositions =[];
+    
     if Seq_Par > 1
         if ~discovery
             parpool(Par_workers)
@@ -333,7 +345,7 @@ if strcmp(T.transform,'Translation')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:)~=paramsEmptyVoxelsValue,1,'first'))
-                        SaveTile(outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
+                        SaveTile(outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder,N_tiles)
                     end
                 end
             end
@@ -529,7 +541,8 @@ elseif outputType ==3
     nbytes = fprintf(fileID,json_string);
     fclose(fileID);
 elseif outputType == 5
-    createXML(FinalTilePositions(~remove_FinalTile_ind),paramsFinalparamsBigTileSize,SaveFolder);
+%     remove_FinalTile_ind=(FinalTilePositions(:,1)>Max(1) | FinalTilePositions(:,2)>Max(2) | FinalTilePositions(:,3)>Max(3));
+    createXML(FinalTilePositions,paramsBigTileSize,SaveFolder);
 end
 
 
