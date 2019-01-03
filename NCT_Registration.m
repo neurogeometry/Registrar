@@ -125,16 +125,19 @@ Par_workers = str2double(get(handles.edit14,'String')); % Number of Workers
 blendingSID = str2double(get(handles.edit15,'String'));
 StackList_csv_pth = get(handles.edt_stacklist,'String');
 
+Log();
+LogHandle=findobj(0,'Name','Log');
+% LogHandle.Children(2).String{end} = '';
+
 tic
-try
-    registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles)
-catch ME
-    %     LogHandles = Log();
-    %     handles.listbox1.String{end+1}= ME.getReport;
-    Log();
-    LogHandle=findobj(0,'Name','Log')
-    LogHandle.Children(2).String = ME.getReport;
-end
+% try
+    registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles,LogHandle)
+% catch ME
+%     %     LogHandles = Log();
+%     %     handles.listbox1.String{end+1}= ME.getReport;
+%     
+%     LogHandle.Children(2).String = ME.getReport;
+% end
 TotalTime = toc
 
 
@@ -402,7 +405,7 @@ elseif val == 6 % Visual
 elseif val == 7 % TimeLapse
     set(handles.edt_stacklist,'String','../../MicroscopeFiles\TimeLapse_Holtmaat_StackList.csv');
 elseif val == 8 % TimeLapse
-    set(handles.edt_stacklist,'String','../../MicroscopeFiles\slices2.csv');
+    set(handles.edt_stacklist,'String','../../MicroscopeFiles\slicesHoltmat.csv');
 elseif val == 9 % Other
     set(handles.edt_stacklist,'String','');
 end

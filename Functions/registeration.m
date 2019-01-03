@@ -30,6 +30,7 @@ Seq_Par = varargin{3};
 Par_workers = varargin{4};
 blendingSID = varargin{5};
 handles = varargin{6};
+LogHandle = varargin{7};
 runFeatureExtraction = handles.checkbox3.Value;
 runFeatureMatching = handles.checkbox4.Value;
 runGlobalOpt = handles.checkbox5.Value;
@@ -42,7 +43,8 @@ AllGUI = NCT_Registration;
 LogLine = 1;
 stop = 0;
 
-
+LogHandle.Children(2).String{end+1} = 'Registration Started';
+LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
 % Check if CSV file exist
 if exist(StackList_csv_pth,'file') > 0
     StackList = table2cell(readtable(StackList_csv_pth,'Delimiter',','));
@@ -126,10 +128,14 @@ if exist(StackList_csv_pth,'file') > 0
     end
     
     % variable 'LogLine' is handling the log
-    listbox_log{LogLine}  = 'Registration Process Started';
-    handles.listbox1.String = listbox_log;drawnow
-    LogLine = LogLine + 1;
-    handles.listbox1.Value = LogLine-1;
+%     listbox_log{LogLine}  = 'Registration Process Started';
+%     handles.listbox1.String = listbox_log;drawnow
+%     LogLine = LogLine + 1;
+%     handles.listbox1.Value = LogLine-1;
+listbox_log = '';
+            
+            
+    
     handles.axes1.Children.delete
     
     if runFeatureExtraction
@@ -146,7 +152,8 @@ if exist(StackList_csv_pth,'file') > 0
         else
             mkdir(DataFolder);
         end
-        
+        LogHandle.Children(2).String{end+1} = "Feature Extraction Started";
+        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
         [~,listbox_log,LogLine,stop]=FeatureExtraction(LogLine,StackList,listbox_log,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels,debug);
         
     end
@@ -154,11 +161,14 @@ if exist(StackList_csv_pth,'file') > 0
     if runFeatureMatching && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
             
-            listbox_log{LogLine}  = 'Feature Matchig Started';
-            handles.listbox1.String = listbox_log;drawnow
-            LogLine = LogLine + 1;
-            handles.listbox1.Value = LogLine-1;drawnow
+%             listbox_log{LogLine}  = 'Feature Matchig Started';
+%             handles.listbox1.String = listbox_log;drawnow
+%             LogLine = LogLine + 1;
+%             handles.listbox1.Value = LogLine-1;drawnow
             
+            LogHandle.Children(2).String{end+1} = 'Feeature Matching Started';
+            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+                        
             [~,Matched,listbox_log,LogLine,stop]=Generate_Reg_MatchedPoints(listbox_log,LogLine,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,debug,params.FM.mu);
         else
             warndlg('The Features Folder is not Exists! Please run Feature Extraction.','!! Warning !!');
@@ -168,10 +178,15 @@ if exist(StackList_csv_pth,'file') > 0
     runGlobal = 0;
     if runGlobalOpt && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
-            listbox_log{LogLine}  = 'Global Optimization Started';
-            handles.listbox1.String = listbox_log;drawnow
-            LogLine = LogLine + 1;
-            handles.listbox1.Value = LogLine-1;drawnow
+%             listbox_log{LogLine}  = 'Global Optimization Started';
+%             handles.listbox1.String = listbox_log;drawnow
+%             LogLine = LogLine + 1;
+%             handles.listbox1.Value = LogLine-1;drawnow
+            LogHandle.Children(2).String{end+1} = 'Global Optimization Started';
+            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+
+            
+            
             switch TransformationValue
                 case 1
                     if exist([DataFolder,params.FM.MatchedLocationsFile_Translation],'file')
@@ -239,11 +254,13 @@ if exist(StackList_csv_pth,'file') > 0
                         [SaveLocation,T]=Global_Linear_Transform(StackPositions_pixels,Matched,Transform_Type,DataFolder);
                         T.L = 0;     
                 end
-                
-                listbox_log{LogLine}  = ['Registered Positions Data saved as: ',SaveLocation];
-                handles.listbox1.String = listbox_log;drawnow
-                LogLine = LogLine + 1;
-                handles.listbox1.Value = LogLine-1;drawnow
+
+                LogHandle.Children(2).String{end+1} = ['Registered Positions Data saved as: ',SaveLocation];
+                LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+%                 listbox_log{LogLine}  = ['Registered Positions Data saved as: ',SaveLocation];
+%                 handles.listbox1.String = listbox_log;drawnow
+%                 LogLine = LogLine + 1;
+%                 handles.listbox1.Value = LogLine-1;drawnow
             else
                 warndlg('Global Optimization can not be run.','!! Warning !!');
             end
@@ -254,10 +271,12 @@ if exist(StackList_csv_pth,'file') > 0
     
     if runBlending && ~stop
         %         if exist([DataFolder,params.GT.StackPositions_Registered]) > 0 || exist([DataFolder,params.GA.StackPositions_Registered]) > 0 || exist([DataFolder,params.GR.StackPositions_Registered]) > 0
-        listbox_log{LogLine}  = 'Blending Started';
-        handles.listbox1.String = listbox_log;drawnow
-        LogLine = LogLine + 1;
-        handles.listbox1.Value = LogLine-1;drawnow
+        LogHandle.Children(2).String{end+1} = 'Blending Stareted';
+        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+%         listbox_log{LogLine}  = 'Blending Started';
+%         handles.listbox1.String = listbox_log;drawnow
+%         LogLine = LogLine + 1;
+%         handles.listbox1.Value = LogLine-1;drawnow
 
         % 8 for Allignement of Stacks
         if TypeOfRegistration == 8
@@ -291,10 +310,12 @@ if exist(StackList_csv_pth,'file') > 0
         axes_main.Tag='axes1';
         axes_main.XLim = [0.5 size(h_im.CData,2)+0.5];
         axes_main.YLim = [0.5 size(h_im.CData,1)+0.5];
-        listbox_log{LogLine}  = ['Registered Positions Data saved as: ',DataFolder];
-        handles.listbox1.String = listbox_log;drawnow
-        LogLine = LogLine + 1;
-        handles.listbox1.Value = LogLine-1;drawnow
+        LogHandle.Children(2).String{end+1} = ['Registered Positions Data saved as:',DataFolder];
+        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+%         listbox_log{LogLine}  = ['Registered Positions Data saved as: ',DataFolder];
+%         handles.listbox1.String = listbox_log;drawnow
+%         LogLine = LogLine + 1;
+%         handles.listbox1.Value = LogLine-1;drawnow
         if handles.checkbox10.Value
             volumeViewer(Tile3D);
         end

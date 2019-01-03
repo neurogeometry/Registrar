@@ -49,7 +49,9 @@ All_overlaps = sparse(ii(1:count),jj(1:count),vv(1:count),N,N);
 % end
 % f1 = figure;
 if debug
-    tb3 = findobj(NCT_Registration,'Tag', 'axes2');
+    DatasetMap();
+    DatasetMapHandle=findobj(0,'Name','DatasetMap');
+    tb3 = DatasetMapHandle;%findobj(NCT_Registration,'Tag', 'axes2');
     if ~isempty(tb3)
         tb3.Tag='axes2';
     end
