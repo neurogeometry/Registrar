@@ -129,7 +129,11 @@ tic
 try
     registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles)
 catch ME
-    handles.listbox1.String{end+1}= ME.getReport;
+    %     LogHandles = Log();
+    %     handles.listbox1.String{end+1}= ME.getReport;
+    Log();
+    LogHandle=findobj(0,'Name','Log')
+    LogHandle.Children(2).String = ME.getReport;
 end
 TotalTime = toc
 
