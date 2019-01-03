@@ -1,4 +1,4 @@
-function SaveTile(usedDB,Tile,image_id,x,TilePositions,TileSize,z_level,SaveFolder,N_tiles)
+function SaveTile(LogHandle,usedDB,Tile,image_id,x,TilePositions,TileSize,z_level,SaveFolder,N_tiles)
 
 TileName=[num2str(TilePositions(1)),'_',num2str(TilePositions(2)),'_',num2str(TilePositions(3))];
 if usedDB == 1
@@ -6,7 +6,7 @@ if usedDB == 1
     insertcommand = 'INSERT INTO pix (image_id,x,y,z,x_dim,y_dim,z_dim,pixels,zoom_out) values (?,?,?,?,?,?,?,?,?)';
     StatementObject = x.prepareStatement(insertcommand);
     StatementObject.setObject(1,image_id);
-%     StatementObject.setObject(2,TileName);
+    %     StatementObject.setObject(2,TileName);
     StatementObject.setObject(2,TilePositions(1)-1)
     StatementObject.setObject(3,TilePositions(2)-1)
     StatementObject.setObject(4,TilePositions(3)-1)
@@ -17,11 +17,14 @@ if usedDB == 1
     StatementObject.setObject(9,z_level);
     StatementObject.execute;
     close(StatementObject);
+    LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' inserted.'];
+    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
+    
     disp(['Tile ',TileName,' inserted.']);
 elseif usedDB == 2
     %                 TileName=num2str(i,['%0',num2str(fix(log10(prod(N_tiles)))+1),'.0f']);
     mkdir([SaveFolder,TileName]);
-%     saveastiff(im2uint8(Tile), [SaveFolder,TileName,'/',TileName,'.tif']);
+    %     saveastiff(im2uint8(Tile), [SaveFolder,TileName,'/',TileName,'.tif']);
     options.overwrite = 1;
     saveastiff(Tile, [SaveFolder,TileName,'/',TileName,'.tif'],options);
     
@@ -31,7 +34,7 @@ elseif usedDB == 2
     %         imwrite(Tile(:,:,i),[SaveFolder,TileName,'/',TileName1,'.jpg'],'jpg');
     %     end
     
-
+    
     % for save as JPEG (Like Neuroglancer) for Joe
     C1 = permute(Tile,[1 3 2]);
     Tile_glancer1 = reshape(C1,[],size(Tile,2),1);
@@ -45,16 +48,17 @@ elseif usedDB == 2
     %                 saveastiff(im2uint8(Tile_glancer), [SaveFolder,'image/',TileName]);
     SaveFolder1 = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-Neocortical2_StackList\forJoe\Zoom1\';
     imwrite(Tile_glancer1,[SaveFolder1,TileName1,'.jpg'],'jpg');
-    
+    LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
+    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
     disp(['Tile ',TileName,' created.']);
 elseif usedDB == 3 % Neuroglancer
     %                 TileName=num2str(i,['%0',num2str(fix(log10(prod(N_tiles)))+1),'.0f']);
-%     for ii = 1:size(Tile,3)
-%         Tile_glancer = [Tile_glancer;Tile(:,:,ii)];
-%     end
+    %     for ii = 1:size(Tile,3)
+    %         Tile_glancer = [Tile_glancer;Tile(:,:,ii)];
+    %     end
     C = permute(Tile,[1 3 2]);
     Tile_glancer = reshape(C,[],size(Tile,2),1);
-
+    
     xstart = TilePositions(2)-1;
     xend = xstart+size(Tile,1);
     ystart = TilePositions(1)-1;
@@ -66,6 +70,8 @@ elseif usedDB == 3 % Neuroglancer
     %                 saveastiff(im2uint8(Tile_glancer), [SaveFolder,'image/',TileName]);
     imwrite(Tile_glancer,[SaveFolder,'image/',TileName],'jpg');
     %Tile_glancer = [];
+    LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
+    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
     disp(['Tile ',TileName,' created.']);
 elseif usedDB == 4 % Nifti
     xstart = TilePositions(2)-2;
@@ -79,11 +85,11 @@ elseif usedDB == 5 % HDF5 - Big Data Viewer (Fiji)
     resolutions =  ones(prod(N_tiles),1);
     subdivisions = repmat(16,prod(N_tiles),1);
     DbName = [SaveFolder,'HDf5/export1.h5'];
-%     if namecount < 11
-%         S =num2str(namecount-1,['%0',num2str(2),'.0f']);
-%     else
-%         S =num2str(namecount-1);
-%     end
+    %     if namecount < 11
+    %         S =num2str(namecount-1,['%0',num2str(2),'.0f']);
+    %     else
+    %         S =num2str(namecount-1);
+    %     end
     h5create(DbName,['/t00000/s',TileName,'/0/cells'],size(Tile),'ChunkSize',size(Tile));
     h5write(DbName, ['/t00000/s',TileName,'/0/cells'], im2uint8(Tile));
     fileattrib(DbName,'+w');
@@ -98,6 +104,8 @@ elseif usedDB == 5 % HDF5 - Big Data Viewer (Fiji)
     h5write(DbName, ['/s',TileName,'/subdivisions'], subdivisions);
     fileattrib(DbName,'+w');
     h5writeatt(DbName,['/s',TileName,'/subdivisions'],'element_size_um',[0.5,0.5,0.5]);
+    LogHandle.Children(2).String{end+1} = 'HDF5 Created!';
+    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
 elseif usedDB == 6 % CATMAID - TrackEM
     xstart = (TilePositions(1)-2)/TileSize(1);
     ystart = (TilePositions(2)-2)/TileSize(2);
@@ -114,7 +122,10 @@ elseif usedDB == 6 % CATMAID - TrackEM
         SubtileTile_CATMAID = Tile(:,:,z+1);
         imwrite(SubtileTile_CATMAID,[SaveFolder,'CATMAID/',num2str(folder),'/',TileName],'jpg');
         
-        
+        LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
+        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
+        drawnow
+        disp(['Tile ',TileName,' created.']);
     end
     
 elseif usedDB == 7
@@ -122,6 +133,8 @@ elseif usedDB == 7
     mkdir([SaveFolder,'HDF5']);
     
     hdf5write([SaveFolder,'HDF5','temp_',TileName,'.h5'], '/dataset1', Tile);
+    LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
+    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
     disp(['Tile ',TileName,' created.']);
     
 end

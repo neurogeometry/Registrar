@@ -66,7 +66,7 @@ if exist(StackList_csv_pth,'file') > 0
     cla(handles.axes6);
     axes_main = findall(AllGUI,'Tag','axes1');
     axes_main = axes_main(1);
-
+    
     % index to remove invalid files
     errIndxs = [];
     StackSizes_pixels = zeros(size(StackList,1),3);
@@ -128,13 +128,13 @@ if exist(StackList_csv_pth,'file') > 0
     end
     
     % variable 'LogLine' is handling the log
-%     listbox_log{LogLine}  = 'Registration Process Started';
-%     handles.listbox1.String = listbox_log;drawnow
-%     LogLine = LogLine + 1;
-%     handles.listbox1.Value = LogLine-1;
-listbox_log = '';
-            
-            
+    %     listbox_log{LogLine}  = 'Registration Process Started';
+    %     handles.listbox1.String = listbox_log;drawnow
+    %     LogLine = LogLine + 1;
+    %     handles.listbox1.Value = LogLine-1;
+    % listbox_log = '';
+    
+    
     
     handles.axes1.Children.delete
     
@@ -154,22 +154,22 @@ listbox_log = '';
         end
         LogHandle.Children(2).String{end+1} = "Feature Extraction Started";
         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-        [~,listbox_log,LogLine,stop]=FeatureExtraction(LogLine,StackList,listbox_log,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels,debug);
+        [stop]=FeatureExtraction(LogHandle,StackList,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels,debug);
         
     end
     
     if runFeatureMatching && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
             
-%             listbox_log{LogLine}  = 'Feature Matchig Started';
-%             handles.listbox1.String = listbox_log;drawnow
-%             LogLine = LogLine + 1;
-%             handles.listbox1.Value = LogLine-1;drawnow
+            %             listbox_log{LogLine}  = 'Feature Matchig Started';
+            %             handles.listbox1.String = listbox_log;drawnow
+            %             LogLine = LogLine + 1;
+            %             handles.listbox1.Value = LogLine-1;drawnow
             
             LogHandle.Children(2).String{end+1} = 'Feeature Matching Started';
             LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-                        
-            [~,Matched,listbox_log,LogLine,stop]=Generate_Reg_MatchedPoints(listbox_log,LogLine,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,debug,params.FM.mu);
+            
+            [~,Matched,stop]=Generate_Reg_MatchedPoints(LogHandle,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,debug,params.FM.mu);
         else
             warndlg('The Features Folder is not Exists! Please run Feature Extraction.','!! Warning !!');
         end
@@ -178,13 +178,13 @@ listbox_log = '';
     runGlobal = 0;
     if runGlobalOpt && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
-%             listbox_log{LogLine}  = 'Global Optimization Started';
-%             handles.listbox1.String = listbox_log;drawnow
-%             LogLine = LogLine + 1;
-%             handles.listbox1.Value = LogLine-1;drawnow
+            %             listbox_log{LogLine}  = 'Global Optimization Started';
+            %             handles.listbox1.String = listbox_log;drawnow
+            %             LogLine = LogLine + 1;
+            %             handles.listbox1.Value = LogLine-1;drawnow
             LogHandle.Children(2).String{end+1} = 'Global Optimization Started';
             LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-
+            
             
             
             switch TransformationValue
@@ -252,15 +252,15 @@ listbox_log = '';
                     case 4
                         Transform_Type = 'Translation';
                         [SaveLocation,T]=Global_Linear_Transform(StackPositions_pixels,Matched,Transform_Type,DataFolder);
-                        T.L = 0;     
+                        T.L = 0;
                 end
-
+                
                 LogHandle.Children(2).String{end+1} = ['Registered Positions Data saved as: ',SaveLocation];
                 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-%                 listbox_log{LogLine}  = ['Registered Positions Data saved as: ',SaveLocation];
-%                 handles.listbox1.String = listbox_log;drawnow
-%                 LogLine = LogLine + 1;
-%                 handles.listbox1.Value = LogLine-1;drawnow
+                %                 listbox_log{LogLine}  = ['Registered Positions Data saved as: ',SaveLocation];
+                %                 handles.listbox1.String = listbox_log;drawnow
+                %                 LogLine = LogLine + 1;
+                %                 handles.listbox1.Value = LogLine-1;drawnow
             else
                 warndlg('Global Optimization can not be run.','!! Warning !!');
             end
@@ -273,16 +273,16 @@ listbox_log = '';
         %         if exist([DataFolder,params.GT.StackPositions_Registered]) > 0 || exist([DataFolder,params.GA.StackPositions_Registered]) > 0 || exist([DataFolder,params.GR.StackPositions_Registered]) > 0
         LogHandle.Children(2).String{end+1} = 'Blending Stareted';
         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-%         listbox_log{LogLine}  = 'Blending Started';
-%         handles.listbox1.String = listbox_log;drawnow
-%         LogLine = LogLine + 1;
-%         handles.listbox1.Value = LogLine-1;drawnow
-
+        %         listbox_log{LogLine}  = 'Blending Started';
+        %         handles.listbox1.String = listbox_log;drawnow
+        %         LogLine = LogLine + 1;
+        %         handles.listbox1.Value = LogLine-1;drawnow
+        
         % 8 for Allignement of Stacks
         if TypeOfRegistration == 8
             [Tile3D_org,Tile3D] = blending_stackreg(StackPositions_pixels,StackSizes_pixels,StackList,T.L,T.b,DataFolder);
-        else      
-            [Tile3D_org,Tile3D,stop] = blending(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder); 
+        else
+            [Tile3D_org,Tile3D,stop] = blending(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);
             %                 [Tile3D_org,Tile3D,stop] = blending_mine(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);
         end
         %         Tile3D(all(all(Tile3D == 0,3),2),:,:) = [];
@@ -310,12 +310,12 @@ listbox_log = '';
         axes_main.Tag='axes1';
         axes_main.XLim = [0.5 size(h_im.CData,2)+0.5];
         axes_main.YLim = [0.5 size(h_im.CData,1)+0.5];
-        LogHandle.Children(2).String{end+1} = ['Registered Positions Data saved as:',DataFolder];
+        LogHandle.Children(2).String{end+1} = 'Blending Done!';
         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-%         listbox_log{LogLine}  = ['Registered Positions Data saved as: ',DataFolder];
-%         handles.listbox1.String = listbox_log;drawnow
-%         LogLine = LogLine + 1;
-%         handles.listbox1.Value = LogLine-1;drawnow
+        %         listbox_log{LogLine}  = ['Registered Positions Data saved as: ',DataFolder];
+        %         handles.listbox1.String = listbox_log;drawnow
+        %         LogLine = LogLine + 1;
+        %         handles.listbox1.Value = LogLine-1;drawnow
         if handles.checkbox10.Value
             volumeViewer(Tile3D);
         end
@@ -342,26 +342,32 @@ listbox_log = '';
             case 4
                 load([DataFolder,params.GT.Transformation],'T');
         end
- 
-        Retiling({StackList{:,1}},StackPositions_pixels,StackSizes_pixels,T,DataFolder,outputType,Seq_Par,Par_workers,DBAddress);
+        LogHandle.Children(2).String{end+1} = 'Retilling Started!';
+        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+        Retiling(LogHandle,{StackList{:,1}},StackPositions_pixels,StackSizes_pixels,T,DataFolder,outputType,Seq_Par,Par_workers,DBAddress);
         
     end
     
     if runRetilling && ~stop && (outputType == 1 || outputType == 2)
         ZL = 2;
         NumTiles = inf;
+        LogHandle.Children(2).String{end+1} = 'Creating Zoom Levels Started!';
+        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
         
         while NumTiles > 1
-            NumTiles = CreateZoomLevels(ZL,DataFolder,outputType,DBAddress);
+            NumTiles = CreateZoomLevels(LogHandle,ZL,DataFolder,outputType,DBAddress);
             ZL = ZL * 2;
         end
     end
     
     if ~stop
-        listbox_log{LogLine}  = 'Done!';
-        handles.listbox1.String = listbox_log;drawnow
-        LogLine = LogLine + 1;
-        handles.listbox1.Value = LogLine-1;drawnow
+        LogHandle.Children(2).String{end+1} = 'All Done!';
+        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+        
+        %         listbox_log{LogLine}  = 'Done!';
+        %         handles.listbox1.String = listbox_log;drawnow
+        %         LogLine = LogLine + 1;
+        %         handles.listbox1.Value = LogLine-1;drawnow
     end
 else
     warndlg('Please select a valid stack list file','!! Warning !!');

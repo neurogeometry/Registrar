@@ -1,6 +1,6 @@
 % This function creates seamless image tiles from the dataset of original image stacks and stack transformations.
 
-function Retiling(StackList,StackPositions,StackSizes,T,DataFolder,outputType,Seq_Par,Par_workers,DBFile)
+function Retiling(LogHandle,StackList,StackPositions,StackSizes,T,DataFolder,outputType,Seq_Par,Par_workers,DBFile)
 % addpath('../Functions');
 parameters
 paramsREuseHDF5=paramsREuseHDF5;
@@ -42,13 +42,13 @@ else
         %         InfoImage=imfinfo(char([allfiles(3).folder,'/',allfiles(3).name]));
         InfoImage=imfinfo(char([filepath,'/',allfiles(3).name]));
         if strcmp(InfoImage.Format,'jpg')
-%             FinalImage=ImportStack([allfiles(3).folder,'/'],StackSizes(1,:));
+            %             FinalImage=ImportStack([allfiles(3).folder,'/'],StackSizes(1,:));
             FinalImage=ImportStack([filepath,'/'],StackSizes(1,:));
             MaxIntensityValue = max(FinalImage(:));
         else
             MaxIntensityValue = InfoImage(1).MaxSampleValue;
         end
-%         StackClass = class(imread(char([allfiles(3).folder,'/',allfiles(3).name])));
+        %         StackClass = class(imread(char([allfiles(3).folder,'/',allfiles(3).name])));
         StackClass = class(imread(char([filepath,'/',allfiles(3).name])));
     end
 end
@@ -57,7 +57,7 @@ end
 if outputType == 1
     SpecimenName = extractBefore(extractAfter(DataFolder,'MicroscopeFiles/Results-'),'_StackList');
     %     DBFile = [pwd,'/',DataFolder,'/nctracer.db'];
-%     DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
+    %     DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
     % for connection help: https://www.mathworks.com/help/database/ug/sqlite-jdbc-windows.html#bt8kopj-1
     %     delete(DBFile);
     if exist(DBFile) > 0
@@ -217,11 +217,11 @@ if strcmp(T.transform,'Translation')
     for i=1:prod(N_tiles)
         FinalTilePositions((i-1)*prod(reduction)+1:i*prod(reduction),:)=TilePositions(i,:)+([xx,yy,zz]-1).*(ones(prod(reduction),1)*paramsFinalTileSize);
     end
-%     remove_FinalTile_ind=(FinalTilePositions(:,1)>Max(1) | FinalTilePositions(:,2)>Max(2) | FinalTilePositions(:,3)>Max(3));
-%     FinalTile_name=(1:length(remove_FinalTile_ind))';
-%     FinalTile_name(remove_FinalTile_ind)=nan;
-%     FinalTile_name=FinalTile_name-cumsum(remove_FinalTile_ind);
-%     FinalN_tiles=N_tiles.*reduction;
+    %     remove_FinalTile_ind=(FinalTilePositions(:,1)>Max(1) | FinalTilePositions(:,2)>Max(2) | FinalTilePositions(:,3)>Max(3));
+    %     FinalTile_name=(1:length(remove_FinalTile_ind))';
+    %     FinalTile_name(remove_FinalTile_ind)=nan;
+    %     FinalTile_name=FinalTile_name-cumsum(remove_FinalTile_ind);
+    %     FinalN_tiles=N_tiles.*reduction;
     FinalTilePositions =[];
     
     if Seq_Par > 1
@@ -283,7 +283,7 @@ if strcmp(T.transform,'Translation')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:)~=paramsEmptyVoxelsValue,1,'first'))
-                        SaveTile(outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
+                        SaveTile(LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end
             end
@@ -345,7 +345,7 @@ if strcmp(T.transform,'Translation')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:)~=paramsEmptyVoxelsValue,1,'first'))
-                        SaveTile(outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder,N_tiles)
+                        SaveTile(LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder,N_tiles)
                     end
                 end
             end
@@ -443,7 +443,7 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:),1,'first'))
-                        SaveTile(outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
+                        SaveTile(LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end
             end
@@ -503,7 +503,7 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:),1,'first'))
-                        SaveTile(outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
+                        SaveTile(LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end
             end
@@ -541,7 +541,7 @@ elseif outputType ==3
     nbytes = fprintf(fileID,json_string);
     fclose(fileID);
 elseif outputType == 5
-%     remove_FinalTile_ind=(FinalTilePositions(:,1)>Max(1) | FinalTilePositions(:,2)>Max(2) | FinalTilePositions(:,3)>Max(3));
+    %     remove_FinalTile_ind=(FinalTilePositions(:,1)>Max(1) | FinalTilePositions(:,2)>Max(2) | FinalTilePositions(:,3)>Max(3));
     createXML(FinalTilePositions,paramsBigTileSize,SaveFolder);
 end
 

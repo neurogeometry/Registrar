@@ -1,4 +1,4 @@
-function [FeatureExtractionLog,listboxItems,v,stop]=FeatureExtraction(v,StackList,listboxItems,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels,debug)
+function [stop]=FeatureExtraction(LogHandle,StackList,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels,debug)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 %
@@ -21,10 +21,10 @@ function [FeatureExtractionLog,listboxItems,v,stop]=FeatureExtraction(v,StackLis
 % -------------------------------------------------------------------------
 
 mkdir([DataFolder,'/tmp/']);
-if v ~= 0
+if LogHandle ~= 0
     AllGUI = findobj(NCT_Registration);
-    log_ctrl = findall(AllGUI,'Tag','listbox1');
-    log_ctrl = log_ctrl(1);
+    %     log_ctrl = findall(AllGUI,'Tag','listbox1');
+    %     log_ctrl = log_ctrl(1);
     % for Stop and Pause Button
     tb11 = findobj(NCT_Registration,'Tag', 'pushbutton10');
     set(tb11,'userdata',0);
@@ -45,44 +45,47 @@ else
     tb11 = 0;
 end
 stop = 0;
-FeatureExtractionLog = [];
 
-parfor_progress(size(StackList,1),v);
+
+parfor_progress(size(StackList,1),100);
 if Seq_Par > 1 % do parallel
-        parpool(Par_workers)
+    parpool(Par_workers)
     parfor i=1:size(StackList,1)
-            parfor_progress;
+        parfor_progress;
         tifFile = StackList(i,1);
         overlap_ind=[i,find(All_overlaps(i,:)),find(All_overlaps(:,i))'];
-        [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,~,~,~] = FeatureExtractionFunc(v,tifFile,i,listboxItems,tb11,stop,debug,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
+        [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,~] = FeatureExtractionFunc(LogHandle,tifFile,i,tb11,stop,debug,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
         
     end
-        parfor_progress(0);
-        delete(gcp)
+    parfor_progress(0);
+    delete(gcp)
 else % do sequential
     for i=1:size(StackList,1)
         TifFileExist = 1;%any(size(dir([Folders{i} '/*.tif' ]),1));
         if TifFileExist
             tifFile = StackList(i,1);
             
-            if v ~= 0
-                listboxItems{v}  = ['Extracting Features for ',char(tifFile)];
-                v = v + 1;
+            if LogHandle ~= 0
+                LogHandle.Children(2).String{end+1} = ['Extracting Features for ',char(tifFile)];
+                LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+                %                 listboxItems{v}  = ['Extracting Features for ',char(tifFile)];
+                %                 v = v + 1;
                 
-                log_ctrl.String = listboxItems;drawnow
-                tb.Value = v-1;drawnow
+                %                 log_ctrl.String = listboxItems;drawnow
+                %                 tb.Value = v-1;drawnow
                 
                 
                 if get(tb11,'userdata') || stop% stop condition
                     disp(num2str(tb11.UserData));
                     stop = 1;
-                    
-                    listboxItems{v}  = 'Process Stopped';
-                    v = v + 1;
+                    LogHandle.Children(2).String{end+1} = 'Process Stopped';
+                    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+                    %                     listboxItems{v}  = 'Process Stopped';
+                    %                     v = v + 1;
                     %                 tb = findobj(NCT_Registration,'Tag', 'listbox1');
-                    log_ctrl.String = listboxItems;drawnow
+                    %                     log_ctrl.String = listboxItems;drawnow
                     %                 set(tb, 'String', listboxItems);drawnow
-                    tb.Value = v-1;drawnow
+                    %                     tb.Value = v-1;drawnow
                     
                     break;
                 end
@@ -90,8 +93,8 @@ else % do sequential
                 tb11 = 0;
             end
             overlap_ind=[i,find(All_overlaps(i,:)),find(All_overlaps(:,i))'];
-            [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,listboxItems,v,stop] = FeatureExtractionFunc(v,tifFile,i,listboxItems,tb11,stop,debug,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
-            if v ~= 0
+            [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,stop] = FeatureExtractionFunc(LogHandle,tifFile,i,tb11,stop,debug,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
+            if LogHandle ~= 0
                 q = round(1000/size(StackList,1))/0;
                 patch('XData',[0,0,x(min(i*q,size(x,2))),x(min(i*q,size(x,2)))],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
                 drawnow;
@@ -101,7 +104,7 @@ else % do sequential
     end
 end
 
-if v ~= 0
+if LogHandle ~= 0
     if ~isempty(tb9)
         tb9.Tag='axes3';
     end

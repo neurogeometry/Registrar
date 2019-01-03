@@ -1,7 +1,7 @@
 % This function creates factor of 2 zoom levels, e.g. 2,4,8,16
 % Zoom is uniform in xyz. Tile sizes remain the same
 
-function NumTiles = CreateZoomLevels(ZoomLevel,DataFolder,OutMethod,DBFile)
+function NumTiles = CreateZoomLevels(LogHandle,ZoomLevel,DataFolder,OutMethod,DBFile)
 addpath('../Functions');
 parameters;
 StackClass='uint8';
@@ -12,10 +12,10 @@ PrevZoomLevelFolder=[SaveFolder,'Zoom',prevZoomLevel,'/'];
 
 SaveFolder=[SaveFolder,'Zoom',num2str(ZoomLevel),'/'];
 if OutMethod == 1
-%     DBFile = [pwd,'/',DataFolder,'/nctracer.db'];
-%     SpecimenName = [extractBefore(extractAfter(DataFolder,"MicroscopeFiles/Results-"),'_StackList'),'_Z_',num2str(ZoomLevel)];
+    %     DBFile = [pwd,'/',DataFolder,'/nctracer.db'];
+    %     SpecimenName = [extractBefore(extractAfter(DataFolder,"MicroscopeFiles/Results-"),'_StackList'),'_Z_',num2str(ZoomLevel)];
     
-%     DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
+    %     DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
     conn = database('','','','org.sqlite.JDBC',['jdbc:sqlite:',DBFile]);
     conn.Message
     x = conn.Handle;
@@ -212,15 +212,15 @@ for i=1:prod(N_tiles_new)
         % save the tile
         TileName=[num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,2)),'_',num2str(NewTilePositions(i,3))];
         if OutMethod == 1
-%             raw_im = typecast(reshape(im2uint8(Tile),1,[]),'uint8');
-              raw_im = typecast(reshape(Tile,1,[]),StackClass);
+            %             raw_im = typecast(reshape(im2uint8(Tile),1,[]),'uint8');
+            raw_im = typecast(reshape(Tile,1,[]),StackClass);
             %            raw_im = reshape(Tile,1,[]);
             
             %             insertcommand = ['INSERT INTO pix (image_id,x,y,z,x_dim,y_dim,z_dim,pixels,z_level) values (?,?,?,?,?,?,?,?,?)'];
             insertcommand = 'INSERT INTO pix (image_id,x,y,z,x_dim,y_dim,z_dim,pixels,zoom_out) values (?,?,?,?,?,?,?,?,?)';
             StatementObject = x.prepareStatement(insertcommand);
             StatementObject.setObject(1,image_id);
-%             StatementObject.setObject(2,TileName);
+            %             StatementObject.setObject(2,TileName);
             StatementObject.setObject(2,NewTilePositions(i,1)-1);
             StatementObject.setObject(3,NewTilePositions(i,2)-1);
             StatementObject.setObject(4,NewTilePositions(i,3)-1);
@@ -231,14 +231,16 @@ for i=1:prod(N_tiles_new)
             StatementObject.setObject(9,ZoomLevel);
             StatementObject.execute;
             close(StatementObject);
-            disp(['Tile ',TileName,' created.']);
+            LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' inserted.'];
+            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
+            disp(['Tile ',TileName,' inserted.']);
             if prod(N_tiles_new) == 1
-%                 raw_im = typecast(reshape(im2uint8(max(Tile,[],3)),1,[]),'uint8');
+                %                 raw_im = typecast(reshape(im2uint8(max(Tile,[],3)),1,[]),'uint8');
                 raw_im = typecast(reshape(im2uint8(Tile),1,[]),'uint8');
                 insertcommand = 'INSERT INTO pix (image_id,x,y,z,x_dim,y_dim,z_dim,pixels,zoom_out) values (?,?,?,?,?,?,?,?,?)';
                 StatementObject = x.prepareStatement(insertcommand);
                 StatementObject.setObject(1,image_id);
-%                 StatementObject.setObject(2,'Map');
+                %                 StatementObject.setObject(2,'Map');
                 StatementObject.setObject(2,NewTilePositions(i,1)-1);
                 StatementObject.setObject(3,NewTilePositions(i,2)-1);
                 StatementObject.setObject(4,NewTilePositions(i,3)-1);
@@ -255,12 +257,12 @@ for i=1:prod(N_tiles_new)
             saveastiff(Tile, [SaveFolder,TileName,'/',TileName,'.tif'],options);
             
             % for save as JPEG (separated z) for Joe
-%             for j=1:size(Tile,3)
-%                 TileName1=[num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,1)+j-1)];
-%                 imwrite(Tile(:,:,j),[SaveFolder,TileName,'/',TileName1,'.jpg'],'jpg');
-%             end
+            %             for j=1:size(Tile,3)
+            %                 TileName1=[num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,1)+j-1)];
+            %                 imwrite(Tile(:,:,j),[SaveFolder,TileName,'/',TileName1,'.jpg'],'jpg');
+            %             end
             
-           
+            
             
             % for save as JPEG (Like Neuroglancer) for Joe
             C1 = permute(Tile,[1 3 2]);
@@ -275,7 +277,8 @@ for i=1:prod(N_tiles_new)
             %                 saveastiff(im2uint8(Tile_glancer), [SaveFolder,'image/',TileName]);
             SaveFolder1 = ['C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-Neocortical2_StackList\forJoe\Zoom',num2str(ZoomLevel),'\'];
             imwrite(Tile_glancer1,[SaveFolder1,TileName1,'.jpg'],'jpg');
-                        
+            LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
+            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
             disp(['Tile ',TileName,' created.']);
         end
     end

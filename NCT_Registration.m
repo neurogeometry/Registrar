@@ -10,21 +10,21 @@ function varargout = NCT_Registration(varargin)
 % =========================================================================
 % -------------------------------------------------------------------------
 % NCT_REGISTRATION MATLAB code for NCT_Registration.fig
-%      NCT_REGISTRATION, by itself, creates a new NCT_REGISTRATION or 
+%      NCT_REGISTRATION, by itself, creates a new NCT_REGISTRATION or
 %      raises the existing singleton*.
 %
-%      H = NCT_REGISTRATION returns the handle to a new NCT_REGISTRATION or 
+%      H = NCT_REGISTRATION returns the handle to a new NCT_REGISTRATION or
 %      the handle to the existing singleton*.
 %
-%      NCT_REGISTRATION('CALLBACK',hObject,eventData,handles,...) calls the 
-%      local function named CALLBACK in NCT_REGISTRATION.M with the given 
+%      NCT_REGISTRATION('CALLBACK',hObject,eventData,handles,...) calls the
+%      local function named CALLBACK in NCT_REGISTRATION.M with the given
 %      input arguments.
 %
-%      NCT_REGISTRATION('Property','Value',...) creates a new 
-%      NCT_REGISTRATION or raises the existing singleton*.  Starting from 
-%      the left, property value pairs are applied to the GUI before 
-%      NCT_Registration_OpeningFcn gets called.  An unrecognized property 
-%      name or invalid value makes property application stop.  All inputs 
+%      NCT_REGISTRATION('Property','Value',...) creates a new
+%      NCT_REGISTRATION or raises the existing singleton*.  Starting from
+%      the left, property value pairs are applied to the GUI before
+%      NCT_Registration_OpeningFcn gets called.  An unrecognized property
+%      name or invalid value makes property application stop.  All inputs
 %      are passed to NCT_Registration_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
@@ -68,7 +68,7 @@ function NCT_Registration_OpeningFcn(hObject, eventdata, handles, varargin)
 % jicon=javax.swing.ImageIcon('icon.png');
 % jFrame.setFigureIcon(jicon);
 %web('mailto:your.mail@address.org');
-handles.output = hObject; 
+handles.output = hObject;
 guidata(hObject, handles);
 % Choose default command line output for NCT_Registration
 handles.output = hObject;
@@ -127,15 +127,15 @@ StackList_csv_pth = get(handles.edt_stacklist,'String');
 
 Log();
 LogHandle=findobj(0,'Name','Log');
-% LogHandle.Children(2).String{end} = '';
+LogHandle.Children(2).String = {};
 
 tic
 % try
-    registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles,LogHandle)
+registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles,LogHandle)
 % catch ME
 %     %     LogHandles = Log();
 %     %     handles.listbox1.String{end+1}= ME.getReport;
-%     
+%
 %     LogHandle.Children(2).String = ME.getReport;
 % end
 TotalTime = toc
