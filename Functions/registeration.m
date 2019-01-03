@@ -261,7 +261,7 @@ if exist(StackList_csv_pth,'file') > 0
 
         % 8 for Allignement of Stacks
         if TypeOfRegistration == 8
-            [Tile3D_org,Tile3D,stop] = blending_stackreg(StackPositions_Registered,StackSizes_pixels,StackList,T.L,T.b,DataFolder);
+            [Tile3D_org,Tile3D] = blending_stackreg(StackPositions_pixels,StackSizes_pixels,StackList,T.L,T.b,DataFolder);
         else      
             [Tile3D_org,Tile3D,stop] = blending(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder); 
             %                 [Tile3D_org,Tile3D,stop] = blending_mine(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);
