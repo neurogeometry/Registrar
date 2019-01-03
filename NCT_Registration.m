@@ -75,7 +75,8 @@ handles.output = hObject;
 myCluster = parcluster('local');
 MaxNumWorkers = myCluster.NumWorkers;
 set(handles.text28,'Enable','off');
-set(handles.text28, 'String', ['Max: ',num2str(MaxNumWorkers)]);
+set(handles.text28, 'String', ['(max: ',num2str(MaxNumWorkers),')']);
+set(handles.edit14, 'String', num2str(MaxNumWorkers));
 % Update handles structure
 guidata(hObject, handles);
 
@@ -125,7 +126,11 @@ blendingSID = str2double(get(handles.edit15,'String'));
 StackList_csv_pth = get(handles.edt_stacklist,'String');
 
 tic
-registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles)
+try
+    registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles)
+catch ME
+    handles.listbox1.String{end+1}= ME.getReport;
+end
 TotalTime = toc
 
 
@@ -381,7 +386,7 @@ val = get(handles.v,'Value');
 if val == 1 %MouseLight
     set(handles.edt_stacklist,'String','../../MicroscopeFiles\MouseLight_StackList.csv');
 elseif val == 2 % Diadem1,2
-    set(handles.edt_stacklist,'String','../../MicroscopeFiles\Neocortical1_StackList.csv');
+    set(handles.edt_stacklist,'String','C:\Armen\Publications\Paper35 (Registration Seyed)\MicroscopeFiles\Neocortical2_StackList.csv');
 elseif val == 3 % Diadem1,2
     set(handles.edt_stacklist,'String','../../MicroscopeFiles\Neocortical2_StackList.csv');
 elseif val == 4 % Neuromuscular
