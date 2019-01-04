@@ -268,7 +268,10 @@ if Seq_Par ~= 2 && LogHandle ~= 0
 end
 if debug ==1 && Seq_Par ~= 2 && LogHandle ~= 0
     
-    tb2 = findobj(NCT_Registration,'Tag', 'axes1');
+    DebugHandle=findobj(0,'Name','Debug');
+    tb2 = DebugHandle.Children(1);
+    
+%     tb2 = findobj(NCT_Registration,'Tag', 'axes1');
     
     set(tb2, 'visible', 'on');
     h_plot=findobj(tb2,'Tag','Fpoints');

@@ -112,11 +112,11 @@ end
 function pushbutton7_Callback(hObject, eventdata, handles)
 addpath('Functions');
 parameters;
-set(handles.radio_before,'Enable','off');
-set(handles.radio_after,'Enable','off');
-set(handles.z_projection,'Enable','off');
-set(handles.radio_layerview,'Enable','off');
-set(handles.checkbox10,'Enable','off');
+% set(handles.radio_before,'Enable','off');
+% set(handles.radio_after,'Enable','off');
+% set(handles.z_projection,'Enable','off');
+% set(handles.radio_layerview,'Enable','off');
+% set(handles.checkbox10,'Enable','off');
 
 TransformationValue = get(handles.popupmenu3,'Value');%1=Translation | 2=Rigis | 3=Affine | 4=NonRigid
 

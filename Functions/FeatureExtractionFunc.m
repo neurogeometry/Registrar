@@ -62,7 +62,9 @@ rem_ind_1 = (r_seed(:,1) <=params.FE.windowsize(1) | r_seed(:,1) > (X1-params.FE
 r_seed(rem_ind_1,:) = [];
 
 if debug
-    tb1 = findobj(NCT_Registration,'Tag', 'axes1');
+%     tb1 = findobj(NCT_Registration,'Tag', 'axes1');
+    DebugHandle=findobj(0,'Name','Debug');
+    tb1 = DebugHandle.Children(1);
     
     set(tb1, 'visible', 'on');
     h_im=imshow(max(IM_Original,[],3),[0 max(IM_Original(:))],'Parent',tb1);hold(tb1,'on')

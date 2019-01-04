@@ -42,6 +42,9 @@ debug = handles.chkdebug.Value;
 AllGUI = NCT_Registration;
 LogLine = 1;
 stop = 0;
+if debug
+    Debug();
+end
 
 LogHandle.Children(2).String{end+1} = 'Registration Started';
 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
@@ -61,11 +64,11 @@ if exist(StackList_csv_pth,'file') > 0
     handles.axes6.YLabel.String = '';
     handles.axes6.XLabel.String='';
     handles.axes6.Title.String = '';
-    handles.slider2.set('Visible','off');
-    cla(handles.axes5);
-    cla(handles.axes6);
-    axes_main = findall(AllGUI,'Tag','axes1');
-    axes_main = axes_main(1);
+%     handles.slider2.set('Visible','off');
+%     cla(handles.axes5);
+%     cla(handles.axes6);
+%     axes_main = findall(AllGUI,'Tag','axes1');
+%     axes_main = axes_main(1);
     
     % index to remove invalid files
     errIndxs = [];
@@ -136,7 +139,7 @@ if exist(StackList_csv_pth,'file') > 0
     
     
     
-    handles.axes1.Children.delete
+%     handles.axes1.Children.delete
     
     if runFeatureExtraction
         if(exist(DataFolder, 'dir')>0 )
@@ -302,26 +305,26 @@ if exist(StackList_csv_pth,'file') > 0
         Axes1V = VisualizationHandle.Children(3);
         h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
 
-        handles.radio_before.Enable = 'on';
-        handles.radio_after.Enable = 'on';
-        handles.z_projection.Enable = 'on';
-        handles.radio_layerview.Enable = 'on';
-        handles.checkbox10.Enable = 'on';
-        handles.axes1.Children.delete
-        
-        t = findobj(NCT_Registration,'Tag', 'uibuttongroup2');
-        u = findobj(NCT_Registration,'Tag', 'radio_after');
-        set(t,'SelectedObject',u);
-        
-        t = findobj(NCT_Registration,'Tag', 'uibuttongroup3');
-        u = findobj(NCT_Registration,'Tag', 'z_projection');
-        set(t,'SelectedObject',u);
-        
-        h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',axes_main);
-        axes_main=h_im.Parent;
-        axes_main.Tag='axes1';
-        axes_main.XLim = [0.5 size(h_im.CData,2)+0.5];
-        axes_main.YLim = [0.5 size(h_im.CData,1)+0.5];
+%         handles.radio_before.Enable = 'on';
+%         handles.radio_after.Enable = 'on';
+%         handles.z_projection.Enable = 'on';
+%         handles.radio_layerview.Enable = 'on';
+%         handles.checkbox10.Enable = 'on';
+%         handles.axes1.Children.delete
+%         
+%         t = findobj(NCT_Registration,'Tag', 'uibuttongroup2');
+%         u = findobj(NCT_Registration,'Tag', 'radio_after');
+%         set(t,'SelectedObject',u);
+%         
+%         t = findobj(NCT_Registration,'Tag', 'uibuttongroup3');
+%         u = findobj(NCT_Registration,'Tag', 'z_projection');
+%         set(t,'SelectedObject',u);
+%         
+%         h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',axes_main);
+%         axes_main=h_im.Parent;
+%         axes_main.Tag='axes1';
+%         axes_main.XLim = [0.5 size(h_im.CData,2)+0.5];
+%         axes_main.YLim = [0.5 size(h_im.CData,1)+0.5];
         LogHandle.Children(2).String{end+1} = 'Blending Done!';
         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
         %         listbox_log{LogLine}  = ['Registered Positions Data saved as: ',DataFolder];
