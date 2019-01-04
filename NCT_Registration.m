@@ -128,6 +128,8 @@ StackList_csv_pth = get(handles.edt_stacklist,'String');
 Log();
 LogHandle=findobj(0,'Name','Log');
 LogHandle.Children(2).String = {};
+% LogHandle.Position = [25.8          52.0769230769231                       112          32.3076923076923];
+
 
 tic
 % try

@@ -100,7 +100,7 @@ end
 function pushbutton1_Callback(hObject, eventdata, handles)
 
 [file,path,indx] = uiputfile(['RegistrarLog_',date,'.txt']);
-dlmwrite([path,file],handles.listbox2.String,'delimiter','');
+dlmwrite([path,file],sprintf('   %s\n',handles.listbox2.String{:}),'delimiter','');
 
 
 % hObject    handle to pushbutton1 (see GCBO)

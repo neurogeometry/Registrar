@@ -51,6 +51,7 @@ All_overlaps = sparse(ii(1:count),jj(1:count),vv(1:count),N,N);
 if debug
     DatasetMap();
     DatasetMapHandle=findobj(0,'Name','DatasetMap');
+%     DatasetMapHandle.Position = [140.8          50.0769230769231                       112          32.3076923076923];
     tb3 = DatasetMapHandle;%findobj(NCT_Registration,'Tag', 'axes2');
     if ~isempty(tb3)
         tb3.Tag='axes2';

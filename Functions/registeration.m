@@ -290,6 +290,18 @@ if exist(StackList_csv_pth,'file') > 0
         %         Tile3D_org(all(all(Tile3D_org == 0,3),2),:,:) = [];
         %         Tile3D_org(:,all(all(Tile3D_org == 0,3),1),:) = [];
         
+        Visualization();
+        VisualizationHandle=findobj(0,'Name','Visualization');
+        ButtonGroup1V = VisualizationHandle.Children(2);
+%         BeforeButton = ButtonGroup1V.Children(2);
+        AfterButton = ButtonGroup1V.Children(1);
+        set(ButtonGroup1V,'SelectedObject',AfterButton);
+        
+       
+        
+        Axes1V = VisualizationHandle.Children(3);
+        h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
+
         handles.radio_before.Enable = 'on';
         handles.radio_after.Enable = 'on';
         handles.z_projection.Enable = 'on';
