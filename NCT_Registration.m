@@ -34,7 +34,7 @@ function varargout = NCT_Registration(varargin)
 
 % Edit the above text to modify the response to help NCT_Registration
 
-% Last Modified by GUIDE v2.5 20-Apr-2018 10:52:21
+% Last Modified by GUIDE v2.5 04-Jan-2019 15:49:52
 
 % Begin initialization code - DO NOT EDIT
 clc;
@@ -128,7 +128,7 @@ StackList_csv_pth = get(handles.edt_stacklist,'String');
 Log();
 LogHandle=findobj(0,'Name','Log');
 LogHandle.Children(2).String = {};
-% LogHandle.Position = [25.8          52.0769230769231                       112          32.3076923076923];
+% LogHandle.Position = [25.8          40.0769230769231                       112          32.3076923076923];
 
 
 tic
@@ -430,21 +430,21 @@ end
 function checkbox6_Callback(hObject, eventdata, handles)
 val = get(handles.checkbox6,'Value');
 if val == 0
-    set(handles.edit15,'Enable','off');
-    set(handles.text29,'Enable','off');
-    set(handles.radio_before,'Enable','off');
-    set(handles.radio_after,'Enable','off');
-    set(handles.z_projection,'Enable','off');
-    set(handles.radio_layerview,'Enable','off');
-    set(handles.checkbox10,'Enable','off');
+%     set(handles.edit15,'Enable','off');
+%     set(handles.text29,'Enable','off');
+%     set(handles.radio_before,'Enable','off');
+%     set(handles.radio_after,'Enable','off');
+%     set(handles.z_projection,'Enable','off');
+%     set(handles.radio_layerview,'Enable','off');
+%     set(handles.checkbox10,'Enable','off');
 else
-    set(handles.edit15,'Enable','on');
-    set(handles.text29,'Enable','on');
-    set(handles.radio_before,'Enable','on');
-    set(handles.radio_after,'Enable','on');
-    set(handles.z_projection,'Enable','on');
-    set(handles.radio_layerview,'Enable','on');
-    set(handles.checkbox10,'Enable','on');
+%     set(handles.edit15,'Enable','on');
+%     set(handles.text29,'Enable','on');
+%     set(handles.radio_before,'Enable','on');
+%     set(handles.radio_after,'Enable','on');
+%     set(handles.z_projection,'Enable','on');
+%     set(handles.radio_layerview,'Enable','on');
+%     set(handles.checkbox10,'Enable','on');
 end
 
 
@@ -812,3 +812,21 @@ web('http://www.northeastern.edu/neurogeometry/');
 function manual_mnu_Callback(hObject, eventdata, handles)
 open('UserManual.docx');
 
+
+
+% --- Executes on button press in checkbox13.
+function checkbox13_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox13
+
+
+% --- Executes on button press in checkbox14.
+function checkbox14_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox14 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox14

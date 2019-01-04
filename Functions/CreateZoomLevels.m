@@ -275,8 +275,8 @@ for i=1:prod(N_tiles_new)
             zend1 = zstart1+size(Tile,3);
             TileName1 = [num2str(xstart1),'-',num2str(xend1),'_',num2str(ystart1),'-',num2str(yend1),'_',num2str(zstart1),'-',num2str(zend1)];
             %                 saveastiff(im2uint8(Tile_glancer), [SaveFolder,'image/',TileName]);
-            SaveFolder1 = ['C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-Neocortical2_StackList\forJoe\Zoom',num2str(ZoomLevel),'\'];
-            imwrite(Tile_glancer1,[SaveFolder1,TileName1,'.jpg'],'jpg');
+%             SaveFolder1 = ['C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-Neocortical2_StackList\forJoe\Zoom',num2str(ZoomLevel),'\'];
+            imwrite(Tile_glancer1,[SaveFolder,TileName1,'.jpg'],'jpg');
             LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
             LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
             disp(['Tile ',TileName,' created.']);
