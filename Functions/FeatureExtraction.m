@@ -30,11 +30,14 @@ if LogHandle ~= 0
     set(tb11,'userdata',0);
     x = 0:0.1:100;
     tb9 = findobj(NCT_Registration,'Tag', 'axes3');
-    cla(tb9,'reset')
+%     cla(tb9,'reset')
+%     tb9.XAxis.Visible='off';
+%     tb9.YAxis.Visible='off';
     if ~isempty(tb9)
         tb9.XLim = [0 100];
         tb9.YTickLabel  = [];
     end
+    patch('XData',[0,0,100,100],'YData',[0,20,20,0],'FaceColor','white','Parent',tb9);
     patch('XData',[0,0,x(40),x(40)],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
     drawnow;
     hold on %hold('units','on')
@@ -95,8 +98,8 @@ else % do sequential
             overlap_ind=[i,find(All_overlaps(i,:)),find(All_overlaps(:,i))'];
             [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,stop] = FeatureExtractionFunc(LogHandle,tifFile,i,tb11,stop,debug,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
             if LogHandle ~= 0
-                q = round(1000/size(StackList,1))/0;
-                patch('XData',[0,0,x(min(i*q,size(x,2))),x(min(i*q,size(x,2)))],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
+                q = i/size(StackList,1)*500;
+                patch('XData',[0,0,x(min(q,size(x,2))),x(min(q,size(x,2)))],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
                 drawnow;
             end
             

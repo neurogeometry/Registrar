@@ -54,6 +54,9 @@ function Log_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for Log
 handles.output = hObject;
+jFrame=get(handles.figure1,'javaframe');
+jicon=javax.swing.ImageIcon('icon.png');
+jFrame.setFigureIcon(jicon);
 
 % Update handles structure
 guidata(hObject, handles);

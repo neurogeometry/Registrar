@@ -37,12 +37,13 @@ k = 1;
 if LogHandle ~= 0
     tb11 = findobj(NCT_Registration,'Tag', 'pushbutton10');
     set(tb11,'userdata',0);
-    x = 0:0.1:100;
+    x = 0:0.1:90;
     tb9 = findobj(NCT_Registration,'Tag', 'axes3');
     if ~isempty(tb9)
-        cla(tb9,'reset')
+%         cla(tb9,'reset')
         tb9.XLim = [0 100];
-        patch('XData',[0,0,x(40),x(40)],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
+%         patch('XData',[0,0,100,100],'YData',[0,20,20,0],'FaceColor','white','Parent',tb9);
+        patch('XData',[0,0,x(520),x(520)],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
         drawnow;
         hold on %hold('units','on')
     end
@@ -176,6 +177,9 @@ else
                 end
             end
         end
+        q = 500+SourceID/size(StackList,1)*500;
+        patch('XData',[0,0,x(min(q,size(x,2))),x(min(q,size(x,2)))],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
+        drawnow;
     end
 end
 

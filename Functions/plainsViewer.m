@@ -1,4 +1,4 @@
-function plainsViewer(handles,IM)
+function plainsViewer(VisualizationStackHandle,IM)
 %This function takes in a 3D image IM and 3-column position vector r. r can
 %be empty. It allows the user to scroll through different planes, with
 %points in the current plane highlighted.
@@ -10,18 +10,19 @@ function plainsViewer(handles,IM)
 % hf=figure;
 % hf.Visible='on';
 
-% hf5 = findobj(NCT_Registration,'Tag', 'slider2');
-% hf5.Max = size(IM,3);
-% hf5.Value = 1;
-% hf5.Callback = @ScrollFcn;
+% hf5 = findobj(NCT_Registration,'Tag', 'slider1');
+hf5 = VisualizationStackHandle.Children(1);
+hf5.Max = size(IM,3);
+hf5.Value = 1;
+hf5.Callback = @ScrollFcn;
 
 % tb2 = findobj(NCT_Registration,'Tag', 'axes1');
-tb2 = handles.axes1;
+tb2 = VisualizationStackHandle.Children(4);
 hf = tb2;
 % % tb2.Units='normalized';
 h_im=imshow(IM(:,:,1),'Parent',tb2);hold on
 hf.CLim = [0 max(IM(:))];
-hf.YLabel.String='X axis';hf.XLabel.String='Y axis';
+% hf.YLabel.String='X axis';hf.XLabel.String='Y axis';
 hf.YLabel.Position(1) = 0;
 hf.XLabel.Position(2) = -50;
 hf.XLabel.Position(1) = 70;
@@ -95,11 +96,11 @@ function ScrollFcn(src,ed)
 %handle, and ed is the event data. For WindowScrollWheelFcn, the default
 %eventdata is a structure containing VerticalScrollCount along with other
 %information.
-try
+% try
 hf = gca;
 % hf3 = findobj(hf.Parent,'-depth',1,'Tag', 'axes5');
 % hf4 = findobj(hf.Parent,'-depth',1,'Tag', 'axes6');
-% hf5 = findobj(hf.Parent,'-depth',1,'Tag', 'slider2');
+hf5 = findobj(hf.Parent,'-depth',1,'Tag', 'slider1');
 % % hf.UserData.currplane = hf5.Value;
 
 if ~isempty(hf.UserData)
@@ -108,27 +109,32 @@ if ~isempty(hf.UserData)
 %     hi4=hf4.UserData.h_im;
     if ~isempty(hi)
         prevplane=hf.UserData.currplane;
-        if ed.VerticalScrollCount>0
-            hf.UserData.currplane=min(hf.UserData.currplane+ed.VerticalScrollCount,size(hf.UserData.IM,3));
+        if strcmp(ed.EventName,'WindowScrollWheel')
+            scrlnum = ed.VerticalScrollCount;
+        else
+            scrlnum = ed.Source.Value-hf.UserData.currplane;
+        end
+        if scrlnum>0
+            hf.UserData.currplane=min(hf.UserData.currplane+scrlnum,size(hf.UserData.IM,3));
 %             hf3.UserData.currplane=min(hf3.UserData.currplane+ed.VerticalScrollCount,size(hf3.UserData.IM,3));
 %             hf4.UserData.currplane=min(hf4.UserData.currplane+ed.VerticalScrollCount,size(hf4.UserData.IM,3));
         else
-            hf.UserData.currplane=max(hf.UserData.currplane+ed.VerticalScrollCount,1);
+            hf.UserData.currplane=max(hf.UserData.currplane+scrlnum,1);
 %             hf3.UserData.currplane=max(hf3.UserData.currplane+ed.VerticalScrollCount,1);
 %             hf4.UserData.currplane=max(hf4.UserData.currplane+ed.VerticalScrollCount,1);
             
         end
-        hi.CData=hf.UserData.IM(:,:,hf.UserData.currplane);
+        hi.CData=hf.UserData.IM(:,:,round(hf.UserData.currplane));
 %         hi3.CData=squeeze(hf.UserData.IM(:,hf.UserData.currplane,:));
 %         hi4.CData=imrotate(squeeze(hf.UserData.IM(:,hf.UserData.currplane,:)),90);
-%         hf5.Value = hf.UserData.currplane;
+          hf5.Value = hf.UserData.currplane;
     end
     
-    hf.Title.String=['Current plane: ',num2str(hf.UserData.currplane),' / ',num2str(size(hf.UserData.IM,3))];
+    hf.Title.String=['Current plane: ',num2str(round(hf.UserData.currplane)),' / ',num2str(size(hf.UserData.IM,3))];
     
 end
-catch
-    warndlg('Please click on the Image','!! Warning !!');
-end
+% catch
+%     warndlg('Please click on the Image','!! Warning !!');
+% end
 
 end

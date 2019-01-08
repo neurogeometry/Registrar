@@ -34,7 +34,7 @@ function varargout = NCT_Registration(varargin)
 
 % Edit the above text to modify the response to help NCT_Registration
 
-% Last Modified by GUIDE v2.5 04-Jan-2019 15:49:52
+% Last Modified by GUIDE v2.5 07-Jan-2019 14:20:11
 
 % Begin initialization code - DO NOT EDIT
 clc;
@@ -64,9 +64,9 @@ function NCT_Registration_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to NCT_Registration (see VARARGIN)
-% jFrame=get(handles.figure1,'javaframe');
-% jicon=javax.swing.ImageIcon('icon.png');
-% jFrame.setFigureIcon(jicon);
+jFrame=get(handles.figure1,'javaframe');
+jicon=javax.swing.ImageIcon('icon.png');
+jFrame.setFigureIcon(jicon);
 %web('mailto:your.mail@address.org');
 handles.output = hObject;
 guidata(hObject, handles);
@@ -128,8 +128,6 @@ StackList_csv_pth = get(handles.edt_stacklist,'String');
 Log();
 LogHandle=findobj(0,'Name','Log');
 LogHandle.Children(2).String = {};
-% LogHandle.Position = [25.8          40.0769230769231                       112          32.3076923076923];
-
 
 tic
 % try
@@ -430,21 +428,15 @@ end
 function checkbox6_Callback(hObject, eventdata, handles)
 val = get(handles.checkbox6,'Value');
 if val == 0
-%     set(handles.edit15,'Enable','off');
-%     set(handles.text29,'Enable','off');
-%     set(handles.radio_before,'Enable','off');
-%     set(handles.radio_after,'Enable','off');
-%     set(handles.z_projection,'Enable','off');
-%     set(handles.radio_layerview,'Enable','off');
-%     set(handles.checkbox10,'Enable','off');
+    set(handles.chkdebug,'Enable','off');
+    set(handles.checkbox13,'Enable','off');
+    set(handles.checkbox14,'Enable','off');
+    set(handles.checkbox10,'Enable','off');
 else
-%     set(handles.edit15,'Enable','on');
-%     set(handles.text29,'Enable','on');
-%     set(handles.radio_before,'Enable','on');
-%     set(handles.radio_after,'Enable','on');
-%     set(handles.z_projection,'Enable','on');
-%     set(handles.radio_layerview,'Enable','on');
-%     set(handles.checkbox10,'Enable','on');
+    set(handles.chkdebug,'Enable','on');
+    set(handles.checkbox13,'Enable','on');
+    set(handles.checkbox14,'Enable','on');
+    set(handles.checkbox10,'Enable','on');
 end
 
 
@@ -762,6 +754,13 @@ end
 
 % --- Executes on button press in chkdebug.
 function chkdebug_Callback(hObject, eventdata, handles)
+Debug();
+DebugHandle=findobj(0,'Name','Debug');
+if handles.chkdebug.Value
+    DebugHandle.Visible = 'on';
+else
+    DebugHandle.Visible = 'off';
+end
 % hObject    handle to chkdebug (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -816,6 +815,26 @@ open('UserManual.docx');
 
 % --- Executes on button press in checkbox13.
 function checkbox13_Callback(hObject, eventdata, handles)
+Visualization();
+VisualizationHandle=findobj(0,'Name','Visualization');
+if handles.checkbox13.Value
+    Axes1V = VisualizationHandle.Children(3);
+    ButtonGroup1V = VisualizationHandle.Children(2);
+    %         BeforeButton = ButtonGroup1V.Children(2);
+    AfterButton = ButtonGroup1V.Children(1);
+    set(ButtonGroup1V,'SelectedObject',AfterButton);
+    try
+    Tile3D=evalin('base','Tile3D');
+    h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
+    VisualizationHandle.Visible = 'on';
+    catch
+        warndlg('Can not load registered tiles, Please run Global Optimization and Preview','!! Warning !!');
+        VisualizationHandle.Visible = 'off';
+    end
+else
+    VisualizationHandle.Visible = 'off';
+end
+
 % hObject    handle to checkbox13 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -825,8 +844,42 @@ function checkbox13_Callback(hObject, eventdata, handles)
 
 % --- Executes on button press in checkbox14.
 function checkbox14_Callback(hObject, eventdata, handles)
+
+if handles.checkbox14.Value
+    VisualiztionStack();
+    VisualizationStackHandle=findobj(0,'Name','VisualiztionStack');
+    Axes1V = VisualizationStackHandle.Children(4);
+    ButtonGroup1V = VisualizationStackHandle.Children(3);
+    %         BeforeButton = ButtonGroup1V.Children(2);
+    AfterButton = ButtonGroup1V.Children(1);
+    set(ButtonGroup1V,'SelectedObject',AfterButton);
+%     try
+    Tile3D=evalin('base','Tile3D');
+    set(VisualizationStackHandle.Children(1),'Visible','on');
+    set(VisualizationStackHandle.Children(1),'Min',1,'Max',size(Tile3D,3),'Value', 1, 'SliderStep', [1/size(Tile3D,3) 1/size(Tile3D,3)]);
+    %     set(handles.slider2,'Max',size(Tile3D1,3));
+    %     set(handles.slider2,'SliderStep',1);
+    plainsViewer(VisualizationStackHandle,Tile3D);
+%     h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
+    VisualizationStackHandle.Visible = 'on';
+%     catch
+%         warndlg('Can not load registered tiles, Please run Global Optimization and Preview','!! Warning !!');
+%         VisualizationStackHandle.Visible = 'off';
+%     end
+else
+    VisualizationStackHandle=findobj(0,'Name','VisualiztionStack');
+    VisualizationStackHandle.Visible = 'off';
+end
 % hObject    handle to checkbox14 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox14
+
+
+% --- Executes during object deletion, before destroying properties.
+function figure1_DeleteFcn(hObject, eventdata, handles)
+delete(findall(0));
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

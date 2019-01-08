@@ -60,6 +60,8 @@ if exist(StackList_csv_pth,'file') > 0
     handles.axes1.Title.String = '';
     handles.axes5.YLabel.String = '';
     handles.axes5.XLabel.String='';
+    handles.axes3.XAxis.Visible='off';
+    handles.axes3.YAxis.Visible='off';
     handles.axes5.Title.String = '';
     handles.axes6.YLabel.String = '';
     handles.axes6.XLabel.String='';
@@ -292,18 +294,20 @@ if exist(StackList_csv_pth,'file') > 0
         %         Tile3D(:,all(all(Tile3D == 0,3),1),:) = [];
         %         Tile3D_org(all(all(Tile3D_org == 0,3),2),:,:) = [];
         %         Tile3D_org(:,all(all(Tile3D_org == 0,3),1),:) = [];
+        if handles.checkbox13.Value
+            Visualization();
+            VisualizationHandle=findobj(0,'Name','Visualization');
+            VisualizationHandle.Visible = 'on';
+            
+            ButtonGroup1V = VisualizationHandle.Children(2);
+            %         BeforeButton = ButtonGroup1V.Children(2);
+            AfterButton = ButtonGroup1V.Children(1);
+            set(ButtonGroup1V,'SelectedObject',AfterButton);
+            
+            Axes1V = VisualizationHandle.Children(3);
+            h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
+        end
         
-        Visualization();
-        VisualizationHandle=findobj(0,'Name','Visualization');
-        ButtonGroup1V = VisualizationHandle.Children(2);
-%         BeforeButton = ButtonGroup1V.Children(2);
-        AfterButton = ButtonGroup1V.Children(1);
-        set(ButtonGroup1V,'SelectedObject',AfterButton);
-        
-       
-        
-        Axes1V = VisualizationHandle.Children(3);
-        h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
 
 %         handles.radio_before.Enable = 'on';
 %         handles.radio_after.Enable = 'on';
@@ -384,6 +388,9 @@ if exist(StackList_csv_pth,'file') > 0
         %         LogLine = LogLine + 1;
         %         handles.listbox1.Value = LogLine-1;drawnow
     end
+    tb9 = findobj(NCT_Registration,'Tag', 'axes3');
+    patch('XData',[0,0,100,100],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
+        
 else
     warndlg('Please select a valid stack list file','!! Warning !!');
 end

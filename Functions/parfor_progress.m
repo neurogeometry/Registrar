@@ -52,11 +52,11 @@ if N > 0
     
     if nargout == 0
         disp(['  0%[>', repmat(' ', 1, w), ']']);
-        if v ~= 0
-            tb9 = findobj(NCT_Registration,'Tag', 'axes3');
-            patch('XData',[0,0,50,50],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
-            drawnow;
-        end
+%         if v ~= 0
+%             tb9 = findobj(NCT_Registration,'Tag', 'axes3');
+%             patch('XData',[0,0,50,50],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
+%             drawnow;
+%         end
     end
 elseif N == 0
     delete('parfor_progress.txt');
@@ -64,11 +64,11 @@ elseif N == 0
     
     if nargout == 0
         disp([repmat(char(8), 1, (w+9)), char(10), '100%[', repmat('=', 1, w+1), ']']);
-        if v ~= 0
-            tb9 = findobj(NCT_Registration,'Tag', 'axes3');
-            patch('XData',[0,0,100,100],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
-            drawnow;
-        end
+%         if v ~= 0
+%             tb9 = findobj(NCT_Registration,'Tag', 'axes3');
+%             patch('XData',[0,0,100,100],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
+%             drawnow;
+%         end
     end
 else
     if ~exist('parfor_progress.txt', 'file')

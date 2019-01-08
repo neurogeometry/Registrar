@@ -22,7 +22,7 @@ function varargout = Visualization(varargin)
 
 % Edit the above text to modify the response to help Visualization
 
-% Last Modified by GUIDE v2.5 04-Jan-2019 14:36:41
+% Last Modified by GUIDE v2.5 07-Jan-2019 15:01:08
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -54,6 +54,9 @@ function Visualization_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for Visualization
 handles.output = hObject;
+jFrame=get(handles.figure1,'javaframe');
+jicon=javax.swing.ImageIcon('icon.png');
+jFrame.setFigureIcon(jicon);
 
 % Update handles structure
 guidata(hObject, handles);
@@ -161,3 +164,12 @@ function slider1_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes during object deletion, before destroying properties.
+function figure1_DeleteFcn(hObject, eventdata, handles)
+NCT_RegistrationHandle=findobj(0,'Name','Registrar');
+NCT_RegistrationHandle.Children(2).Children(9).Children(2).Value = 0;
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
