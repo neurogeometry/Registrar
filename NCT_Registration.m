@@ -848,16 +848,16 @@ function checkbox14_Callback(hObject, eventdata, handles)
 if handles.checkbox14.Value
     VisualiztionStack();
     VisualizationStackHandle=findobj(0,'Name','VisualiztionStack');
-    Axes1V = VisualizationStackHandle.Children(4);
-    ButtonGroup1V = VisualizationStackHandle.Children(3);
+    Axes1V = VisualizationStackHandle.Children(3);
+    ButtonGroup1V = VisualizationStackHandle.Children(2);
     %         BeforeButton = ButtonGroup1V.Children(2);
     AfterButton = ButtonGroup1V.Children(1);
     set(ButtonGroup1V,'SelectedObject',AfterButton);
 %     try
     Tile3D=evalin('base','Tile3D');
-    set(VisualizationStackHandle.Children(1),'Visible','on');
-    set(VisualizationStackHandle.Children(1),'Min',1,'Max',size(Tile3D,3),'Value', 1, 'SliderStep', [1/size(Tile3D,3) 1/size(Tile3D,3)]);
-    %     set(handles.slider2,'Max',size(Tile3D1,3));
+%     set(VisualizationStackHandle.Children(1),'Visible','on');
+%     set(VisualizationStackHandle.Children(1),'Min',1,'Max',size(Tile3D,3),'Value', 1, 'SliderStep', [1/size(Tile3D,3) 1/size(Tile3D,3)]);
+%     %     set(handles.slider2,'Max',size(Tile3D1,3));
     %     set(handles.slider2,'SliderStep',1);
     plainsViewer(VisualizationStackHandle,Tile3D);
 %     h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);

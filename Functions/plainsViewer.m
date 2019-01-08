@@ -11,13 +11,13 @@ function plainsViewer(VisualizationStackHandle,IM)
 % hf.Visible='on';
 
 % hf5 = findobj(NCT_Registration,'Tag', 'slider1');
-hf5 = VisualizationStackHandle.Children(1);
-hf5.Max = size(IM,3);
-hf5.Value = 1;
-hf5.Callback = @ScrollFcn;
+% hf5 = VisualizationStackHandle.Children(1);
+% hf5.Max = size(IM,3);
+% hf5.Value = 1;
+% hf5.Callback = @ScrollFcn;
 
 % tb2 = findobj(NCT_Registration,'Tag', 'axes1');
-tb2 = VisualizationStackHandle.Children(4);
+tb2 = VisualizationStackHandle.Children(3);
 hf = tb2;
 % % tb2.Units='normalized';
 h_im=imshow(IM(:,:,1),'Parent',tb2);hold on
@@ -100,7 +100,7 @@ function ScrollFcn(src,ed)
 hf = gca;
 % hf3 = findobj(hf.Parent,'-depth',1,'Tag', 'axes5');
 % hf4 = findobj(hf.Parent,'-depth',1,'Tag', 'axes6');
-hf5 = findobj(hf.Parent,'-depth',1,'Tag', 'slider1');
+% hf5 = findobj(hf.Parent,'-depth',1,'Tag', 'slider1');
 % % hf.UserData.currplane = hf5.Value;
 
 if ~isempty(hf.UserData)
@@ -127,7 +127,7 @@ if ~isempty(hf.UserData)
         hi.CData=hf.UserData.IM(:,:,round(hf.UserData.currplane));
 %         hi3.CData=squeeze(hf.UserData.IM(:,hf.UserData.currplane,:));
 %         hi4.CData=imrotate(squeeze(hf.UserData.IM(:,hf.UserData.currplane,:)),90);
-          hf5.Value = hf.UserData.currplane;
+%           hf5.Value = hf.UserData.currplane;
     end
     
     hf.Title.String=['Current plane: ',num2str(round(hf.UserData.currplane)),' / ',num2str(size(hf.UserData.IM,3))];

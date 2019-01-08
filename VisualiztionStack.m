@@ -119,8 +119,8 @@ else
 
 end
     VisualizationStackHandle=findobj(0,'Name','VisualiztionStack');
-    set(VisualizationStackHandle.Children(1),'Visible','on');
-    set(VisualizationStackHandle.Children(1),'Min',1,'Max',size(Tile3D,3),'Value', 1, 'SliderStep', [1/size(Tile3D,3) 1/size(Tile3D,3)]);
+%     set(VisualizationStackHandle.Children(1),'Visible','on');
+%     set(VisualizationStackHandle.Children(1),'Min',1,'Max',size(Tile3D,3),'Value', 1, 'SliderStep', [1/size(Tile3D,3) 1/size(Tile3D,3)]);
     %     set(handles.slider2,'Max',size(Tile3D1,3));
     %     set(handles.slider2,'SliderStep',1);
     plainsViewer(VisualizationStackHandle,Tile3D);
