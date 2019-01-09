@@ -562,12 +562,18 @@ end
 function checkbox10_Callback(hObject, eventdata, handles)
 val = get(handles.checkbox10,'Value');
 if val
-    Tile3D1=evalin('base','Tile3D');
-    volumeViewer(Tile3D1);
+    try
+        Tile3D1=evalin('base','Tile3D');
+        volumeViewer(Tile3D1);
+    catch
+        warndlg('Can not load tiles, Please run Global Optimization and check Preview','!! Warning !!');
+        volumeViewer close
+    end
 else
     volumeViewer close
 end
 
+function help_mnu_Callback(hObject, eventdata, handles)
 
 % --- Executes on button press in pushbutton10.
 function pushbutton10_Callback(hObject, eventdata, handles)
@@ -817,12 +823,12 @@ open('UserManual.docx');
 
 % --- Executes on button press in checkbox13.
 function checkbox13_Callback(hObject, eventdata, handles)
-Visualization();
-VisualizationHandle=findobj(0,'Name','Visualization');
+
 if handles.checkbox13.Value
+    Visualization();
+    VisualizationHandle=findobj(0,'Name','Visualization');
     Axes1V = VisualizationHandle.Children(3);
     ButtonGroup1V = VisualizationHandle.Children(2);
-    %         BeforeButton = ButtonGroup1V.Children(2);
     AfterButton = ButtonGroup1V.Children(1);
     set(ButtonGroup1V,'SelectedObject',AfterButton);
     try
@@ -830,11 +836,15 @@ if handles.checkbox13.Value
         h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
         VisualizationHandle.Visible = 'on';
     catch
-        warndlg('Can not load registered tiles, Please run Global Optimization and Preview','!! Warning !!');
+        warndlg('Can not load tiles, Please run Global Optimization and check Preview','!! Warning !!');
         VisualizationHandle.Visible = 'off';
     end
 else
+    try
+    VisualizationHandle=findobj(0,'Name','Visualization');
     VisualizationHandle.Visible = 'off';
+    catch
+    end
 end
 
 % hObject    handle to checkbox13 (see GCBO)
@@ -852,10 +862,9 @@ if handles.checkbox14.Value
     VisualizationStackHandle=findobj(0,'Name','VisualiztionStack');
     Axes1V = VisualizationStackHandle.Children(3);
     ButtonGroup1V = VisualizationStackHandle.Children(2);
-    %         BeforeButton = ButtonGroup1V.Children(2);
     AfterButton = ButtonGroup1V.Children(1);
     set(ButtonGroup1V,'SelectedObject',AfterButton);
-    %     try
+        try
     Tile3D=evalin('base','Tile3D');
     %     set(VisualizationStackHandle.Children(1),'Visible','on');
     %     set(VisualizationStackHandle.Children(1),'Min',1,'Max',size(Tile3D,3),'Value', 1, 'SliderStep', [1/size(Tile3D,3) 1/size(Tile3D,3)]);
@@ -864,13 +873,16 @@ if handles.checkbox14.Value
     plainsViewer(VisualizationStackHandle,Tile3D);
     %     h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
     VisualizationStackHandle.Visible = 'on';
-    %     catch
-    %         warndlg('Can not load registered tiles, Please run Global Optimization and Preview','!! Warning !!');
-    %         VisualizationStackHandle.Visible = 'off';
-    %     end
+        catch
+            warndlg('Can not load tiles, Please run Global Optimization and check Preview','!! Warning !!');
+            VisualizationStackHandle.Visible = 'off';
+        end
 else
+    try
     VisualizationStackHandle=findobj(0,'Name','VisualiztionStack');
     VisualizationStackHandle.Visible = 'off';
+    catch
+    end
 end
 % hObject    handle to checkbox14 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
