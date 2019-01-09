@@ -101,7 +101,8 @@ end
 % --- Executes during object deletion, before destroying properties.
 function figure1_DeleteFcn(hObject, eventdata, handles)
 NCT_RegistrationHandle=findobj(0,'Name','Registrar');
-NCT_RegistrationHandle.Children(2).Children(9).Children(1).Value = 0;
+NCT_RegistrationHandle.Children.findobj('Tag','checkbox14').Value = 0;
+% NCT_RegistrationHandle.Children(2).Children(9).Children(4).Value = 0;
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)

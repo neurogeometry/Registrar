@@ -34,7 +34,7 @@ function varargout = NCT_Registration(varargin)
 
 % Edit the above text to modify the response to help NCT_Registration
 
-% Last Modified by GUIDE v2.5 07-Jan-2019 14:20:11
+% Last Modified by GUIDE v2.5 09-Jan-2019 13:44:49
 
 % Begin initialization code - DO NOT EDIT
 clc;
@@ -90,7 +90,9 @@ function varargout = NCT_Registration_OutputFcn(hObject, eventdata, handles)
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+if sum(size(handles.axes3.Children)) == 0
+    patch('XData',[0,0,100,100],'YData',[0,20,20,0],'FaceColor','white','Parent',handles.axes3);
+end
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
@@ -824,9 +826,9 @@ if handles.checkbox13.Value
     AfterButton = ButtonGroup1V.Children(1);
     set(ButtonGroup1V,'SelectedObject',AfterButton);
     try
-    Tile3D=evalin('base','Tile3D');
-    h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
-    VisualizationHandle.Visible = 'on';
+        Tile3D=evalin('base','Tile3D');
+        h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
+        VisualizationHandle.Visible = 'on';
     catch
         warndlg('Can not load registered tiles, Please run Global Optimization and Preview','!! Warning !!');
         VisualizationHandle.Visible = 'off';
@@ -853,19 +855,19 @@ if handles.checkbox14.Value
     %         BeforeButton = ButtonGroup1V.Children(2);
     AfterButton = ButtonGroup1V.Children(1);
     set(ButtonGroup1V,'SelectedObject',AfterButton);
-%     try
+    %     try
     Tile3D=evalin('base','Tile3D');
-%     set(VisualizationStackHandle.Children(1),'Visible','on');
-%     set(VisualizationStackHandle.Children(1),'Min',1,'Max',size(Tile3D,3),'Value', 1, 'SliderStep', [1/size(Tile3D,3) 1/size(Tile3D,3)]);
-%     %     set(handles.slider2,'Max',size(Tile3D1,3));
+    %     set(VisualizationStackHandle.Children(1),'Visible','on');
+    %     set(VisualizationStackHandle.Children(1),'Min',1,'Max',size(Tile3D,3),'Value', 1, 'SliderStep', [1/size(Tile3D,3) 1/size(Tile3D,3)]);
+    %     %     set(handles.slider2,'Max',size(Tile3D1,3));
     %     set(handles.slider2,'SliderStep',1);
     plainsViewer(VisualizationStackHandle,Tile3D);
-%     h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
+    %     h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
     VisualizationStackHandle.Visible = 'on';
-%     catch
-%         warndlg('Can not load registered tiles, Please run Global Optimization and Preview','!! Warning !!');
-%         VisualizationStackHandle.Visible = 'off';
-%     end
+    %     catch
+    %         warndlg('Can not load registered tiles, Please run Global Optimization and Preview','!! Warning !!');
+    %         VisualizationStackHandle.Visible = 'off';
+    %     end
 else
     VisualizationStackHandle=findobj(0,'Name','VisualiztionStack');
     VisualizationStackHandle.Visible = 'off';
@@ -883,3 +885,6 @@ delete(findall(0));
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+
