@@ -26,8 +26,6 @@ To test the software, download RegistrarSampleData.zip (~160 MB) and extract its
 
 # A sample of input CSV file
 
-<img src="https://web.northeastern.edu/kahaki/Registrar.PNG" alt="Registrar" align="middle"> 
-
 % Stack location on disk, stack position x, stack position y, stack position z
 
 E:\SubTiling\00735\00735-ngc.0.tif,203299.775250213,196643.100746094,19118.6238160000
