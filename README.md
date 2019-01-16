@@ -4,7 +4,7 @@ Copyright 2017 Northeastern University
 </br>
 This project has been supported by the National Institude of Health (NIH)
 </br></br></br>
-Registrar is a software for registration of spatial and temporal 3D light microscopy images
+Registrar is open source software for accurate spatial registration of multiple overlapping stacks of images, registration of stacks of images acquired in a time-lapse manner, and registration of image plains within individual stacks. Registrar provides a utility for registration based on translation, rigid, affine, and B-spline transformations. This software was developed by Seyed M.M. Kahaki and Armen Stepanyants with input from other members of the Neurogeometry group.
 
 <img src="https://web.northeastern.edu/kahaki/reg_before_after.PNG" alt="Registrar" align="middle">
 
