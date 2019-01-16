@@ -24,7 +24,7 @@ Registrar can be downloaded at https://github.com/neurogeometry/registrar. Start
 
 # Sample Data
 
-To test the software, download RegistrarSampleData.zip (~160 MB) and extract its components. This folder includes the Neocortical Layer 1 Axons dataset of the DIADEM Competition, which can be used along with spatial registration.
+To test the software, download <a href="http://www.northeastern.edu/neurogeometry/wp-content/uploads/RegistrarSampleData.zip">RegistrarSampleData.zip</a> (~160 MB) and extract its components. This folder includes the Neocortical Layer 1 Axons dataset of the DIADEM Competition, which can be used along with spatial registration.
 
 # A sample of input CSV file
 
