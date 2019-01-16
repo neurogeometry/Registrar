@@ -1,48 +1,49 @@
 %% This file store all available parameters
                             
-                                %% Feature Extraction Parameters
+%% Feature Extraction Parameters
 
-    % Parameter to set the filter value
+% Parameter to set the filter value
 params.FE.filterValue = 1;          % For Smooth3 set to 1, 3D Gaussian set to 2, Imboxfilter3 set to 3, MultiScale LOG set to 4
 
-    % Parameter to control the smooth3 filtering size
+% Parameter to control the smooth3 filtering size
 params.FE.smooth3BoxSize = 3;       %default:   params.FE.smooth3BoxSize = 3
 
-    % Parameter to control the Gaussian filtering size
+% Parameter to control the Gaussian filtering size
 params.FE.GaussianSize = 3;         %default:   params.FE.GaussianSize = 3
 
-    % Parameter to control the imbox filtering size
+% Parameter to control the imbox filtering size
 params.FE.IMboxSize = [5 5 3];      %default:   params.FE.IMboxSize = [5 5 3]
 
-    % Parameter to control the Multi Scale LOG filtering size
+% Parameter to control the Multi Scale LOG filtering size
 params.FE.MLOG1 = 3;               %default:   params.FE.MLOG1 = 3
 params.FE.MLOG2 = 3;               %default:   params.FE.MLOG2 = 3
 params.FE.MLOG3 = 3;               %default:   params.FE.MLOG3 = 3
 
-    %  Size of the window to exgtract information around features 
+%  Size of the window to exgtract information around features 
 params.FE.windowsize = [4 4 4];
 
-    %  Feature Extraction Threshold - higher k for less features
+%  Feature Extraction Threshold - higher k for less features
 params.FE.k = 1.5;
 
-    % Expected number of features per stack
+% Expected number of features per stack
 params.FE.MaxN_Features=1000;
 params.FE.Mesh = [15 15 5]; %Features distance / Higher for less Features
 
-    % Expected [x,y,z] movement of voxles during registration relative to stack size
-    % Use 1 if unknown 
+% Expected [x,y,z] movement of voxles during registration relative to stack size
+% Use 1 if unknown 
 params.FE.Expected_Missalignment = [0.1,0.1,0.1];                                
                                 %% Feature Matching Parameters
                  
-    % Parameter controling the minimum matched points to run Ransac in Stitching_3D_Func.m 
+% Parameter controling the minimum matched points to run Ransac in Stitching_3D_Func.m 
 paramsFMRansacMin =15;             %default:   params.FM.RansacLimit=15
 
-    % Parameter controling the maximum distance of features to be consider in Hungarian Algorithm in Stitching_3D_Func.m 
+% Parameter controling the maximum distance of features to be consider in Hungarian Algorithm in Stitching_3D_Func.m 
 paramsFMDT = 60;                   %default:	params.FM.DT = 60;       
 
 paramsFMPad = 0; % used in OverlapRegion1 to pad the features
 paramsFMminReqFeatures = 15; % minimum features to run feature matching
-    % Parameter to selec the similarity metric for feature matching
+
+% Parameter to selec the similarity metric for feature matching
 % available metrics includes:
 % ZMAD = ZeroMeanAbsoluteDifferences
 % MSE: MeanSquareError
@@ -54,12 +55,12 @@ paramsFMminReqFeatures = 15; % minimum features to run feature matching
 % SAD =  Sum of Squared Differences
 paramsFMMetric = 'ZMAD';        %default:	paramsFMMetric = 'ZMAD'  EigenVector;
 
-    % Parameter to have a cost for matching by Hungarian
+% Parameter to have a cost for matching by Hungarian
 paramsFM_C1 = [];        %default:	paramsFM_C1 = 200
 paramsFM_C2 = [];        %default:	paramsFM_C2 = 200
 
 
-    % Parameter to control the maximum iteration of Ransac
+% Parameter to control the maximum iteration of Ransac
 paramsFMmaxiter=1000;           %default:	paramsFMmaxiter = 1000;
 
 % Parameter to control the debug mode
@@ -68,7 +69,7 @@ paramsFMmaxiter=1000;           %default:	paramsFMmaxiter = 1000;
 % Minimum number of desired final matches
 paramsFMminmatches = 10; 
 
-    % Use Hessian-Eigen
+% Use Hessian-Eigen
 paramsFMEigen=0;                %default:	paramsFMEigen = 0;
 
 % Minimum required features to do feature matching
@@ -102,12 +103,13 @@ params.GA.lamda=10^-6;
 params.GT.eta = 1;
 params.GA.eta = 1;
 
-    % regularization of the overall deformation
+% regularization of the overall deformation
 params.GA.nu = 1;
-    % regularization of individual deformations 
+
+% regularization of individual deformations 
 params.GA.mu=10^-1;
 
-    % Registratio Results save file GT = Global Translation, GA = Global Affine
+% Registratio Results save file GT = Global Translation, GA = Global Affine
 params.G.StackPositions_Registered = '/StackPositions_Registered';
 params.G.StackPositions_RegisteredCSV = '/StackPositions_Registered.csv';
 
@@ -125,7 +127,7 @@ params.GR.Transformation = '/T_Rigid.mat';
 params.GA.Transformation = '/T_Affine.mat';
 
 
-                         %% Blending for Preview Parameters
+%% Blending for Preview Parameters
 %Parameters to control the size of the visualization tile size
 params.BP.extSize = [300 300 0];
 
@@ -133,7 +135,7 @@ params.BP.saveImages = 0;
 % Set to 1 if your stack has grey pad to remove in visualization
 params.BP.remove_pad = 0;
 
-                         %% Resampling Parameters
+%% Resampling Parameters
 params.RE.savefolder = '/Tiles/';
 paramsREuseHDF5 = 0;
 paramsRERemoveBlack = 1;
@@ -141,6 +143,8 @@ paramsBigTileSize = [512 512 64]; % powers of 2 only
 paramsFinalTileSize = [128*2 128*2 64]; % powers of 2 only
 paramsEmptyVoxelsValue=111;
 
-DBAddress = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
+
+DBAddress = 'C:/nctracer.db';
+%DBAddress = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
                          
                          

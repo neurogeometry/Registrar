@@ -823,18 +823,19 @@ end
 
 % --------------------------------------------------------------------
 function parameters_mnu_Callback(hObject, eventdata, handles)
-% !notepad Functions\parameters.m
-open('Functions\parameters.m');
+!notepad Functions\parameters.m
+% open('Functions\parameters.m');
 
 
 % --------------------------------------------------------------------
 function website_mnu_Callback(hObject, eventdata, handles)
-web('http://www.northeastern.edu/neurogeometry/');
+web('http://www.northeastern.edu/neurogeometry/resources/registrar');
 
 
 % --------------------------------------------------------------------
 function manual_mnu_Callback(hObject, eventdata, handles)
-open('UserManual.docx');
+web('http://www.northeastern.edu/neurogeometry/resources/registrar');
+%open('UserManual.docx');
 
 
 
