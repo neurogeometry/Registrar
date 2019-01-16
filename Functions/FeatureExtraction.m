@@ -22,14 +22,14 @@ function [stop]=FeatureExtraction(LogHandle,StackList,DataFolder,Seq_Par,Par_wor
 
 mkdir([DataFolder,'/tmp/']);
 if LogHandle ~= 0
-    AllGUI = findobj(NCT_Registration);
+    AllGUI = findobj(Registrar);
     %     log_ctrl = findall(AllGUI,'Tag','listbox1');
     %     log_ctrl = log_ctrl(1);
     % for Stop and Pause Button
-    tb11 = findobj(NCT_Registration,'Tag', 'pushbutton10');
+    tb11 = findobj(Registrar,'Tag', 'pushbutton10');
     set(tb11,'userdata',0);
     x = 0:0.1:100;
-    tb9 = findobj(NCT_Registration,'Tag', 'axes3');
+    tb9 = findobj(Registrar,'Tag', 'axes3');
 %     cla(tb9,'reset')
 %     tb9.XAxis.Visible='off';
 %     tb9.YAxis.Visible='off';

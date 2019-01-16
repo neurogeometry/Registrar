@@ -87,7 +87,7 @@ else
     if nargout == 0
         perc = sprintf('%3.0f%%', percent); % 4 characters wide, percentage
         if v ~= 0
-            tb9 = findobj(NCT_Registration,'Tag', 'axes3');
+            tb9 = findobj(Registrar,'Tag', 'axes3');
             patch('XData',[0,0,90,90],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
             drawnow;
         end

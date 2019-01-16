@@ -35,10 +35,10 @@ Matched_hung=cell(size(All_overlaps));
 Registrationtime = 0;
 k = 1;
 if LogHandle ~= 0
-    tb11 = findobj(NCT_Registration,'Tag', 'pushbutton10');
+    tb11 = findobj(Registrar,'Tag', 'pushbutton10');
     set(tb11,'userdata',0);
     x = 0:0.1:90;
-    tb9 = findobj(NCT_Registration,'Tag', 'axes3');
+    tb9 = findobj(Registrar,'Tag', 'axes3');
     if ~isempty(tb9)
 %         cla(tb9,'reset')
         tb9.XLim = [0 100];
@@ -47,7 +47,7 @@ if LogHandle ~= 0
         drawnow;
         hold on %hold('units','on')
     end
-    tb_dataset = findobj(NCT_Registration,'Tag', 'v');
+    tb_dataset = findobj(Registrar,'Tag', 'v');
 else
     tb11 = 0;
 end

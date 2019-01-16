@@ -39,7 +39,7 @@ TypeOfRegistration = handles.v.Value;
 runRetilling = handles.chkretilling.Value;
 outputType = handles.popupretilling.Value;
 debug = handles.chkdebug.Value;
-AllGUI = NCT_Registration;
+AllGUI = Registrar;
 LogLine = 1;
 stop = 0;
 if debug
@@ -402,7 +402,7 @@ if exist(StackList_csv_pth,'file') > 0
         %         LogLine = LogLine + 1;
         %         handles.listbox1.Value = LogLine-1;drawnow
     end
-    tb9 = findobj(NCT_Registration,'Tag', 'axes3');
+    tb9 = findobj(Registrar,'Tag', 'axes3');
     patch('XData',[0,0,100,100],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
         
 else

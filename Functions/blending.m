@@ -22,9 +22,9 @@ function [Tile3D_org,Tile3D,stop] = blending(StackPositions_pixels_original,Stac
 addpath('../Functions');
 parameters;
 % paramsBPremove_pad = 0;
-% axes_xz = findobj(NCT_Registration,'Tag', 'v');
+% axes_xz = findobj(Registrar,'Tag', 'v');
 options.overwrite = 1;
-tb11 = findobj(NCT_Registration,'Tag', 'pushbutton10');
+tb11 = findobj(Registrar,'Tag', 'pushbutton10');
 set(tb11,'userdata',0);
 stop = 0;
 
@@ -67,7 +67,7 @@ Tile3D(params.BP.extSize(1)+1:end-params.BP.extSize(1),params.BP.extSize(2)+1:en
 StackPositions_neighb=StackPositions_pixels_original(Neighbors,:)-ones(length(Neighbors),1)*StackPositions_pixels_original(stackID,:)+params.BP.extSize+1;
 
 for i = 1:size(Neighbors,1)
-    tb11 = findobj(NCT_Registration,'Tag', 'pushbutton10');
+    tb11 = findobj(Registrar,'Tag', 'pushbutton10');
     if get(tb11,'userdata') || stop% stop condition
         disp(num2str(tb11.UserData));
         disp('Process Stopped');

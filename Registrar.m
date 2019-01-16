@@ -1,4 +1,4 @@
-function varargout = NCT_Registration(varargin)
+function varargout = Registrar(varargin)
 % ============================== About ====================================
 % ----------------Copyright 2019 Northeastern University-------------------
 %
@@ -9,40 +9,40 @@ function varargout = NCT_Registration(varargin)
 % kahaki@neu.edu, a.stepanyants.neu.edu
 % =========================================================================
 % -------------------------------------------------------------------------
-% NCT_REGISTRATION MATLAB code for NCT_Registration.fig
-%      NCT_REGISTRATION, by itself, creates a new NCT_REGISTRATION or
+% Registrar MATLAB code for Registrar.fig
+%      Registrar, by itself, creates a new Registrar or
 %      raises the existing singleton*.
 %
-%      H = NCT_REGISTRATION returns the handle to a new NCT_REGISTRATION or
+%      H = Registrar returns the handle to a new Registrar or
 %      the handle to the existing singleton*.
 %
-%      NCT_REGISTRATION('CALLBACK',hObject,eventData,handles,...) calls the
-%      local function named CALLBACK in NCT_REGISTRATION.M with the given
+%      Registrar('CALLBACK',hObject,eventData,handles,...) calls the
+%      local function named CALLBACK in Registrar.M with the given
 %      input arguments.
 %
-%      NCT_REGISTRATION('Property','Value',...) creates a new
-%      NCT_REGISTRATION or raises the existing singleton*.  Starting from
+%      Registrar('Property','Value',...) creates a new
+%      Registrar or raises the existing singleton*.  Starting from
 %      the left, property value pairs are applied to the GUI before
-%      NCT_Registration_OpeningFcn gets called.  An unrecognized property
+%      Registrar_OpeningFcn gets called.  An unrecognized property
 %      name or invalid value makes property application stop.  All inputs
-%      are passed to NCT_Registration_OpeningFcn via varargin.
+%      are passed to Registrar_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help NCT_Registration
+% Edit the above text to modify the response to help Registrar
 
-% Last Modified by GUIDE v2.5 09-Jan-2019 13:44:49
+% Last Modified by GUIDE v2.5 16-Jan-2019 12:17:03
 
 % Begin initialization code - DO NOT EDIT
 clc;
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
     'gui_Singleton',  gui_Singleton, ...
-    'gui_OpeningFcn', @NCT_Registration_OpeningFcn, ...
-    'gui_OutputFcn',  @NCT_Registration_OutputFcn, ...
+    'gui_OpeningFcn', @Registrar_OpeningFcn, ...
+    'gui_OutputFcn',  @Registrar_OutputFcn, ...
     'gui_LayoutFcn',  [] , ...
     'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -57,13 +57,13 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before NCT_Registration is made visible.
-function NCT_Registration_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before Registrar is made visible.
+function Registrar_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to NCT_Registration (see VARARGIN)
+% varargin   command line arguments to Registrar (see VARARGIN)
 try
     jFrame=get(handles.figure1,'javaframe');
     jicon=javax.swing.ImageIcon('icon.png');
@@ -73,8 +73,9 @@ end
 %web('mailto:your.mail@address.org');
 handles.output = hObject;
 guidata(hObject, handles);
-% Choose default command line output for NCT_Registration
+% Choose default command line output for Registrar
 handles.output = hObject;
+handles.figure1.Position=[50 40 185 11];
 myCluster = parcluster('local');
 MaxNumWorkers = myCluster.NumWorkers;
 set(handles.text28,'Enable','off');
@@ -83,12 +84,12 @@ set(handles.edit14, 'String', num2str(MaxNumWorkers));
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes NCT_Registration wait for user response (see UIRESUME)
+% UIWAIT makes Registrar wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = NCT_Registration_OutputFcn(hObject, eventdata, handles)
+function varargout = Registrar_OutputFcn(hObject, eventdata, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -540,7 +541,7 @@ end
 function slider2_Callback(hObject, eventdata, handles)
 hf = gca;
 % if isempty(hf.UserData)
-%     hf = findobj(NCT_Registration,'Tag', 'slider2');
+%     hf = findobj(Registrar,'Tag', 'slider2');
 %     Tile3D1=evalin('base','Tile3D');
 %     plainsViewer(Tile3D1);
 % end
@@ -622,7 +623,7 @@ val = get(handles.uibuttongroup3.SelectedObject,'Tag');
 if strcmp(val,'z_projection')
     Tile3D_Registered=evalin('base','Tile3D');
     set(handles.slider2,'Visible','off');
-    tb7 = findobj(NCT_Registration,'Tag', 'axes1');
+    tb7 = findobj(Registrar,'Tag', 'axes1');
     
     P_XLim = tb7.XLim;
     P_YLim = tb7.YLim;
@@ -683,7 +684,7 @@ val = get(handles.uibuttongroup3.SelectedObject,'Tag');
 if strcmp(val,'z_projection')
     Tile3D_org=evalin('base','Tile3D_org');
     set(handles.slider2,'Visible','off');
-    tb7 = findobj(NCT_Registration,'Tag', 'axes1');
+    tb7 = findobj(Registrar,'Tag', 'axes1');
     
     P_XLim = tb7.XLim;
     P_YLim = tb7.YLim;
@@ -723,7 +724,7 @@ val = get(handles.uibuttongroup2.SelectedObject,'Tag');
 if strcmp(val,'radio_after')
     Tile3D_Registered=evalin('base','Tile3D');
     set(handles.slider2,'Visible','off');
-    tb7 = findobj(NCT_Registration,'Tag', 'axes1');
+    tb7 = findobj(Registrar,'Tag', 'axes1');
     
     P_XLim = tb7.XLim;
     P_YLim = tb7.YLim;
@@ -749,7 +750,7 @@ if strcmp(val,'radio_after')
 else
     Tile3D_org=evalin('base','Tile3D_org');
     set(handles.slider2,'Visible','off');
-    tb7 = findobj(NCT_Registration,'Tag', 'axes1');
+    tb7 = findobj(Registrar,'Tag', 'axes1');
     
     P_XLim = tb7.XLim;
     P_YLim = tb7.YLim;
@@ -918,3 +919,14 @@ delete(findall(0));
 
 
 
+
+
+
+% --- Executes when user attempts to close figure1.
+function figure1_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: delete(hObject) closes the figure
+delete(hObject);
