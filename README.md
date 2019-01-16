@@ -18,7 +18,7 @@ The ability to map neural circuits on the scale of an entire brain is critical f
 
 # Examples
 
-<img src="https://web.northeastern.edu/kahaki/Registrar.PNG" alt="Registrar" align="middle">
+<img src="https://web.northeastern.edu/kahaki/Registrar.PNG" alt="Registrar" align="middle"> 
 
 A sample of input CSV file:
 
