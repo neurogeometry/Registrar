@@ -75,7 +75,7 @@ handles.output = hObject;
 guidata(hObject, handles);
 % Choose default command line output for Registrar
 handles.output = hObject;
-handles.figure1.Position=[50 40 185 11];
+% handles.figure1.Position=[50 40 185 11];
 myCluster = parcluster('local');
 MaxNumWorkers = myCluster.NumWorkers;
 set(handles.text28,'Enable','off');
