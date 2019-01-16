@@ -177,7 +177,7 @@ else
                 end
             end
         end
-        q = 500+SourceID/size(StackList,1)*500;
+        q = round(500+SourceID/size(StackList,1)*500);
         patch('XData',[0,0,x(min(q,size(x,2))),x(min(q,size(x,2)))],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
         drawnow;
     end

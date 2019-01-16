@@ -54,9 +54,12 @@ function VisualiztionStack_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for VisualiztionStack
 handles.output = hObject;
-jFrame=get(handles.figure1,'javaframe');
-jicon=javax.swing.ImageIcon('icon.png');
-jFrame.setFigureIcon(jicon);
+try
+    jFrame=get(handles.figure1,'javaframe');
+    jicon=javax.swing.ImageIcon('icon.png');
+    jFrame.setFigureIcon(jicon);
+catch
+end
 
 % Update handles structure
 guidata(hObject, handles);
@@ -114,19 +117,19 @@ valBeforeAfter = get(handles.uibuttongroup1.SelectedObject,'Tag');
 
 if strcmp(valBeforeAfter,'radiobutton1')
     Tile3D=evalin('base','Tile3D_org');
-
 else
     Tile3D=evalin('base','Tile3D');
-
 end
-    VisualizationStackHandle=findobj(0,'Name','VisualiztionStack');
+VisualizationStackHandle=findobj(0,'Name','VisualiztionStack');
 %     set(VisualizationStackHandle.Children(1),'Visible','on');
 %     set(VisualizationStackHandle.Children(1),'Min',1,'Max',size(Tile3D,3),'Value', 1, 'SliderStep', [1/size(Tile3D,3) 1/size(Tile3D,3)]);
     %     set(handles.slider2,'Max',size(Tile3D1,3));
     %     set(handles.slider2,'SliderStep',1);
-    plainsViewer(VisualizationStackHandle,Tile3D);
+%     VisualizationStackHandle.Children(3).UserData.currplane
+    plainsViewer(VisualizationStackHandle,Tile3D,VisualizationStackHandle.Children(3).UserData.currplane);
+    handles.axes1.Children(1).CDataMapping = 'direct';
 %     h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
-    VisualizationStackHandle.Visible = 'on';
+VisualizationStackHandle.Visible = 'on';
 % hObject    handle to the selected object in uibuttongroup1 
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)

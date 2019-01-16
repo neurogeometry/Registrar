@@ -54,9 +54,12 @@ function Visualization_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for Visualization
 handles.output = hObject;
-jFrame=get(handles.figure1,'javaframe');
-jicon=javax.swing.ImageIcon('icon.png');
-jFrame.setFigureIcon(jicon);
+try
+    jFrame=get(handles.figure1,'javaframe');
+    jicon=javax.swing.ImageIcon('icon.png');
+    jFrame.setFigureIcon(jicon);
+catch
+end
 
 % Update handles structure
 guidata(hObject, handles);
@@ -90,6 +93,7 @@ if strcmp(valBeforeAfter,'Before')
         handles.axes1.XLim = P_XLim;
         handles.axes1.YLim = P_YLim;
         handles.axes1.Position=  P_Position;
+        handles.axes1.Children.CDataMapping = 'direct';
     
 else
     Tile=evalin('base','Tile3D');
@@ -101,6 +105,7 @@ else
         handles.axes1.XLim = P_XLim;
         handles.axes1.YLim = P_YLim;
         handles.axes1.Position=  P_Position;
+        handles.axes1.Children.CDataMapping = 'direct';
 
 %         plainsViewer(handles,Tile);
    

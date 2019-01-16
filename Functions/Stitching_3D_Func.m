@@ -243,7 +243,12 @@ MatchLocationsHang = [Global_Matched_Source',Global_Matched_Target'];
 %         TransformationValue = 4;
 %         Match_Indexes = RANSAC(Global_Matched_Source(:,Match_Indexes),Global_Matched_Target(:,Match_Indexes),TransformationValue);
 %     else
-Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue,mu);
+try
+    Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue,mu);
+catch
+    LogHandle.Children(2).String{end+1} = 'RANSAC failed! Change the parameters and run feature extraction again.';
+    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);    
+end
 %     end
 %     Match_Indexes_temp = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
 %     if numel(Match_Indexes_temp)<paramsFMminmatches

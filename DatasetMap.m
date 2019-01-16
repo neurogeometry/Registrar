@@ -51,9 +51,12 @@ function DatasetMap_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to DatasetMap (see VARARGIN)
-jFrame=get(handles.figure1,'javaframe');
-jicon=javax.swing.ImageIcon('icon.png');
-jFrame.setFigureIcon(jicon);
+try
+    jFrame=get(handles.figure1,'javaframe');
+    jicon=javax.swing.ImageIcon('icon.png');
+    jFrame.setFigureIcon(jicon);
+catch
+end
 % Choose default command line output for DatasetMap
 handles.output = hObject;
 

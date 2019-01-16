@@ -80,6 +80,18 @@ if exist(StackList_csv_pth,'file') > 0
             [filepath,~,ext] = fileparts(char(StackList(i,1)));
             if size(ext,2)>1
                 InfoImage=imfinfo(char(StackList(i,1)));
+            else 
+                allfiles = dir(filepath);
+                [~,~,ext] = fileparts(allfiles(1).name);
+            end
+        catch
+            StackList{i} = [PathStr,'\',StackList{i}];
+        end
+        
+        try
+            [filepath,~,ext] = fileparts(char(StackList(i,1)));
+            if size(ext,2)>1
+                InfoImage=imfinfo(char(StackList(i,1)));
                 StackSizes_pixels(i,1) = InfoImage.Height;
                 StackSizes_pixels(i,2) = InfoImage.Width;
                 StackSizes_pixels(i,3) = size(InfoImage,1);
@@ -113,20 +125,22 @@ if exist(StackList_csv_pth,'file') > 0
     StackPositions_pixels = cell2mat(StackList(:,2:4));%xlsread(StackPositions_pixels_csv_pth);
     
     % This part is not fixed yet, should be based on correct positions from csv
-    if TypeOfRegistration == 1
-        temp=StackPositions_pixels;
-        StackPositions_pixels(:,1) = max(temp(:,2))-temp(:,2);
-        StackPositions_pixels(:,2) = max(temp(:,1))-temp(:,1);
-        StackPositions_pixels(:,3) = max(temp(:,3))-temp(:,3);
-    else
-        StackPositions_pixels = StackPositions_pixels(:,[2,1,3]);
-    end
+%     if TypeOfRegistration == 1
+%         temp=StackPositions_pixels;
+%         StackPositions_pixels(:,1) = max(temp(:,2))-temp(:,2);
+%         StackPositions_pixels(:,2) = max(temp(:,1))-temp(:,1);
+%         StackPositions_pixels(:,3) = max(temp(:,3))-temp(:,3);
+%     else
+%         StackPositions_pixels = StackPositions_pixels(:,[2,1,3]);
+%     end
+
+    StackPositions_pixels = StackPositions_pixels(:,[2,1,3]);
     
     % Find stacks overlap
     handles.axes2.Visible = 'on';
     All_overlaps = FindOverlaps(StackPositions_pixels,StackSizes_pixels,StackList,debug);
     
-    if TypeOfRegistration == 8 || TypeOfRegistration == 7
+    if TypeOfRegistration == 2 || TypeOfRegistration == 3
         All_overlaps = zeros(size(All_overlaps));
         All_overlaps(2:size(All_overlaps,1)+1:end) = 1;
         All_overlaps = All_overlaps';
@@ -232,7 +246,7 @@ if exist(StackList_csv_pth,'file') > 0
             end
             
             if runGlobal && ~stop
-                if TypeOfRegistration == 8
+                if TypeOfRegistration == 3
                     StackPositions_pixels(:,3) = 0;
                 end
                 switch TransformationValue
@@ -284,8 +298,8 @@ if exist(StackList_csv_pth,'file') > 0
         %         handles.listbox1.Value = LogLine-1;drawnow
         
         % 8 for Allignement of Stacks
-        if TypeOfRegistration == 8
-            [Tile3D_org,Tile3D] = blending_stackreg(StackPositions_pixels,StackSizes_pixels,StackList,T.L,T.b,DataFolder);
+        if TypeOfRegistration == 3
+            [Tile3D_org,Tile3D] = blending_stackreg(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);
         else
             [Tile3D_org,Tile3D,stop] = blending(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);
             %                 [Tile3D_org,Tile3D,stop] = blending_mine(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);

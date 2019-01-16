@@ -87,10 +87,7 @@ for i = 1:size(Neighbors,1)
             IM_Source = ImportStack(char(StackList(SourceID,1)),StackSizes_pixels(SourceID,:));
         end
     end
-%     IM_Source(:,1:3,:) = 60000;
-%     IM_Source(:,end-2:end,:) = 60000;
-%     IM_Source(1:3,:,:) = 60000;
-%     IM_Source(end-2:end,:,:) = 60000;
+
     Start=max([1,1,1;StackPositions_neighb(i,:)]);
     End=min(size(Tile3D_org),StackPositions_neighb(i,:)+size(IM_Source)-1);
     Start1=max([1,1,1;1-StackPositions_neighb(i,:)+1]);

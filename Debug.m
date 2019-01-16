@@ -54,9 +54,12 @@ function Debug_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for Debug
 handles.output = hObject;
-jFrame=get(handles.figure1,'javaframe');
-jicon=javax.swing.ImageIcon('icon.png');
-jFrame.setFigureIcon(jicon);
+try
+    jFrame=get(handles.figure1,'javaframe');
+    jicon=javax.swing.ImageIcon('icon.png');
+    jFrame.setFigureIcon(jicon);
+catch
+end
 
 % Update handles structure
 guidata(hObject, handles);
@@ -79,7 +82,7 @@ varargout{1} = handles.output;
 % --- Executes during object deletion, before destroying properties.
 function figure1_DeleteFcn(hObject, eventdata, handles)
 NCT_RegistrationHandle=findobj(0,'Name','Registrar');
-NCT_RegistrationHandle.Children(2).Children(9).Children(3).Value = 0;
+NCT_RegistrationHandle.findobj('Tag','chkdebug').Value = 0;
 % NCT_RegistrationHandle
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB

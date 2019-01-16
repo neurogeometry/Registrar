@@ -55,8 +55,8 @@ paramsFMminReqFeatures = 15; % minimum features to run feature matching
 paramsFMMetric = 'ZMAD';        %default:	paramsFMMetric = 'ZMAD'  EigenVector;
 
     % Parameter to have a cost for matching by Hungarian
-paramsFM_C1 = 200;        %default:	paramsFM_C1 = 200
-paramsFM_C2 = 200;        %default:	paramsFM_C2 = 200
+paramsFM_C1 = [];        %default:	paramsFM_C1 = 200
+paramsFM_C2 = [];        %default:	paramsFM_C2 = 200
 
 
     % Parameter to control the maximum iteration of Ransac

@@ -1,4 +1,4 @@
-function plainsViewer(VisualizationStackHandle,IM)
+function plainsViewer(VisualizationStackHandle,IM,curplane)
 %This function takes in a 3D image IM and 3-column position vector r. r can
 %be empty. It allows the user to scroll through different planes, with
 %points in the current plane highlighted.
@@ -18,9 +18,10 @@ function plainsViewer(VisualizationStackHandle,IM)
 
 % tb2 = findobj(NCT_Registration,'Tag', 'axes1');
 tb2 = VisualizationStackHandle.Children(3);
+% tb2.UserData.currplane = curplane;
 hf = tb2;
 % % tb2.Units='normalized';
-h_im=imshow(IM(:,:,1),'Parent',tb2);hold on
+h_im=imshow(IM(:,:,curplane),'Parent',tb2);hold on
 hf.CLim = [0 max(IM(:))];
 % hf.YLabel.String='X axis';hf.XLabel.String='Y axis';
 hf.YLabel.Position(1) = 0;
@@ -66,7 +67,7 @@ tb2.Tag='axes1';
 % hf4.YLim=[0 150];
 
 hf.UserData.IM=IM;
-hf.UserData.currplane=1;
+hf.UserData.currplane=curplane;
 hf.UserData.h_im=h_im;
 
 % hf3.UserData.IM=IM3;

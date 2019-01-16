@@ -64,9 +64,12 @@ function NCT_Registration_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to NCT_Registration (see VARARGIN)
-jFrame=get(handles.figure1,'javaframe');
-jicon=javax.swing.ImageIcon('icon.png');
-jFrame.setFigureIcon(jicon);
+try
+    jFrame=get(handles.figure1,'javaframe');
+    jicon=javax.swing.ImageIcon('icon.png');
+    jFrame.setFigureIcon(jicon);
+catch
+end
 %web('mailto:your.mail@address.org');
 handles.output = hObject;
 guidata(hObject, handles);
@@ -392,25 +395,38 @@ web(docurl);
 function v_Callback(hObject, eventdata, handles)
 val = get(handles.v,'Value');
 
-if val == 1 %MouseLight
-    set(handles.edt_stacklist,'String','../../MicroscopeFiles\MouseLight_StackList.csv');
-elseif val == 2 % Diadem1,2
-    set(handles.edt_stacklist,'String','C:\Armen\Publications\Paper35 (Registration Seyed)\MicroscopeFiles\Neocortical2_StackList.csv');
-elseif val == 3 % Diadem1,2
-    set(handles.edt_stacklist,'String','../../MicroscopeFiles\Neocortical2_StackList.csv');
-elseif val == 4 % Neuromuscular
-    set(handles.edt_stacklist,'String','../../MicroscopeFiles\Neuromuscular_StackList_4Stacks.csv');
-elseif val == 5 % Holtmaat
-    set(handles.edt_stacklist,'String','../../MicroscopeFiles\Holtmaat_StackList.csv');
-elseif val == 6 % Visual
-    set(handles.edt_stacklist,'String','../../MicroscopeFiles\Visual_StackList.csv');
-elseif val == 7 % TimeLapse
-    set(handles.edt_stacklist,'String','../../MicroscopeFiles\TimeLapse_Holtmaat_StackList.csv');
-elseif val == 8 % TimeLapse
-    set(handles.edt_stacklist,'String','../../MicroscopeFiles\slicesHoltmat.csv');
-elseif val == 9 % Other
-    set(handles.edt_stacklist,'String','');
+if val == 1 %MultiStack Registration
+    set(handles.edt_stacklist,'String','../Data/Neocortical.csv');
+    handles.chkretilling.Enable = 'on';
+elseif val == 2 % TimeLapse Registration
+    set(handles.edt_stacklist,'String','../Data/DL083.csv');
+    handles.chkretilling.Value = 0;
+    handles.chkretilling.Enable = 'off';
+elseif val == 3 % Stack Registration
+    set(handles.edt_stacklist,'String','../Data/DL083B001G.csv');
+    handles.chkretilling.Value = 0;
+    handles.chkretilling.Enable = 'off';
 end
+
+% if val == 1 %MouseLight
+%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\MouseLight_StackList.csv');
+% elseif val == 2 % Diadem1,2
+%     set(handles.edt_stacklist,'String','C:\Armen\Publications\Paper35 (Registration Seyed)\MicroscopeFiles\Neocortical2_StackList.csv');
+% elseif val == 3 % Diadem1,2
+%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\Neocortical2_StackList.csv');
+% elseif val == 4 % Neuromuscular
+%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\Neuromuscular_StackList_4Stacks.csv');
+% elseif val == 5 % Holtmaat
+%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\Holtmaat_StackList.csv');
+% elseif val == 6 % Visual
+%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\Visual_StackList.csv');
+% elseif val == 7 % TimeLapse
+%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\TimeLapse_Holtmaat_StackList.csv');
+% elseif val == 8 % TimeLapse
+%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\slicesHoltmat.csv');
+% elseif val == 9 % Other
+%     set(handles.edt_stacklist,'String','');
+% end
 
 
 % --- Executes during object creation, after setting all properties.
@@ -465,12 +481,12 @@ function popupmenu4_Callback(hObject, eventdata, handles)
 val = get(handles.popupmenu4,'Value');
 if val == 1
     set(handles.edit14,'Enable','off');
-    set(handles.text27,'Enable','off');
+    set(handles.text27,'Visible','off');
     set(handles.text26,'Enable','off');
     set(handles.text28,'Enable','off');
 else
     set(handles.edit14,'Enable','on');
-    set(handles.text27,'Enable','on');
+    set(handles.text27,'Visible','on');
     set(handles.text26,'Enable','on');
     set(handles.text28,'Enable','on');
 end
@@ -834,6 +850,7 @@ if handles.checkbox13.Value
     try
         Tile3D=evalin('base','Tile3D');
         h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
+        VisualizationHandle.Children(3).Children.CDataMapping = 'direct';
         VisualizationHandle.Visible = 'on';
     catch
         warndlg('Can not load tiles, Please run Global Optimization and check Preview','!! Warning !!');
@@ -870,9 +887,10 @@ if handles.checkbox14.Value
     %     set(VisualizationStackHandle.Children(1),'Min',1,'Max',size(Tile3D,3),'Value', 1, 'SliderStep', [1/size(Tile3D,3) 1/size(Tile3D,3)]);
     %     %     set(handles.slider2,'Max',size(Tile3D1,3));
     %     set(handles.slider2,'SliderStep',1);
-    plainsViewer(VisualizationStackHandle,Tile3D);
+    plainsViewer(VisualizationStackHandle,Tile3D,1);
     %     h_im=imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
     VisualizationStackHandle.Visible = 'on';
+    VisualizationStackHandle.Children(3).Children.CDataMapping = 'direct';
         catch
             warndlg('Can not load tiles, Please run Global Optimization and check Preview','!! Warning !!');
             VisualizationStackHandle.Visible = 'off';

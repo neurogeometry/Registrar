@@ -2,8 +2,8 @@ clear all
 clc
 close all
 % StackList_csv_pth = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\slices2.csv';
- StackList_csv_pth = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\slicesHoltmatMess.csv';
-%StackList_csv_pth = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\slicesHoltmat.csv';
+% StackList_csv_pth = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\slicesHoltmatMess.csv';
+StackList_csv_pth = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\slicesHoltmat.csv';
 addpath('C:\Users\Seyed\Documents\DatasetTests\registrar\registrar\Functions');
 StackList = table2cell(readtable(StackList_csv_pth,'Delimiter',','));
 [PathStr,FolderName]=fileparts(StackList_csv_pth);
@@ -15,39 +15,42 @@ T_Translation = load([DataFolder,'\T_Translation.mat']);
 T_Rigid = load([DataFolder,'\T_Rigid.mat']);
 T_Affine = load([DataFolder,'\T_Affine.mat']);
 % %                        Create Mess
-% options.overwrite = 1;
-% for i = 1:size(StackList,1)
-%     IM = imread(char(StackList(i,1)));
-%     [PathStr,Filename,ext]=fileparts(char(StackList(i,1)));
+options.overwrite = 1;
+T = (4+(2+2))*rand(size(StackList,1),2);
+for i = 1:size(StackList,1)
+    IM = imread(char(StackList(i,1)));
+    [PathStr,Filename,ext]=fileparts(char(StackList(i,1)));
 %     if mod(i,2) == 0
 %         T = [2 -2];
 %     else
 %         T = [-2 2];
 %     end
-%         
-%     IM = imtranslate(IM,T);
-%     StackMess(:,:,i) = IM; 
-% 
-%     saveastiff(IM, ['E:\SliceRegistration\DL083B001G_Mess\',Filename,'.tif'],options);
-% end
-% figure,imshow(max(StackMess,[],3),[0 100]);
+    Stack(:,:,i) = IM;     
+    IM1 = imtranslate(IM,T(i,:));
+    StackMess(:,:,i) = IM1; 
 
-% % Translation
-% for i = 1:size(StackList,1)
-%     IM = imread(char(StackList(i,1)));
-%     Stack(:,:,i) = IM; 
-%     [IMs{i},StackPosition_registered(:,i)]=Perform_Linear_Transform(IM,[1,1,1],[],T_Translation.T.b(:,i));
-%     Sizes(i,:)=[size(IMs{i}),1];
-% end
-% StackPosition_registered=round(StackPosition_registered');
-% Start=min(StackPosition_registered);
-% End=max(StackPosition_registered+Sizes-1);
-% Shift=1-Start;
-% StackRegistered_Translation=zeros(End-Shift,class(IM));
-% for i = 1:size(StackList,1)
-%     StackRegistered_Translation(StackPosition_registered(i,1)+Shift(1):StackPosition_registered(i,1)+Shift(1)+Sizes(i,1)-1,...
-%         StackPosition_registered(i,2)+Shift(2):StackPosition_registered(i,2)+Shift(2)+Sizes(i,2)-1,i+Shift(3))=IMs{i};
-% end
+    saveastiff(IM1, ['E:\SliceRegistration\DL083B001G_Mess1\',Filename,'.tif'],options);
+end
+figure,imshow(max(Stack,[],3),[0 100]);
+
+figure,imshow(max(StackMess,[],3),[0 100]);
+
+% Translation
+for i = 1:size(StackList,1)
+    IM = imread(char(StackList(i,1)));
+    Stack(:,:,i) = IM; 
+    [IMs{i},StackPosition_registered(:,i)]=Perform_Linear_Transform(IM,[1,1,1],[],T_Translation.T.b(:,i));
+    Sizes(i,:)=[size(IMs{i}),1];
+end
+StackPosition_registered=round(StackPosition_registered');
+Start=min(StackPosition_registered);
+End=max(StackPosition_registered+Sizes-1);
+Shift=1-Start;
+StackRegistered_Translation=zeros(End-Shift,class(IM));
+for i = 1:size(StackList,1)
+    StackRegistered_Translation(StackPosition_registered(i,1)+Shift(1):StackPosition_registered(i,1)+Shift(1)+Sizes(i,1)-1,...
+        StackPosition_registered(i,2)+Shift(2):StackPosition_registered(i,2)+Shift(2)+Sizes(i,2)-1,i+Shift(3))=IMs{i};
+end
 % 
 % % Rigid
 % for i = 1:size(StackList,1)

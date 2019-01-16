@@ -98,7 +98,7 @@ else % do sequential
             overlap_ind=[i,find(All_overlaps(i,:)),find(All_overlaps(:,i))'];
             [ImportTime,FeatureExtractionTime,numberofFeatures,seedsFile,stop] = FeatureExtractionFunc(LogHandle,tifFile,i,tb11,stop,debug,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
             if LogHandle ~= 0
-                q = i/size(StackList,1)*500;
+                q = round(i/size(StackList,1)*500);
                 patch('XData',[0,0,x(min(q,size(x,2))),x(min(q,size(x,2)))],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
                 drawnow;
             end
