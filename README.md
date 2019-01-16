@@ -1,6 +1,6 @@
 # Registrar
 
-Copyright 2017 Northeastern University
+Copyright 2018 Northeastern University
 </br>
 This project has been supported by the National Institude of Health (NIH)
 </br></br>
