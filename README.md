@@ -18,7 +18,7 @@ The ability to map neural circuits on the scale of an entire brain is critical f
 
 3.	Registration of images within stacks: the Registrar software can register stack slices within a single stack which is an important task in Neuroscience and many other fields. Large scale image stacks captured in live animal can be transformed within the slices of the stacks. This is a common issue specially in EM data. Using this ability of the software, you can register the slices based on different transformation provided in the GUI.
 
-# Installation and System Requirements
+# Installation
 
 Registrar can be downloaded at https://github.com/neurogeometry/registrar. Start MATLAB, navigate to the software folder, and run Registrar in MATLAB command window. Registrar is designed to run sequentially or in parallel, on a PC or a cluster.
 
