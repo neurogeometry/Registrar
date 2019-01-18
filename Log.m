@@ -104,9 +104,13 @@ end
 
 % --- Executes on button press in pushbutton1.
 function pushbutton1_Callback(hObject, eventdata, handles)
+try
+    [file,path,indx] = uiputfile(['RegistrarLog_',date,'.txt']);
 
-[file,path,indx] = uiputfile(['RegistrarLog_',date,'.txt']);
-dlmwrite([path,file],sprintf('   %s\n',handles.listbox2.String{:}),'delimiter','');
+    dlmwrite([path,file],handles.listbox2.String,'delimiter','');
+catch
+    disp('File is not saved! Please try again.');
+end
 
 
 % hObject    handle to pushbutton1 (see GCBO)

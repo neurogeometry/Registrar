@@ -70,12 +70,10 @@ try
     jFrame.setFigureIcon(jicon);
 catch
 end
-%web('mailto:your.mail@address.org');
+
 handles.output = hObject;
 guidata(hObject, handles);
-% Choose default command line output for Registrar
 handles.output = hObject;
-% handles.figure1.Position=[50 40 185 11];
 myCluster = parcluster('local');
 MaxNumWorkers = myCluster.NumWorkers;
 set(handles.text28,'Enable','off');
@@ -118,19 +116,11 @@ end
 function pushbutton7_Callback(hObject, eventdata, handles)
 addpath('Functions');
 parameters;
-% set(handles.radio_before,'Enable','off');
-% set(handles.radio_after,'Enable','off');
-% set(handles.z_projection,'Enable','off');
-% set(handles.radio_layerview,'Enable','off');
-% set(handles.checkbox10,'Enable','off');
-
 TransformationValue = get(handles.popupmenu3,'Value');%1=Translation | 2=Rigis | 3=Affine | 4=NonRigid
-
 Seq_Par = get(handles.popupmenu4,'Value');%1=Sequential | 2=Parallel
 Par_workers = str2double(get(handles.edit14,'String')); % Number of Workers
 blendingSID = str2double(get(handles.edit15,'String'));
 StackList_csv_pth = get(handles.edt_stacklist,'String');
-
 Log();
 LogHandle=findobj(0,'Name','Log');
 LogHandle.Children(2).String = {};
@@ -139,9 +129,6 @@ tic
 % try
 registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles,LogHandle)
 % catch ME
-%     %     LogHandles = Log();
-%     %     handles.listbox1.String{end+1}= ME.getReport;
-%
 %     LogHandle.Children(2).String = ME.getReport;
 % end
 TotalTime = toc
