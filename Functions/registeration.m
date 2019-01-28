@@ -101,6 +101,7 @@ if exist(StackList_csv_pth,'file') > 0
     end
     StackList (errIndxs,:) = [];
     StackSizes_pixels (errIndxs,:) = [];
+    % check this section???
     if size(StackList,2) == 7
         StackSizes_pixels = cell2mat(StackList(:,5:7));
     end
