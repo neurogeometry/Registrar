@@ -1,6 +1,6 @@
 % This function creates seamless image tiles from the dataset of original image stacks and stack transformations.
 
-function Retiling(LogHandle,StackList,StackPositions,StackSizes,T,DataFolder,outputType,Seq_Par,Par_workers,DBFile)
+function Retiling(handles,LogHandle,StackList,StackPositions,StackSizes,T,DataFolder,outputType,Seq_Par,Par_workers,DBFile)
 % addpath('../Functions');
 parameters
 paramsREuseHDF5=paramsREuseHDF5;
@@ -284,7 +284,7 @@ if strcmp(T.transform,'Translation')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:)~=paramsEmptyVoxelsValue,1,'first'))
-                        SaveTile(LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
+                        SaveTile(handles,LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end
             end
@@ -346,7 +346,7 @@ if strcmp(T.transform,'Translation')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:)~=paramsEmptyVoxelsValue,1,'first'))
-                        SaveTile(LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder,N_tiles)
+                        SaveTile(handles,LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder,N_tiles)
                     end
                 end
             end
@@ -444,7 +444,7 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:),1,'first'))
-                        SaveTile(LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
+                        SaveTile(handles,LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end
             end
@@ -504,7 +504,7 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                     [xxx,yyy,zzz]=ind2sub(reduction,jj);
                     FinalTile=Tile((xxx-1)*paramsFinalTileSize(1)+1:xxx*paramsFinalTileSize(1),(yyy-1)*paramsFinalTileSize(2)+1:yyy*paramsFinalTileSize(2),(zzz-1)*paramsFinalTileSize(3)+1:zzz*paramsFinalTileSize(3));
                     if ~isempty(find(FinalTile(:),1,'first'))
-                        SaveTile(LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
+                        SaveTile(handles,LogHandle,outputType,FinalTile,image_id,x,FinalTilePositions(jj,:),paramsFinalTileSize,z_level,SaveFolder)
                     end
                 end
             end

@@ -1,4 +1,4 @@
-function All_overlaps=FindOverlaps(StackPositions_pixels,StackSizes_pixels,StackList,debug)
+function All_overlaps=FindOverlaps(handles,StackPositions_pixels,StackSizes_pixels,StackList)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 % Purpose: Find the nearest stacks of all stack
@@ -48,7 +48,8 @@ All_overlaps = sparse(ii(1:count),jj(1:count),vv(1:count),N,N);
 %
 % end
 % f1 = figure;
-if debug
+if handles.checkbox16.Value
+    try
     DatasetMap();
     DatasetMapHandle=findobj(0,'Name','DatasetMap');
 %     DatasetMapHandle.Position = [140.8          50.0769230769231                       112          32.3076923076923];
@@ -87,5 +88,7 @@ if debug
     end
     if ~isempty(tb3)
         tb3.Tag='axes2';
+    end
+    catch
     end
 end

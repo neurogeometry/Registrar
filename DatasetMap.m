@@ -22,7 +22,7 @@ function varargout = DatasetMap(varargin)
 
 % Edit the above text to modify the response to help DatasetMap
 
-% Last Modified by GUIDE v2.5 03-Jan-2019 14:40:22
+% Last Modified by GUIDE v2.5 25-Jan-2019 15:06:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -76,3 +76,12 @@ function varargout = DatasetMap_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
+
+
+% --- Executes during object deletion, before destroying properties.
+function figure1_DeleteFcn(hObject, eventdata, handles)
+NCT_RegistrationHandle=findobj(0,'Name','Registrar');
+NCT_RegistrationHandle.Children.findobj('Tag','checkbox16').Value = 0;
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

@@ -34,7 +34,7 @@ function varargout = Registrar(varargin)
 
 % Edit the above text to modify the response to help Registrar
 
-% Last Modified by GUIDE v2.5 16-Jan-2019 12:17:03
+% Last Modified by GUIDE v2.5 18-Jan-2019 18:01:11
 
 % Begin initialization code - DO NOT EDIT
 clc;
@@ -121,13 +121,17 @@ Seq_Par = get(handles.popupmenu4,'Value');%1=Sequential | 2=Parallel
 Par_workers = str2double(get(handles.edit14,'String')); % Number of Workers
 blendingSID = str2double(get(handles.edit15,'String'));
 StackList_csv_pth = get(handles.edt_stacklist,'String');
-Log();
-LogHandle=findobj(0,'Name','Log');
-LogHandle.Children(2).String = {};
+if handles.checkbox15.Value
+    Log();
+    LogHandle=findobj(0,'Name','Log');
+    LogHandle.Children(2).String = {};
+else
+    LogHandle = [];
+end
 
 tic
 % try
-registeration (StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles,LogHandle)
+registeration(StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles,LogHandle)
 % catch ME
 %     LogHandle.Children(2).String = ME.getReport;
 % end
@@ -434,12 +438,12 @@ end
 function checkbox6_Callback(hObject, eventdata, handles)
 val = get(handles.checkbox6,'Value');
 if val == 0
-    set(handles.chkdebug,'Enable','off');
+%     set(handles.chkdebug,'Enable','off');
     set(handles.checkbox13,'Enable','off');
     set(handles.checkbox14,'Enable','off');
     set(handles.checkbox10,'Enable','off');
 else
-    set(handles.chkdebug,'Enable','on');
+%     set(handles.chkdebug,'Enable','on');
     set(handles.checkbox13,'Enable','on');
     set(handles.checkbox14,'Enable','on');
     set(handles.checkbox10,'Enable','on');
@@ -571,10 +575,10 @@ if val
         volumeViewer(Tile3D1);
     catch
         warndlg('Can not load tiles, Please run Global Optimization and check Preview','!! Warning !!');
-        volumeViewer close
+        volumeViewer CLOSE
     end
 else
-    volumeViewer close
+    volumeViewer CLOSE
 end
 
 function help_mnu_Callback(hObject, eventdata, handles)
@@ -766,12 +770,18 @@ end
 
 % --- Executes on button press in chkdebug.
 function chkdebug_Callback(hObject, eventdata, handles)
-Debug();
-DebugHandle=findobj(0,'Name','Debug');
+
 if handles.chkdebug.Value
+    Debug();
+    DebugHandle=findobj(0,'Name','Debug');
     DebugHandle.Visible = 'on';
 else
+    try
+    Debug();
+    DebugHandle=findobj(0,'Name','Debug');
     DebugHandle.Visible = 'off';
+    catch
+    end
 end
 % hObject    handle to chkdebug (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -918,3 +928,45 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 
 % Hint: delete(hObject) closes the figure
 delete(hObject);
+
+
+% --- Executes on button press in checkbox15.
+function checkbox15_Callback(hObject, eventdata, handles)
+if handles.checkbox15.Value
+    Log();
+    LogHandle=findobj(0,'Name','Log');
+    LogHandle.Visible = 'on';
+else
+    try
+    Log();
+    LogHandle=findobj(0,'Name','Log');
+    LogHandle.Visible = 'off';
+    catch
+    end
+end
+% hObject    handle to checkbox15 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox15
+
+
+% --- Executes on button press in checkbox16.
+function checkbox16_Callback(hObject, eventdata, handles)
+if handles.checkbox16.Value
+    DatasetMap();
+    MapHandle=findobj(0,'Name','Stack Map');
+    MapHandle.Visible = 'on';
+else
+    try
+    DatasetMap();
+    MapHandle=findobj(0,'Name','Stack Map');
+    MapHandle.Visible = 'off';
+    catch
+    end
+end
+% hObject    handle to checkbox16 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox16

@@ -1,4 +1,4 @@
-function [FeatureMatchingLog,Matched,stop]=Generate_Reg_MatchedPoints(LogHandle,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,debug,mu)
+function [FeatureMatchingLog,Matched,stop]=Generate_Reg_MatchedPoints(handles,LogHandle,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,mu)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 %
@@ -34,23 +34,23 @@ Matched=cell(size(All_overlaps));
 Matched_hung=cell(size(All_overlaps));
 Registrationtime = 0;
 k = 1;
-if LogHandle ~= 0
-    tb11 = findobj(Registrar,'Tag', 'pushbutton10');
-    set(tb11,'userdata',0);
-    x = 0:0.1:90;
-    tb9 = findobj(Registrar,'Tag', 'axes3');
-    if ~isempty(tb9)
-%         cla(tb9,'reset')
-        tb9.XLim = [0 100];
-%         patch('XData',[0,0,100,100],'YData',[0,20,20,0],'FaceColor','white','Parent',tb9);
-        patch('XData',[0,0,x(520),x(520)],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
-        drawnow;
-        hold on %hold('units','on')
-    end
-    tb_dataset = findobj(Registrar,'Tag', 'v');
-else
-    tb11 = 0;
+% if LogHandle ~= 0
+tb11 = findobj(Registrar,'Tag', 'pushbutton10');
+set(tb11,'userdata',0);
+x = 0:0.1:90;
+tb9 = findobj(Registrar,'Tag', 'axes3');
+if ~isempty(tb9)
+    %         cla(tb9,'reset')
+    tb9.XLim = [0 100];
+    %         patch('XData',[0,0,100,100],'YData',[0,20,20,0],'FaceColor','white','Parent',tb9);
+    patch('XData',[0,0,x(520),x(520)],'YData',[0,20,20,0],'FaceColor','green','Parent',tb9);
+    drawnow;
+    hold on %hold('units','on')
 end
+tb_dataset = findobj(Registrar,'Tag', 'v');
+% else
+%     tb11 = 0;
+% end
 
 match = zeros(1,8);
 if Seq_Par > 1
@@ -76,7 +76,7 @@ if Seq_Par > 1
                         
                         Source_StackPositions = StackPositions_pixels(SourceID,:);
                         Target_StackPositions = StackPositions_pixels(TargetID,:);
-                        [~,MatchLocations,~,~,~,~] = Stitching_3D_Func(LogHandle,StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder,mu);
+                        [~,MatchLocations,~,~,~,~] = Stitching_3D_Func(handles,LogHandle,StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,DataFolder,mu);
                         
                         sourceCol = zeros(size(MatchLocations,1),1);
                         sourceCol(:,1) = SourceID;
@@ -102,21 +102,24 @@ if Seq_Par > 1
     end
 else
     for SourceID=1:size(All_overlaps,1)
-        if LogHandle ~= 0
-            if get(tb11,'userdata') || stop% stop condition
-                disp(num2str(tb11.UserData));
-                stop = 1;
+        %         if LogHandle ~= 0
+        if get(tb11,'userdata') || stop% stop condition
+            disp(num2str(tb11.UserData));
+            stop = 1;
+            try
                 LogHandle.Children(2).String{end+1} = 'Process Stopped';
                 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-                
-                %                 listboxItems{v}  = 'Process Stopped';
-                %                 v = v + 1;
-                %                 tb = findobj(NCT_Registration,'Tag', 'listbox1');
-                %                 set(tb, 'String', listboxItems);drawnow
-                %                 tb.Value = v-1;drawnow
-                break;
+            catch
             end
+            
+            %                 listboxItems{v}  = 'Process Stopped';
+            %                 v = v + 1;
+            %                 tb = findobj(NCT_Registration,'Tag', 'listbox1');
+            %                 set(tb, 'String', listboxItems);drawnow
+            %                 tb.Value = v-1;drawnow
+            break;
         end
+        %         end
         
         Source_seed_r_seed = hdf5read([DataFolder,'/tmp/Feature_seeds',num2str(SourceID),'.h5'], '/dataset1');
         Source_seed_FeatureVector = hdf5read([DataFolder,'/tmp/Feature_vector',num2str(SourceID),'.h5'], '/dataset1');
@@ -124,20 +127,23 @@ else
             j_ind=find(All_overlaps(SourceID,:));
             for jj=1:length(j_ind)
                 
-                if LogHandle ~= 0
-                    if get(tb11,'userdata') || stop% stop condition
-                        disp(num2str(tb11.UserData));
-                        stop = 1;
+                %                 if LogHandle ~= 0
+                if get(tb11,'userdata') || stop% stop condition
+                    disp(num2str(tb11.UserData));
+                    stop = 1;
+                    try
                         LogHandle.Children(2).String{end+1} = 'Process Stopped';
                         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-                        %                         listboxItems{v}  = 'Process Stopped ';
-                        %                         v = v + 1;
-                        %                         tb = findobj(NCT_Registration,'Tag', 'listbox1');
-                        %                         set(tb, 'String', listboxItems);drawnow
-                        %                         tb.Value = v-1;drawnow
-                        break;
+                    catch
                     end
+                    %                         listboxItems{v}  = 'Process Stopped ';
+                    %                         v = v + 1;
+                    %                         tb = findobj(NCT_Registration,'Tag', 'listbox1');
+                    %                         set(tb, 'String', listboxItems);drawnow
+                    %                         tb.Value = v-1;drawnow
+                    break;
                 end
+                %                 end
                 
                 TargetID=j_ind(jj);
                 
@@ -152,9 +158,12 @@ else
                     FeatureMatchingLog{k,2} = TargetID;
                     
                     if size(SourceSubFeatures,1) >= paramsFMminReqFeatures && size(TargetSubFeatures,1)>= paramsFMminReqFeatures%params.FM.minReqFeatures
-                        if LogHandle ~= 0
-                            LogHandle.Children(2).String{end+1} = ['Finding Correspondence between: ',num2str(SourceID),' and ',num2str(TargetID)];
-                            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+                        if handles.checkbox15.Value
+                            try
+                                LogHandle.Children(2).String{end+1} = ['Finding Correspondence between: ',num2str(SourceID),' and ',num2str(TargetID)];
+                                LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+                            catch
+                            end
                             
                             %                             tb = findobj(NCT_Registration,'Tag', 'listbox1');
                             %                             listboxItems{v}  = ['Finding Correspondence between: ',num2str(SourceID),' and ',num2str(TargetID)];
@@ -164,7 +173,7 @@ else
                         end
                         Source_StackPositions = StackPositions_pixels(SourceID,:);
                         Target_StackPositions = StackPositions_pixels(TargetID,:);
-                        [Registrationtime,MatchLocations,MatchLocationsHang,~,~,stop] = Stitching_3D_Func(LogHandle,StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder,mu);
+                        [Registrationtime,MatchLocations,MatchLocationsHang,~,~,stop] = Stitching_3D_Func(handles,LogHandle,StackSizes_pixels(SourceID,:),StackSizes_pixels(TargetID,:),StackList,SourceID,TargetID,SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,DataFolder,mu);
                         
                         Matched(SourceID,TargetID) = {MatchLocations};
                         Matched_hung(SourceID,TargetID) = {MatchLocationsHang};
@@ -192,9 +201,12 @@ elseif TransformationValue ==3
 elseif TransformationValue ==4
     save(matchedLocationFile_Non_Rigid,'Matched','Matched_hung','-v7.3');
 end
-if LogHandle ~= 0
-    LogHandle.Children(2).String{end+1} = ['Matched Locations are saved as: ',DataFolder];
-    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+if handles.checkbox15.Value
+    try
+        LogHandle.Children(2).String{end+1} = ['Matched Locations are saved as: ',DataFolder];
+        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+    catch
+    end
     %     tb = findobj(NCT_Registration,'Tag', 'listbox1');
     %     listboxItems{v}  = ['Matched Locations are saved as: ',DataFolder];
     %     set(tb, 'String', listboxItems);drawnow

@@ -1,7 +1,7 @@
 % This function creates factor of 2 zoom levels, e.g. 2,4,8,16
 % Zoom is uniform in xyz. Tile sizes remain the same
 
-function NumTiles = CreateZoomLevels(LogHandle,ZoomLevel,DataFolder,OutMethod,DBFile)
+function NumTiles = CreateZoomLevels(handles,LogHandle,ZoomLevel,DataFolder,OutMethod,DBFile)
 addpath('../Functions');
 parameters;
 StackClass='uint8';
@@ -231,8 +231,13 @@ for i=1:prod(N_tiles_new)
             StatementObject.setObject(9,ZoomLevel);
             StatementObject.execute;
             close(StatementObject);
-            LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' inserted.'];
-            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
+            if handles.checkbox15.Value
+                try
+                    LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' inserted.'];
+                    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
+                catch
+                end
+            end
             disp(['Tile ',TileName,' inserted.']);
             if prod(N_tiles_new) == 1
                 %                 raw_im = typecast(reshape(im2uint8(max(Tile,[],3)),1,[]),'uint8');
@@ -275,34 +280,22 @@ for i=1:prod(N_tiles_new)
             zend1 = zstart1+size(Tile,3);
             TileName1 = [num2str(xstart1),'-',num2str(xend1),'_',num2str(ystart1),'-',num2str(yend1),'_',num2str(zstart1),'-',num2str(zend1)];
             %                 saveastiff(im2uint8(Tile_glancer), [SaveFolder,'image/',TileName]);
-%             SaveFolder1 = ['C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-Neocortical2_StackList\forJoe\Zoom',num2str(ZoomLevel),'\'];
+            %             SaveFolder1 = ['C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-Neocortical2_StackList\forJoe\Zoom',num2str(ZoomLevel),'\'];
             imwrite(Tile_glancer1,[SaveFolder,TileName1,'.jpg'],'jpg');
-            LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
-            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
+            
+            if handles.checkbox15.Value
+                try
+                    LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
+                    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
+                catch
+                end
+            end
             disp(['Tile ',TileName,' created.']);
         end
     end
-    
-    %     saveastiff(Tile, [SaveFolder,TileName,'.tif']);
-    
-    %          figure, imshow(max(Tile,[],3)), drawnow
+
 end
 if OutMethod == 1
     close(conn)
     clear conn
 end
-
-% save: TileNames NewTilePositions TileSizes ZoomLevels
-% TileInfo.N_tiles=N_tiles_new;
-% TileInfo.TileNames=num2cell(num2str((1:prod(N_tiles_new))',['%0',num2str(fix(log10(prod(N_tiles_new)))+1),'.0f']),2);
-% TileInfo.NewTilePositions=NewTilePositions;
-% paramsFinalTileSize=repmat(paramsFinalTileSize(1,:),prod(N_tiles_new),1);
-% TileInfo.ZoomLevels=ZoomLevel.*ones(prod(N_tiles_new),1);
-% if ~exist(SaveFolder, 'dir')
-%     mkdir(SaveFolder)
-% end
-% save([SaveFolder,'TileInfo.mat'],'TileInfo')
-%
-% T = table(TileInfo.TileNames,TileInfo.NewTilePositions,paramsFinalTileSize,TileInfo.ZoomLevels);
-% writetable(T,[SaveFolder,'TileInfo.csv'],'WriteVariableNames',false)
-

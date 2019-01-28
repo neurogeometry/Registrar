@@ -1,4 +1,4 @@
-function [Registrationtime,MatchLocations,MatchLocationsHang,Transformation_T,b,stop] = Stitching_3D_Func(LogHandle,SourceStackSize,TargetStackSize,StackList,SourceID,TargetID,Source_seed,SourceFeatures,Target_seed,TargetFeatures,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,debug,DataFolder,mu)
+function [Registrationtime,MatchLocations,MatchLocationsHang,Transformation_T,b,stop] = Stitching_3D_Func(handles,LogHandle,SourceStackSize,TargetStackSize,StackList,SourceID,TargetID,Source_seed,SourceFeatures,Target_seed,TargetFeatures,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,DataFolder,mu)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 %
@@ -25,27 +25,30 @@ tic
 
 Displacement = Source_StackPositions-Target_StackPositions;
 
-if debug ==1 && Seq_Par ~= 2
-    Source_Stack_File = StackList(SourceID,1);
-    Target_Stack_File = StackList(TargetID,1);
-    
-    IM_Source=ImportStack(char(Source_Stack_File),SourceStackSize);
-    IM_Target=ImportStack(char(Target_Stack_File),TargetStackSize);
-    
-    IM_source_max=max(IM_Source,[],3);
-    IM_target_max=max(IM_Target,[],3);
-    M_source=max(IM_Source(:));
-    
-    if abs(Displacement(2)) > abs(Displacement(1))
-        Direction='horizontal';
-    elseif abs(Displacement(1)) > abs(Displacement(2))
-        Direction='vertical';
-    else
-        Direction='vertical';
+if handles.chkdebug.Value && Seq_Par ~= 2
+    try
+        Source_Stack_File = StackList(SourceID,1);
+        Target_Stack_File = StackList(TargetID,1);
+        
+        IM_Source=ImportStack(char(Source_Stack_File),SourceStackSize);
+        IM_Target=ImportStack(char(Target_Stack_File),TargetStackSize);
+        
+        IM_source_max=max(IM_Source,[],3);
+        IM_target_max=max(IM_Target,[],3);
+        M_source=max(IM_Source(:));
+        
+        if abs(Displacement(2)) > abs(Displacement(1))
+            Direction='horizontal';
+        elseif abs(Displacement(1)) > abs(Displacement(2))
+            Direction='vertical';
+        else
+            Direction='vertical';
+        end
+        
+        [X1,Y1,~]=size(IM_Source);
+        [X2,Y2,~]=size(IM_Target);
+    catch
     end
-    
-    [X1,Y1,~]=size(IM_Source);
-    [X2,Y2,~]=size(IM_Target);
     
 end
 
@@ -180,9 +183,12 @@ Am(hungInput==10^12)=0;
 [idx1,idx2]=find(Am);
 
 
-if Seq_Par ~= 2 && LogHandle ~= 0
-    LogHandle.Children(2).String{end+1} = ['Number of Hungarian Matches:',num2str(size(idx1,1))];
-    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+if Seq_Par ~= 2 && handles.checkbox15.Value
+    try
+        LogHandle.Children(2).String{end+1} = ['Number of Hungarian Matches:',num2str(size(idx1,1))];
+        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+    catch
+    end
     
     %     tb = findobj(NCT_Registration,'Tag', 'listbox1');
     %     listboxItems{v}  = ['Number of Hungarian Matches:',num2str(size(idx1,1))];
@@ -197,7 +203,7 @@ y_Target = Target_seed(idx2,2);
 z_Source = Source_seed(idx1,3);
 z_Target = Target_seed(idx2,3);
 
-if debug ==1 && Seq_Par ~= 2 && LogHandle ~= 0
+if handles.chkdebug.Value && Seq_Par ~= 2
     if strcmp(Direction,'horizontal')
         if Displacement(2)<0
             stitched = appendimages(IM_source_max,IM_target_max,Direction);
@@ -246,8 +252,13 @@ MatchLocationsHang = [Global_Matched_Source',Global_Matched_Target'];
 try
     Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue,mu);
 catch
-    LogHandle.Children(2).String{end+1} = 'RANSAC failed! Change the parameters and run feature extraction again.';
-    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);    
+    if handles.checkbox15.Value
+        try
+            LogHandle.Children(2).String{end+1} = 'RANSAC failed! Change the parameters and run feature extraction again.';
+            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+        catch
+        end
+    end
 end
 %     end
 %     Match_Indexes_temp = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
@@ -260,10 +271,12 @@ end
 %     end
 % end
 
-if Seq_Par ~= 2 && LogHandle ~= 0
-    LogHandle.Children(2).String{end+1} = ['Number of Final Matches:',num2str(size(Match_Indexes,2))];
-    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-    
+if Seq_Par ~= 2 && handles.checkbox15.Value
+    try
+        LogHandle.Children(2).String{end+1} = ['Number of Final Matches:',num2str(size(Match_Indexes,2))];
+        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+    catch
+    end
     
     %     tb = findobj(NCT_Registration,'Tag', 'listbox1');
     %     listboxItems{v}  = ['Number of Final Matches:',num2str(size(Match_Indexes,2))];
@@ -271,74 +284,75 @@ if Seq_Par ~= 2 && LogHandle ~= 0
     %     v = v + 1;
     %     tb.Value = v-1;drawnow
 end
-if debug ==1 && Seq_Par ~= 2 && LogHandle ~= 0
-    
-    DebugHandle=findobj(0,'Name','Debug');
-    tb2 = DebugHandle.Children(1);
-    
-%     tb2 = findobj(NCT_Registration,'Tag', 'axes1');
-    
-    set(tb2, 'visible', 'on');
-    h_plot=findobj(tb2,'Tag','Fpoints');
-    h_plot3=findobj(tb2,'Tag','Flines');
-    if ~isempty(h_plot)
-        delete(h_plot)
-        delete(h_plot3)
-        drawnow;
-    end
-    h_im=imshow(stitched,[0 M_source],'Parent',tb2);hold(tb2,'on')
-    tb2=h_im.Parent;
-    tb2.Tag='axes1';
-    tb2.XLim = [0.5 size(h_im.CData,2)+0.5];
-    tb2.YLim = [0.5 size(h_im.CData,1)+0.5];
-    title('Correct Matches','Parent',tb2);
-    
-    if strcmp(Direction,'horizontal')
-        if Displacement(2)<0
-            plot(matchLoc_Source(Match_Indexes,2),matchLoc_Source(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
-        else
-            plot(matchLoc_Source(Match_Indexes,2)+Y1,matchLoc_Source(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
-        end
-        if Displacement(2)<0
-            plot(matchLoc_Target(Match_Indexes,2)+Y2,matchLoc_Target(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
-        else
-            plot(matchLoc_Target(Match_Indexes,2),matchLoc_Target(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
-        end
+if handles.chkdebug.Value && Seq_Par ~= 2
+    try
+        DebugHandle=findobj(0,'Name','Debug');
+        tb2 = DebugHandle.Children(1);
         
-    else
-        if Displacement(1)<0
-            plot(matchLoc_Source(Match_Indexes,2),matchLoc_Source(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
-        else
-            plot(matchLoc_Source(Match_Indexes,2),matchLoc_Source(Match_Indexes,1)+X1,'*','Parent',tb2,'Tag','Fpoints');
+        %     tb2 = findobj(NCT_Registration,'Tag', 'axes1');
+        
+        set(tb2, 'visible', 'on');
+        h_plot=findobj(tb2,'Tag','Fpoints');
+        h_plot3=findobj(tb2,'Tag','Flines');
+        if ~isempty(h_plot)
+            delete(h_plot)
+            delete(h_plot3)
+            drawnow;
         end
-        if Displacement(1)<0
-            plot(matchLoc_Target(Match_Indexes,2),matchLoc_Target(Match_Indexes,1)+X2,'*','Parent',tb2,'Tag','Fpoints');
-        else
-            plot(matchLoc_Target(Match_Indexes,2),matchLoc_Target(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
-        end
-    end
-    
-    for i = 1: length(Match_Indexes)
+        h_im=imshow(stitched,[0 M_source],'Parent',tb2);hold(tb2,'on')
+        tb2=h_im.Parent;
+        tb2.Tag='axes1';
+        tb2.XLim = [0.5 size(h_im.CData,2)+0.5];
+        tb2.YLim = [0.5 size(h_im.CData,1)+0.5];
+        title('Correct Matches','Parent',tb2);
+        
         if strcmp(Direction,'horizontal')
             if Displacement(2)<0
-                line([matchLoc_Source(Match_Indexes(i),2) matchLoc_Target(Match_Indexes(i),2)+Y1], ...
-                    [matchLoc_Source(Match_Indexes(i),1) matchLoc_Target(Match_Indexes(i),1)], 'Color', rand(1,3),'Parent',tb2,'Tag','Flines');
+                plot(matchLoc_Source(Match_Indexes,2),matchLoc_Source(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
             else
-                line([matchLoc_Source(Match_Indexes(i),2)+Y1 matchLoc_Target(Match_Indexes(i),2)], ...
-                    [matchLoc_Source(Match_Indexes(i),1) matchLoc_Target(Match_Indexes(i),1)], 'Color', rand(1,3),'Parent',tb2,'Tag','Flines');
+                plot(matchLoc_Source(Match_Indexes,2)+Y1,matchLoc_Source(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
             end
+            if Displacement(2)<0
+                plot(matchLoc_Target(Match_Indexes,2)+Y2,matchLoc_Target(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
+            else
+                plot(matchLoc_Target(Match_Indexes,2),matchLoc_Target(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
+            end
+            
         else
             if Displacement(1)<0
-                line([matchLoc_Source(Match_Indexes(i),2) matchLoc_Target(Match_Indexes(i),2)], ...
-                    [matchLoc_Source(Match_Indexes(i),1) matchLoc_Target(Match_Indexes(i),1)+X1], 'Color', rand(1,3),'Parent',tb2,'Tag','Flines');
+                plot(matchLoc_Source(Match_Indexes,2),matchLoc_Source(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
             else
-                line([matchLoc_Source(Match_Indexes(i),2) matchLoc_Target(Match_Indexes(i),2)], ...
-                    [matchLoc_Source(Match_Indexes(i),1)+X1 matchLoc_Target(Match_Indexes(i),1)], 'Color', rand(1,3),'Parent',tb2,'Tag','Flines');
+                plot(matchLoc_Source(Match_Indexes,2),matchLoc_Source(Match_Indexes,1)+X1,'*','Parent',tb2,'Tag','Fpoints');
+            end
+            if Displacement(1)<0
+                plot(matchLoc_Target(Match_Indexes,2),matchLoc_Target(Match_Indexes,1)+X2,'*','Parent',tb2,'Tag','Fpoints');
+            else
+                plot(matchLoc_Target(Match_Indexes,2),matchLoc_Target(Match_Indexes,1),'*','Parent',tb2,'Tag','Fpoints');
             end
         end
         
+        for i = 1: length(Match_Indexes)
+            if strcmp(Direction,'horizontal')
+                if Displacement(2)<0
+                    line([matchLoc_Source(Match_Indexes(i),2) matchLoc_Target(Match_Indexes(i),2)+Y1], ...
+                        [matchLoc_Source(Match_Indexes(i),1) matchLoc_Target(Match_Indexes(i),1)], 'Color', rand(1,3),'Parent',tb2,'Tag','Flines');
+                else
+                    line([matchLoc_Source(Match_Indexes(i),2)+Y1 matchLoc_Target(Match_Indexes(i),2)], ...
+                        [matchLoc_Source(Match_Indexes(i),1) matchLoc_Target(Match_Indexes(i),1)], 'Color', rand(1,3),'Parent',tb2,'Tag','Flines');
+                end
+            else
+                if Displacement(1)<0
+                    line([matchLoc_Source(Match_Indexes(i),2) matchLoc_Target(Match_Indexes(i),2)], ...
+                        [matchLoc_Source(Match_Indexes(i),1) matchLoc_Target(Match_Indexes(i),1)+X1], 'Color', rand(1,3),'Parent',tb2,'Tag','Flines');
+                else
+                    line([matchLoc_Source(Match_Indexes(i),2) matchLoc_Target(Match_Indexes(i),2)], ...
+                        [matchLoc_Source(Match_Indexes(i),1)+X1 matchLoc_Target(Match_Indexes(i),1)], 'Color', rand(1,3),'Parent',tb2,'Tag','Flines');
+                end
+            end
+            
+        end
+    catch
     end
-    
 end
 
 MatchLocations=NaN(length(Match_Indexes),6);
@@ -349,10 +363,12 @@ if ~isempty(Match_Indexes)
 end
 
 Registrationtime=toc;
-if Seq_Par ~= 2 && LogHandle ~= 0
-    LogHandle.Children(2).String{end+1} = ['Correspondence Finding Time:',num2str(Registrationtime)];
-    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-    
+if Seq_Par ~= 2 && handles.checkbox15.Value
+    try
+        LogHandle.Children(2).String{end+1} = ['Correspondence Finding Time:',num2str(Registrationtime)];
+        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+    catch
+    end
     
     %     tb = findobj(NCT_Registration,'Tag', 'listbox1');
     %     listboxItems{v}  = ['Correspondence Finding Time:',num2str(Registrationtime)];
