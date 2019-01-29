@@ -63,13 +63,18 @@ StackPositions_pixels = StackPositions_pixels(:,[2,1,3]);
 All_overlaps = FindOverlaps(StackPositions_pixels,StackSizes_pixels);
 
 for i=1:size(StackList,1)
+    % Find overlap indexes
+    overlap_ind = [i,find(All_overlaps(i,:)),find(All_overlaps(:,i))'];
+    overlaps(i,2:size(overlap_ind,2)+1)=overlap_ind;
+end
+
+% dlmwrite([DataFolder,'\overlaps.txt'],overlaps);
+% type([DataFolder,'\overlaps.txt'])
+for i=1:size(StackList,1)
     tifFile = StackList(i,1);
 
-    % Find overlap indexes
-    overlap_ind=[i,find(All_overlaps(i,:)),find(All_overlaps(:,i))'];
-    
     % Run Feature Extraction for one Stack
-    FeatureExtractionFunc(tifFile,i,DataFolder,StackPositions_pixels(overlap_ind,:),StackSizes_pixels(overlap_ind,:));
+    FeatureExtractionFunc(tifFile,i,DataFolder,StackPositions_pixels(overlaps(i,:),:),StackSizes_pixels(overlaps(i,:),:));
     
 end
 
