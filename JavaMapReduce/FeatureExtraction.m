@@ -14,6 +14,4 @@ for i=1:size(StackList,1)
     overlap_ind = overlaps_csv(i,find(overlaps_csv(i,:)));
     % Run Feature Extraction for one Stack
     FeatureExtractionFunc(tifFile,i,DataFolder,StackPositions_pixels_csv(overlap_ind,:),StackSizes_pixels_csv(overlap_ind,:));
-    
 end
-
