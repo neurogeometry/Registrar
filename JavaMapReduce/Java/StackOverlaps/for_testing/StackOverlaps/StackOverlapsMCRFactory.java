@@ -1,8 +1,8 @@
 /*
- * MATLAB Compiler: 6.5 (R2017b)
- * Date: Wed Jan 30 11:13:54 2019
+ * MATLAB Compiler: 7.0 (R2018b)
+ * Date: Thu Jan 31 16:15:54 2019
  * Arguments: 
- * "-B""macro_default""-W""java:StackOverlaps,Class1""-T""link:lib""-d""C:\\Users\\Seyed\\Documents\\DatasetTests\\registrar\\registrar\\JavaMapReduce\\Java\\StackOverlaps\\for_testing""class{Class1:C:\\Users\\Seyed\\Documents\\DatasetTests\\registrar\\registrar\\JavaMapReduce\\StackOverlaps.m}"
+ * "-B""macro_default""-W""java:StackOverlaps,Class1""-T""link:lib""-d""/Users/chuhan/Documents/MATLAB/StackOverlaps/for_testing""class{Class1:/Users/chuhan/Documents/study/2019Spring/registrar/JavaMapReduce/StackOverlaps.m}"
  */
 
 package StackOverlaps;
@@ -18,7 +18,7 @@ public class StackOverlapsMCRFactory
    
     
     /** Component's uuid */
-    private static final String sComponentId = "StackOverlap_A49789EDFDBE9D9C9DB9FDD65690BFB6";
+    private static final String sComponentId = "StackOverlap_4DDCA61451D97EC237519D55E35C7CC4";
     
     /** Component name */
     private static final String sComponentName = "StackOverlaps";
@@ -48,7 +48,7 @@ public class StackOverlapsMCRFactory
             StackOverlapsMCRFactory.class, 
             sComponentName, 
             sComponentId,
-            new int[]{9,3,0}
+            new int[]{9,5,0}
         );
     }
     

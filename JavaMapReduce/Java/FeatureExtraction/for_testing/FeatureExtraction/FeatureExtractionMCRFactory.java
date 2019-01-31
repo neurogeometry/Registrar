@@ -1,8 +1,8 @@
 /*
- * MATLAB Compiler: 6.5 (R2017b)
- * Date: Wed Jan 30 11:16:19 2019
+ * MATLAB Compiler: 7.0 (R2018b)
+ * Date: Thu Jan 31 15:36:44 2019
  * Arguments: 
- * "-B""macro_default""-W""java:FeatureExtraction,Class1""-T""link:lib""-d""C:\\Users\\Seyed\\Documents\\DatasetTests\\registrar\\registrar\\JavaMapReduce\\FeatureExtraction\\for_testing""class{Class1:C:\\Users\\Seyed\\Documents\\DatasetTests\\registrar\\registrar\\JavaMapReduce\\FeatureExtraction.m}"
+ * "-B""macro_default""-W""java:FeatureExtraction,Class1""-T""link:lib""-d""/Users/chuhan/Documents/MATLAB/FeatureExtraction/for_testing""class{Class1:/Users/chuhan/Documents/study/2019Spring/registrar/JavaMapReduce/FeatureExtraction.m}"
  */
 
 package FeatureExtraction;
@@ -18,7 +18,7 @@ public class FeatureExtractionMCRFactory
    
     
     /** Component's uuid */
-    private static final String sComponentId = "FeatureExtra_F8925E4A1D792969B1380D1D5293F1E5";
+    private static final String sComponentId = "FeatureExtra_69F582BB2D99D7A325102A27F7B9003B";
     
     /** Component name */
     private static final String sComponentName = "FeatureExtraction";
@@ -48,7 +48,7 @@ public class FeatureExtractionMCRFactory
             FeatureExtractionMCRFactory.class, 
             sComponentName, 
             sComponentId,
-            new int[]{9,3,0}
+            new int[]{9,5,0}
         );
     }
     

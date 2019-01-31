@@ -2,26 +2,23 @@ FeatureExtraction MATLAB Java Package
 
 1. Prerequisites for Deployment 
 
-Verify that version 9.3 (R2017b) of the MATLAB Runtime is installed.   
-
-If the MATLAB Runtime is not installed, you can run the MATLAB Runtime installer.
+Verify that version 9.5 (R2018b) of the MATLAB Runtime is installed.   
+If not, you can run the MATLAB Runtime installer.
 To find its location, enter
   
     >>mcrinstaller
       
 at the MATLAB prompt.
+NOTE: You will need administrator rights to run the MATLAB Runtime installer. 
 
-Alternatively, download and install the Windows version of the MATLAB Runtime for R2017b 
+Alternatively, download and install the Macintosh version of the MATLAB Runtime for R2018b 
 from the following link on the MathWorks website:
 
     http://www.mathworks.com/products/compiler/mcr/index.html
    
 For more information about the MATLAB Runtime and the MATLAB Runtime installer, see 
-Package and Distribute in the MATLAB Compiler SDK documentation  
-in the MathWorks Documentation Center.    
-
-NOTE: You will need administrator rights to run the MATLAB Runtime installer. 
-
+"Distribute Applications" in the MATLAB Compiler SDK documentation  
+in the MathWorks Documentation Center.
  
 - Ensure that you have version 1.7 of the Java Development Kit (JDK). 
 
@@ -30,7 +27,7 @@ NOTE: You will need administrator rights to run the MATLAB Runtime installer.
 - javabuilder.jar must be included in your CLASSPATH. javabuilder.jar 
   can be found at: 
   
-  <mcr_root>\toolbox\javabuilder\jar\win64\javabuilder.jar
+  <mcr_root>/toolbox/javabuilder/jar/maci64/javabuilder.jar
 
   where <mcr_root> represents the directory where MATLAB or the MATLAB Runtime is 
   installed on the target machine. 
@@ -38,10 +35,10 @@ NOTE: You will need administrator rights to run the MATLAB Runtime installer.
 2. Files to Deploy and Package
 
 -FeatureExtraction.jar
--MCRInstaller.exe 
+-MCRInstaller.zip 
     Note: if end users are unable to download the MATLAB Runtime using the
     instructions in the previous section, include it when building your 
-    component by clicking the "Runtime downloaded from web" link in the
+    component by clicking the "Runtime included in package" link in the
     Deployment Tool.
 -Javadoc   
    - javadoc for FeatureExtraction is in the doc directory. When  
@@ -65,6 +62,17 @@ Center.
 
 5. Appendix 
 
+In the following directions, replace MR/v95 by the directory on the target machine where 
+   MATLAB is installed, or MR by the directory where the MATLAB Runtime is installed.
+
+If the environment variable DYLD_LIBRARY_PATH is undefined, set it to the following 
+   string:
+
+MR/v95/runtime/maci64:MR/v95/sys/os/maci64:MR/v95/bin/maci64
+
+If it is defined, set it to the following:
+
+${DYLD_LIBRARY_PATH}:MR/v95/runtime/maci64:MR/v95/sys/os/maci64:MR/v95/bin/maci64
 
    For more detailed information about setting the MATLAB Runtime paths, see Package and 
    Distribute in the MATLAB Compiler SDK documentation in the MathWorks Documentation 
