@@ -1,8 +1,8 @@
 /*
- * MATLAB Compiler: 6.5 (R2017b)
- * Date: Wed Jan 30 11:13:54 2019
+ * MATLAB Compiler: 7.0 (R2018b)
+ * Date: Thu Jan 31 16:15:54 2019
  * Arguments: 
- * "-B""macro_default""-W""java:StackOverlaps,Class1""-T""link:lib""-d""C:\\Users\\Seyed\\Documents\\DatasetTests\\registrar\\registrar\\JavaMapReduce\\Java\\StackOverlaps\\for_testing""class{Class1:C:\\Users\\Seyed\\Documents\\DatasetTests\\registrar\\registrar\\JavaMapReduce\\StackOverlaps.m}"
+ * "-B""macro_default""-W""java:StackOverlaps,Class1""-T""link:lib""-d""/Users/chuhan/Documents/MATLAB/StackOverlaps/for_testing""class{Class1:/Users/chuhan/Documents/study/2019Spring/registrar/JavaMapReduce/StackOverlaps.m}"
  */
 
 package StackOverlaps;
@@ -16,7 +16,7 @@ import java.rmi.RemoteException;
  * The <code>Class1Remote</code> class provides a Java RMI-compliant interface to MATLAB 
  * functions. The interface is compiled from the following files:
  * <pre>
- *  C:\\Users\\Seyed\\Documents\\DatasetTests\\registrar\\registrar\\JavaMapReduce\\StackOverlaps.m
+ *  /Users/chuhan/Documents/study/2019Spring/registrar/JavaMapReduce/StackOverlaps.m
  * </pre>
  * The {@link #dispose} method <b>must</b> be called on a <code>Class1Remote</code> 
  * instance when it is no longer needed to ensure that native resources allocated by this 

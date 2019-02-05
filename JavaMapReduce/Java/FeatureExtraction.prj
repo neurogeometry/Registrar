@@ -1,25 +1,33 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration file="C:\Users\Seyed\Documents\DatasetTests\registrar\registrar\JavaMapReduce\FeatureExtraction.prj" location="C:\Users\Seyed\Documents\DatasetTests\registrar\registrar\JavaMapReduce" name="FeatureExtraction" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration file="/Users/chuhan/Documents/MATLAB/FeatureExtraction.prj" location="/Users/chuhan/Documents/MATLAB" name="FeatureExtraction" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>FeatureExtraction</param.appname>
     <param.icon />
     <param.icons />
     <param.version>1.0</param.version>
-    <param.authnamewatermark>Seyed M.M. Kahaki</param.authnamewatermark>
-    <param.email>kahaki@neu.edu</param.email>
-    <param.company>Northeastern University</param.company>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
     <param.summary />
     <param.description />
     <param.screenshot />
     <param.guid />
-    <param.installpath.string>\Northeastern University\FeatureExtraction\</param.installpath.string>
-    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.installpath.string>/FeatureExtraction/</param.installpath.string>
+    <param.installpath.combo>option.installpath.systemwideapp</param.installpath.combo>
     <param.logo />
     <param.install.notes />
-    <param.target.install.notes />
-    <param.intermediate>${PROJECT_ROOT}\FeatureExtraction\for_testing</param.intermediate>
-    <param.files.only>${PROJECT_ROOT}\FeatureExtraction\for_redistribution_files_only</param.files.only>
-    <param.output>${PROJECT_ROOT}\FeatureExtraction\for_redistribution</param.output>
-    <param.logdir>${PROJECT_ROOT}\FeatureExtraction</param.logdir>
+    <param.target.install.notes>In the following directions, replace MR/v95 by the directory on the target machine where MATLAB is installed, or MR by the directory where the MATLAB Runtime is installed.
+
+If the environment variable DYLD_LIBRARY_PATH is undefined, set it to the following string:
+
+MR/v95/runtime/maci64:MR/v95/sys/os/maci64:MR/v95/bin/maci64
+
+If it is defined, set it to the following:
+
+${DYLD_LIBRARY_PATH}:MR/v95/runtime/maci64:MR/v95/sys/os/maci64:MR/v95/bin/maci64</param.target.install.notes>
+    <param.intermediate>${PROJECT_ROOT}/FeatureExtraction/for_testing</param.intermediate>
+    <param.files.only>${PROJECT_ROOT}/FeatureExtraction/for_redistribution_files_only</param.files.only>
+    <param.output>${PROJECT_ROOT}/FeatureExtraction/for_redistribution</param.output>
+    <param.logdir>${PROJECT_ROOT}/FeatureExtraction</param.logdir>
     <param.enable.clean.build>false</param.enable.clean.build>
     <param.user.defined.mcr.options />
     <param.target.type>subtarget.java.package</param.target.type>
@@ -32,7 +40,7 @@
     <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
     <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
     <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
-    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.windows.command.prompt>false</param.windows.command.prompt>
     <param.create.log>false</param.create.log>
     <param.log.file />
     <param.user.only.registration>false</param.user.only.registration>
@@ -45,12 +53,16 @@
     <param.net.tsa.namespace />
     <param.net.tsa.superclass>Class1</param.net.tsa.superclass>
     <param.net.tsa.metadata />
-    <param.net.tsa.metadata.assembly>C:\Users\Seyed\Documents\MATLAB</param.net.tsa.metadata.assembly>
+    <param.net.tsa.metadata.assembly>/Users/chuhan/Documents/MATLAB</param.net.tsa.metadata.assembly>
     <param.net.saved.interface />
+    <param.cpp.api>option.cpp.all</param.cpp.api>
     <unset>
       <param.icon />
       <param.icons />
       <param.version />
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
       <param.summary />
       <param.description />
       <param.screenshot />
@@ -58,7 +70,7 @@
       <param.installpath.string />
       <param.installpath.combo />
       <param.logo />
-      <param.target.install.notes />
+      <param.install.notes />
       <param.intermediate />
       <param.files.only />
       <param.output />
@@ -89,84 +101,50 @@
       <param.net.tsa.metadata />
       <param.net.tsa.metadata.assembly />
       <param.net.saved.interface />
+      <param.cpp.api />
     </unset>
     <fileset.exports>
-      <file>${PROJECT_ROOT}\FeatureExtraction.m</file>
+      <file>/Users/chuhan/Documents/study/2019Spring/registrar/JavaMapReduce/FeatureExtraction.m</file>
     </fileset.exports>
     <fileset.classes>
       <entity.package name="">
         <entity.class name="Class1">
-          <file>${PROJECT_ROOT}\FeatureExtraction.m</file>
+          <file>/Users/chuhan/Documents/study/2019Spring/registrar/JavaMapReduce/FeatureExtraction.m</file>
         </entity.class>
       </entity.package>
     </fileset.classes>
     <fileset.resources />
     <fileset.depfun>
-      <file>${PROJECT_ROOT}\FeatureExtractionFunc.m</file>
-      <file>${PROJECT_ROOT}\Find_Seeds.m</file>
-      <file>${PROJECT_ROOT}\ImportStack.m</file>
+      <file>/Users/chuhan/Documents/study/2019Spring/registrar/JavaMapReduce/FeatureExtractionFunc.m</file>
+      <file>/Users/chuhan/Documents/study/2019Spring/registrar/JavaMapReduce/Find_Seeds.m</file>
+      <file>/Users/chuhan/Documents/study/2019Spring/registrar/JavaMapReduce/ImportStack.m</file>
     </fileset.depfun>
     <fileset.package />
+    <fileset.examples />
+    <fileset.documentation />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}\FeatureExtraction\for_testing" name="readme.txt" optional="true">C:\Users\Seyed\Documents\DatasetTests\registrar\registrar\JavaMapReduce\FeatureExtraction\for_testing\readme.txt</file>
-      <file location="${PROJECT_ROOT}\FeatureExtraction\for_testing" name="FeatureExtraction.jar" optional="false">C:\Users\Seyed\Documents\DatasetTests\registrar\registrar\JavaMapReduce\FeatureExtraction\for_testing\FeatureExtraction.jar</file>
-      <file location="${PROJECT_ROOT}\FeatureExtraction\for_testing" name="doc" optional="false">C:\Users\Seyed\Documents\DatasetTests\registrar\registrar\JavaMapReduce\FeatureExtraction\for_testing\doc</file>
+      <file location="${PROJECT_ROOT}/FeatureExtraction/for_testing" name="FeatureExtraction.jar" optional="false">/Users/chuhan/Documents/MATLAB/FeatureExtraction/for_testing/FeatureExtraction.jar</file>
+      <file location="${PROJECT_ROOT}/FeatureExtraction/for_testing" name="doc" optional="false">/Users/chuhan/Documents/MATLAB/FeatureExtraction/for_testing/doc</file>
+      <file location="${PROJECT_ROOT}/FeatureExtraction/for_testing" name="readme.txt" optional="true">/Users/chuhan/Documents/MATLAB/FeatureExtraction/for_testing/readme.txt</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2017b</root>
-      <toolboxes>
-        <toolbox name="fixedpoint" />
-        <toolbox name="matlabcoder" />
-        <toolbox name="matlabhdlcoder" />
-        <toolbox name="embeddedcoder" />
-        <toolbox name="gpucoder" />
-        <toolbox name="polyspacebugfinder" />
-      </toolboxes>
-      <toolbox>
-        <fixedpoint>
-          <enabled>true</enabled>
-        </fixedpoint>
-      </toolbox>
-      <toolbox>
-        <matlabcoder>
-          <enabled>true</enabled>
-        </matlabcoder>
-      </toolbox>
-      <toolbox>
-        <matlabhdlcoder>
-          <enabled>true</enabled>
-        </matlabhdlcoder>
-      </toolbox>
-      <toolbox>
-        <embeddedcoder>
-          <enabled>true</enabled>
-        </embeddedcoder>
-      </toolbox>
-      <toolbox>
-        <gpucoder>
-          <enabled>true</enabled>
-        </gpucoder>
-      </toolbox>
-      <toolbox>
-        <polyspacebugfinder>
-          <enabled>true</enabled>
-        </polyspacebugfinder>
-      </toolbox>
+      <root>/Applications/MATLAB_R2018b.app</root>
+      <toolboxes />
     </matlab>
     <platform>
-      <unix>false</unix>
-      <mac>false</mac>
-      <windows>true</windows>
+      <unix>true</unix>
+      <mac>true</mac>
+      <windows>false</windows>
       <win2k>false</win2k>
       <winxp>false</winxp>
       <vista>false</vista>
       <linux>false</linux>
       <solaris>false</solaris>
-      <osver>10.0</osver>
+      <osver>10.14.3</osver>
       <os32>false</os32>
       <os64>true</os64>
-      <arch>win64</arch>
+      <arch>maci64</arch>
       <matlab>true</matlab>
     </platform>
   </configuration>

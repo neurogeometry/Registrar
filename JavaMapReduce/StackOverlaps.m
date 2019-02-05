@@ -16,7 +16,10 @@ for i = 1:size(StackList,1)
             [~,~,ext] = fileparts(allfiles(1).name);
         end
     catch
-        StackList{i} = [PathStr,'\',StackList{i}];
+%         For Windows/LINUX
+%         StackList{i} = [PathStr,'\',StackList{i}];
+%       For Mac/UNIX
+        StackList{i} = [PathStr,'/',StackList{i}];
     end
     
     try
@@ -33,7 +36,10 @@ for i = 1:size(StackList,1)
             for j = 1:NumFiles
                 [~,~,ext] = fileparts(allfiles(j).name);
                 if strcmpi(ext,'.tif') || strcmpi(ext,'.jp2') || strcmpi(ext,'.png') || strcmpi(ext,'.jpeg')
-                    InfoImage=imfinfo(char([allfiles(j).folder,'\',allfiles(j).name]));
+                    %       For Windows/LINUX
+%                     InfoImage=imfinfo(char([allfiles(j).folder,'\',allfiles(j).name]));
+                    %       For Mac/UNIX
+                    InfoImage=imfinfo(char([allfiles(j).folder,'/',allfiles(j).name]));
                     StackSizes_pixels(i,1) = InfoImage.Height;
                     StackSizes_pixels(i,2) = InfoImage.Width;
                     imgIdx = imgIdx +1;
@@ -64,6 +70,12 @@ for i=1:size(StackList,1)
     overlaps(i,1:size(overlap_ind,2))=overlap_ind;
 end
 
-dlmwrite([DataFolder,'\overlaps.csv'],overlaps);
-dlmwrite([DataFolder,'\StackPositions_pixels.csv'],StackPositions_pixels);
-dlmwrite([DataFolder,'\StackSizes_pixels.csv'],StackSizes_pixels);
+% For Winsows/LINUX
+% dlmwrite([DataFolder,'\overlaps.csv'],overlaps);
+% dlmwrite([DataFolder,'\StackPositions_pixels.csv'],StackPositions_pixels);
+% dlmwrite([DataFolder,'\StackSizes_pixels.csv'],StackSizes_pixels);
+
+% For Mac/UNIX
+dlmwrite([DataFolder,'/overlaps.csv'],overlaps);
+dlmwrite([DataFolder,'/StackPositions_pixels.csv'],StackPositions_pixels);
+dlmwrite([DataFolder,'/StackSizes_pixels.csv'],StackSizes_pixels);
