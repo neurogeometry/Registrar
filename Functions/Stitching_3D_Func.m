@@ -184,17 +184,16 @@ Am(hungInput==10^12)=0;
 
 
 if Seq_Par ~= 2 && handles.checkbox15.Value
-    try
-        LogHandle.Children(2).String{end+1} = ['Number of Hungarian Matches:',num2str(size(idx1,1))];
-        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-    catch
-    end
-    
-    %     tb = findobj(NCT_Registration,'Tag', 'listbox1');
-    %     listboxItems{v}  = ['Number of Hungarian Matches:',num2str(size(idx1,1))];
-    %     set(tb, 'String', listboxItems);drawnow
-    %     v = v + 1;
-    %     tb.Value = v-1;drawnow
+        try
+            if isempty(LogHandle)
+                Log();
+                LogHandle=findobj(0,'Name','Log');
+                LogHandle.Children(2).String = {};
+            end
+            LogHandle.Children(2).String{end+1} = ['Number of Hungarian Matches:',num2str(size(idx1,1))];
+            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+        catch
+        end
 end
 x_Source = Source_seed(idx1,1);
 x_Target = Target_seed(idx2,1);
@@ -252,13 +251,20 @@ MatchLocationsHang = [Global_Matched_Source',Global_Matched_Target'];
 try
     Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue,mu);
 catch
+    
     if handles.checkbox15.Value
         try
+            if isempty(LogHandle)
+                Log();
+                LogHandle=findobj(0,'Name','Log');
+                LogHandle.Children(2).String = {};
+            end
             LogHandle.Children(2).String{end+1} = 'RANSAC failed! Change the parameters and run feature extraction again.';
             LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
         catch
         end
     end
+
 end
 %     end
 %     Match_Indexes_temp = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue);
@@ -272,17 +278,16 @@ end
 % end
 
 if Seq_Par ~= 2 && handles.checkbox15.Value
-    try
-        LogHandle.Children(2).String{end+1} = ['Number of Final Matches:',num2str(size(Match_Indexes,2))];
-        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-    catch
-    end
-    
-    %     tb = findobj(NCT_Registration,'Tag', 'listbox1');
-    %     listboxItems{v}  = ['Number of Final Matches:',num2str(size(Match_Indexes,2))];
-    %     set(tb, 'String', listboxItems);drawnow
-    %     v = v + 1;
-    %     tb.Value = v-1;drawnow
+        try
+            if isempty(LogHandle)
+                Log();
+                LogHandle=findobj(0,'Name','Log');
+                LogHandle.Children(2).String = {};
+            end
+            LogHandle.Children(2).String{end+1} = ['Number of Final Matches:',num2str(size(Match_Indexes,2))];
+            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+        catch
+        end
 end
 if handles.chkdebug.Value && Seq_Par ~= 2
     try
@@ -363,18 +368,17 @@ if ~isempty(Match_Indexes)
 end
 
 Registrationtime=toc;
-if Seq_Par ~= 2 && handles.checkbox15.Value
-    try
-        LogHandle.Children(2).String{end+1} = ['Correspondence Finding Time:',num2str(Registrationtime)];
-        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-    catch
-    end
-    
-    %     tb = findobj(NCT_Registration,'Tag', 'listbox1');
-    %     listboxItems{v}  = ['Correspondence Finding Time:',num2str(Registrationtime)];
-    %     set(tb, 'String', listboxItems);drawnow
-    %     v = v + 1;
-    %     tb.Value = v-1;drawnow
-end
 
+if Seq_Par ~= 2 && handles.checkbox15.Value
+        try
+            if isempty(LogHandle)
+                Log();
+                LogHandle=findobj(0,'Name','Log');
+                LogHandle.Children(2).String = {};
+            end
+            LogHandle.Children(2).String{end+1} = ['Correspondence Finding Time:',num2str(Registrationtime)];
+            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+        catch
+        end
+end
 end

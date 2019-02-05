@@ -100,18 +100,25 @@ if Seq_Par > 1
             Matched(SourceID,TargetID) = {match(find(match(:,7) == SourceID & match(:,8) == TargetID),1:6)};
         end
     end
-else
+else % Run Sequential
     for SourceID=1:size(All_overlaps,1)
         %         if LogHandle ~= 0
         if get(tb11,'userdata') || stop% stop condition
             disp(num2str(tb11.UserData));
             stop = 1;
-            try
-                LogHandle.Children(2).String{end+1} = 'Process Stopped';
-                LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-            catch
-            end
             
+            if handles.checkbox15.Value
+                try
+                    if isempty(LogHandle)
+                        Log();
+                        LogHandle=findobj(0,'Name','Log');
+                        LogHandle.Children(2).String = {};
+                    end
+                    LogHandle.Children(2).String{end+1} = 'Process Stopped';
+                    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+                catch
+                end
+            end
             %                 listboxItems{v}  = 'Process Stopped';
             %                 v = v + 1;
             %                 tb = findobj(NCT_Registration,'Tag', 'listbox1');
@@ -131,11 +138,19 @@ else
                 if get(tb11,'userdata') || stop% stop condition
                     disp(num2str(tb11.UserData));
                     stop = 1;
-                    try
-                        LogHandle.Children(2).String{end+1} = 'Process Stopped';
-                        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-                    catch
+                    if handles.checkbox15.Value
+                        try
+                            if isempty(LogHandle)
+                                Log();
+                                LogHandle=findobj(0,'Name','Log');
+                                LogHandle.Children(2).String = {};
+                            end
+                            LogHandle.Children(2).String{end+1} = 'Process Stopped';
+                            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+                        catch
+                        end
                     end
+                    
                     %                         listboxItems{v}  = 'Process Stopped ';
                     %                         v = v + 1;
                     %                         tb = findobj(NCT_Registration,'Tag', 'listbox1');
@@ -159,11 +174,24 @@ else
                     
                     if size(SourceSubFeatures,1) >= paramsFMminReqFeatures && size(TargetSubFeatures,1)>= paramsFMminReqFeatures%params.FM.minReqFeatures
                         if handles.checkbox15.Value
-                            try
-                                LogHandle.Children(2).String{end+1} = ['Finding Correspondence between: ',num2str(SourceID),' and ',num2str(TargetID)];
-                                LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-                            catch
+                            
+                            if handles.checkbox15.Value
+                                try
+                                    if isempty(LogHandle)
+                                        Log();
+                                        LogHandle=findobj(0,'Name','Log');
+                                        LogHandle.Children(2).String = {};
+                                    end
+                                    LogHandle.Children(2).String{end+1} = ['Finding Correspondence between: ',num2str(SourceID),' and ',num2str(TargetID)];
+                                    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+                                catch
+                                end
                             end
+                            
+                            
+                            
+                            
+                            
                             
                             %                             tb = findobj(NCT_Registration,'Tag', 'listbox1');
                             %                             listboxItems{v}  = ['Finding Correspondence between: ',num2str(SourceID),' and ',num2str(TargetID)];

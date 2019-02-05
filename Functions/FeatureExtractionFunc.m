@@ -31,6 +31,11 @@ ImportTime = toc;
 % Update Log
 if handles.checkbox15.Value
     try
+        if isempty(LogHandle)
+            Log();
+            LogHandle=findobj(0,'Name','Log');
+            LogHandle.Children(2).String = {};
+        end
         LogHandle.Children(2).String{end+1} = ['End Reading the file ',char(File),' - Import Time:',num2str(ImportTime)];
         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
     catch
@@ -43,6 +48,11 @@ r_seed=Find_Seeds(IM_Original,StackPositions_pixels,StackSizes_pixels);
 % Update Log
 if handles.checkbox15.Value
     try
+        if isempty(LogHandle)
+            Log();
+            LogHandle=findobj(0,'Name','Log');
+            LogHandle.Children(2).String = {};
+        end
         LogHandle.Children(2).String{end+1} = ['End Finding the Seeds for ',char(File),' - Finding Seeds Time:',num2str(SeedsTime)];
         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
     catch
@@ -83,6 +93,11 @@ end
 % Update Log
 if handles.checkbox15.Value
     try
+        if isempty(LogHandle)
+            Log();
+            LogHandle=findobj(0,'Name','Log');
+            LogHandle.Children(2).String = {};
+        end
         LogHandle.Children(2).String{end+1} = ['End of Extracting Features for the file ',char(File),' - ',num2str(size(r_seed,1)), ' Features are Detected'];
         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
     catch
@@ -105,6 +120,11 @@ for i=1:size(r_seed,1)
         % Update Log
         if handles.checkbox15.Value
             try
+                if isempty(LogHandle)
+                    Log();
+                    LogHandle=findobj(0,'Name','Log');
+                    LogHandle.Children(2).String = {};
+                end
                 LogHandle.Children(2).String{end+1} = 'Process Stopped';
                 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
             catch
@@ -120,6 +140,11 @@ end
 % Update Log
 if handles.checkbox15.Value
     try
+        if isempty(LogHandle)
+            Log();
+            LogHandle=findobj(0,'Name','Log');
+            LogHandle.Children(2).String = {};
+        end
         LogHandle.Children(2).String{end+1} = ['End of Reading the Features Neighbor of the file ',char(File),' - extracting neighbors time: ',num2str(NeighborExtractionTime) ];
         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
     catch
@@ -130,6 +155,11 @@ end
 numberofFeatures = size(r_seed);
 if handles.checkbox15.Value
     try
+        if isempty(LogHandle)
+            Log();
+            LogHandle=findobj(0,'Name','Log');
+            LogHandle.Children(2).String = {};
+        end
         LogHandle.Children(2).String{end+1} = [num2str(numberofFeatures(1)),' Features are extracted for the file ',char(File)];
         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
     catch
@@ -144,6 +174,11 @@ seedsFile = [DataFolder,'/tmp/Feature_',num2str(stackID),'.h5'];
 % Update Log
 if handles.checkbox15.Value
     try
+        if isempty(LogHandle)
+            Log();
+            LogHandle=findobj(0,'Name','Log');
+            LogHandle.Children(2).String = {};
+        end
         LogHandle.Children(2).String{end+1} = ['Seeds are saved as: ',seedsFile];
         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
     catch

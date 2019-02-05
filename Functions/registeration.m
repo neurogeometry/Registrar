@@ -44,6 +44,11 @@ if handles.chkdebug.Value
 end
 if handles.checkbox15.Value
     try
+        if isempty(LogHandle)
+            Log();
+            LogHandle=findobj(0,'Name','Log');
+            LogHandle.Children(2).String = {};
+        end
         LogHandle.Children(2).String{end+1} = 'Registration Started';
         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
     catch
@@ -135,6 +140,11 @@ if exist(StackList_csv_pth,'file') > 0
         end
         if handles.checkbox15.Value
             try
+                if isempty(LogHandle)
+                    Log();
+                    LogHandle=findobj(0,'Name','Log');
+                    LogHandle.Children(2).String = {};
+                end
                 LogHandle.Children(2).String{end+1} = "Feature Extraction Started";
                 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
             catch
@@ -149,6 +159,11 @@ if exist(StackList_csv_pth,'file') > 0
             
             if handles.checkbox15.Value
                 try
+                    if isempty(LogHandle)
+                        Log();
+                        LogHandle=findobj(0,'Name','Log');
+%                         LogHandle.Children(2).String = {};
+                    end
                     LogHandle.Children(2).String{end+1} = 'Feeature Matching Started';
                     LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
                 catch
@@ -166,6 +181,11 @@ if exist(StackList_csv_pth,'file') > 0
             
             if handles.checkbox15.Value
                 try
+                    if isempty(LogHandle)
+                        Log();
+                        LogHandle=findobj(0,'Name','Log');
+                        LogHandle.Children(2).String = {};
+                    end
                     LogHandle.Children(2).String{end+1} = 'Global Optimization Started';
                     LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
                 catch
@@ -240,6 +260,11 @@ if exist(StackList_csv_pth,'file') > 0
                 end
                 if handles.checkbox15.Value
                     try
+                        if isempty(LogHandle)
+                            Log();
+                            LogHandle=findobj(0,'Name','Log');
+                            LogHandle.Children(2).String = {};
+                        end
                         LogHandle.Children(2).String{end+1} = ['Registered Positions Data saved as: ',SaveLocation];
                         LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
                     catch
@@ -287,6 +312,11 @@ if exist(StackList_csv_pth,'file') > 0
         
         if handles.checkbox15.Value
             try
+                if isempty(LogHandle)
+                    Log();
+                    LogHandle=findobj(0,'Name','Log');
+                    LogHandle.Children(2).String = {};
+                end
                 LogHandle.Children(2).String{end+1} = 'Blending Stareted';
                 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
             catch
@@ -323,6 +353,11 @@ if exist(StackList_csv_pth,'file') > 0
         
         if handles.checkbox15.Value
             try
+                if isempty(LogHandle)
+                    Log();
+                    LogHandle=findobj(0,'Name','Log');
+                    LogHandle.Children(2).String = {};
+                end
                 LogHandle.Children(2).String{end+1} = 'Blending Done!';
                 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
             catch
@@ -350,6 +385,11 @@ if exist(StackList_csv_pth,'file') > 0
         end
         if handles.checkbox15.Value
             try
+                if isempty(LogHandle)
+                    Log();
+                    LogHandle=findobj(0,'Name','Log');
+                    LogHandle.Children(2).String = {};
+                end
                 LogHandle.Children(2).String{end+1} = 'Retilling Started!';
                 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
             catch
@@ -378,6 +418,11 @@ if exist(StackList_csv_pth,'file') > 0
     if ~stop
         if handles.checkbox15.Value
             try
+                if isempty(LogHandle)
+                    Log();
+                    LogHandle=findobj(0,'Name','Log');
+                    LogHandle.Children(2).String = {};
+                end
                 LogHandle.Children(2).String{end+1} = 'All Done!';
                 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
             catch

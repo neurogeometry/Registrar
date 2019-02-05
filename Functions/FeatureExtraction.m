@@ -60,6 +60,11 @@ else % do sequential
             % Update Log
             if handles.checkbox15.Value
                 try
+                    if isempty(LogHandle)
+                        Log();
+                        LogHandle=findobj(0,'Name','Log');
+                        LogHandle.Children(2).String = {};
+                    end
                     LogHandle.Children(2).String{end+1} = ['Extracting Features for ',char(tifFile)];
                     LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
                 catch
@@ -72,6 +77,11 @@ else % do sequential
                 disp(num2str(tb11.UserData));
                 stop = 1;
                 try
+                    if isempty(LogHandle)
+                        Log();
+                        LogHandle=findobj(0,'Name','Log');
+                        LogHandle.Children(2).String = {};
+                    end
                     LogHandle.Children(2).String{end+1} = 'Process Stopped';
                     LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
                 catch
