@@ -1,4 +1,4 @@
-function [Registrationtime,MatchLocations,MatchLocationsHang,Transformation_T,b,stop] = Stitching_3D_Func(handles,LogHandle,SourceStackSize,TargetStackSize,StackList,SourceID,TargetID,Source_seed,SourceFeatures,Target_seed,TargetFeatures,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,DataFolder,mu)
+function [MatchLocations,MatchLocationsHang,Transformation_T,b,stop] = Stitching_3D_Func(handles,LogHandle,SourceStackSize,TargetStackSize,StackList,SourceID,TargetID,Source_seed,SourceFeatures,Target_seed,TargetFeatures,Source_StackPositions,Target_StackPositions,TransformationValue,Seq_Par,tb11,stop,DataFolder,mu)
 % ============================== About ====================================
 % -------------------------------------------------------------------------
 %
@@ -182,18 +182,8 @@ Am = Hungarian_fast(hungInput,paramsFM_C1,paramsFM_C2);
 Am(hungInput==10^12)=0;
 [idx1,idx2]=find(Am);
 
-
 if Seq_Par ~= 2 && handles.checkbox15.Value
-        try
-            if isempty(LogHandle)
-                Log();
-                LogHandle=findobj(0,'Name','Log');
-                LogHandle.Children(2).String = {};
-            end
-            LogHandle.Children(2).String{end+1} = ['Number of Hungarian Matches:',num2str(size(idx1,1))];
-            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-        catch
-        end
+        UpdateLog(LogHandle,['Number of Hungarian Matches:',num2str(size(idx1,1))]);   
 end
 x_Source = Source_seed(idx1,1);
 x_Target = Target_seed(idx2,1);
@@ -221,7 +211,7 @@ end
 matchLoc_Target = [x_Target,y_Target,z_Target];
 matchLoc_Source = [x_Source,y_Source,z_Source];
 
-i=1;
+
 Match_Indexes=[];
 Transformation_T = [];
 b = [];
@@ -229,6 +219,7 @@ Global_Matched_Source = matchLoc_Source'+(ones(size(matchLoc_Source,1),1)*Source
 Global_Matched_Target = matchLoc_Target'+(ones(size(matchLoc_Source,1),1)*Target_StackPositions)'-1;
 
 MatchLocationsHang = [Global_Matched_Source',Global_Matched_Target'];
+% i=1;
 % while numel(Match_Indexes)<paramsFMminmatches && i<paramsFMmaxiter
 %     if v ~= 0
 %     if get(tb11,'userdata') || stop% stop condition
@@ -253,16 +244,8 @@ try
 catch
     
     if handles.checkbox15.Value
-        try
-            if isempty(LogHandle)
-                Log();
-                LogHandle=findobj(0,'Name','Log');
-                LogHandle.Children(2).String = {};
-            end
-            LogHandle.Children(2).String{end+1} = 'RANSAC failed! Change the parameters and run feature extraction again.';
-            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-        catch
-        end
+        
+        UpdateLog(LogHandle,'RANSAC failed! Change the parameters and run feature extraction again.');
     end
 
 end
@@ -278,24 +261,12 @@ end
 % end
 
 if Seq_Par ~= 2 && handles.checkbox15.Value
-        try
-            if isempty(LogHandle)
-                Log();
-                LogHandle=findobj(0,'Name','Log');
-                LogHandle.Children(2).String = {};
-            end
-            LogHandle.Children(2).String{end+1} = ['Number of Final Matches:',num2str(size(Match_Indexes,2))];
-            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-        catch
-        end
+        UpdateLog(LogHandle,['Number of Final Matches:',num2str(size(Match_Indexes,2))]);   
 end
 if handles.chkdebug.Value && Seq_Par ~= 2
     try
         DebugHandle=findobj(0,'Name','Debug');
         tb2 = DebugHandle.Children(1);
-        
-        %     tb2 = findobj(NCT_Registration,'Tag', 'axes1');
-        
         set(tb2, 'visible', 'on');
         h_plot=findobj(tb2,'Tag','Fpoints');
         h_plot3=findobj(tb2,'Tag','Flines');
@@ -370,15 +341,6 @@ end
 Registrationtime=toc;
 
 if Seq_Par ~= 2 && handles.checkbox15.Value
-        try
-            if isempty(LogHandle)
-                Log();
-                LogHandle=findobj(0,'Name','Log');
-                LogHandle.Children(2).String = {};
-            end
-            LogHandle.Children(2).String{end+1} = ['Correspondence Finding Time:',num2str(Registrationtime)];
-            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-        catch
-        end
+        UpdateLog(LogHandle,['Correspondence Finding Time:',num2str(Registrationtime)]);
 end
 end

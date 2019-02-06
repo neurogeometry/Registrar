@@ -5,9 +5,6 @@ TargetStackCenter=StackPositions_pixels(TargetID,:)+StackSizes_pixels(TargetID,:
 
 
 PixelSizes = StackSizes_pixels(SourceID,:)./StackSizes_pixels(SourceID,1:3);
-% SourceDimX = StackSizes_pixels(SourceID,1);
-% SourceDimY = StackSizes_pixels(SourceID,2);
-% SourceDimZ = StackSizes_pixels(SourceID,3);
 
 TargetDimX = StackSizes_pixels(TargetID,1);
 TargetDimY = StackSizes_pixels(TargetID,2);
@@ -49,21 +46,12 @@ else
     z2 = StackSizes_pixels(SourceID,3);
 end
 
-% StackSizes_pixels(SourceID,1:3);
-% StackSizes_pixels(TargetID,1:3);
-
-% if strcmp(Dataset,'Mine')
-%     ind = (Source_seed_r_seed(:,1)>y1 & Source_seed_r_seed(:,1)<y2 & Source_seed_r_seed(:,2)>x1 & Source_seed_r_seed(:,2)<x2 & Source_seed_r_seed(:,3)>z1 & Source_seed_r_seed(:,3)<z2);
-% elseif strcmp(Dataset, 'DIADEM1')
 if StackSizes_pixels(1,3) >1
     ind = (Source_seed_r_seed(:,1)>x1 & Source_seed_r_seed(:,1)<x2 & Source_seed_r_seed(:,2)>y1 & Source_seed_r_seed(:,2)<y2 & Source_seed_r_seed(:,3)>z1 & Source_seed_r_seed(:,3)<z2);
 else
     ind = (Source_seed_r_seed(:,1)>x1 & Source_seed_r_seed(:,1)<x2 & Source_seed_r_seed(:,2)>y1 & Source_seed_r_seed(:,2)<y2);
 end
     
-    % end
-
-
 SubFeatures = Source_seed_r_seed(ind(:,1),:);
 SubFeaturesVectors = Source_seed_FeatureVector(ind(:,1),:);
 

@@ -43,16 +43,7 @@ if handles.chkdebug.Value
     Debug();
 end
 if handles.checkbox15.Value
-    try
-        if isempty(LogHandle)
-            Log();
-            LogHandle=findobj(0,'Name','Log');
-            LogHandle.Children(2).String = {};
-        end
-        LogHandle.Children(2).String{end+1} = 'Registration Started';
-        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-    catch
-    end
+    UpdateLog(LogHandle,'Registration Started');
 end
 % Check if CSV file exist
 if exist(StackList_csv_pth,'file') > 0
@@ -65,18 +56,21 @@ if exist(StackList_csv_pth,'file') > 0
     errIndxs = [];
     StackSizes_pixels = zeros(size(StackList,1),3);
     for i = 1:size(StackList,1)
+        
+        % To check the path if it is local path
         try
             [filepath,~,ext] = fileparts(char(StackList(i,1)));
             if size(ext,2)>1
-                InfoImage=imfinfo(char(StackList(i,1)));
+                imfinfo(char(StackList(i,1)));
             else
                 allfiles = dir(filepath);
-                [~,~,ext] = fileparts(allfiles(1).name);
+                fileparts(allfiles(1).name);
             end
         catch
             StackList{i} = [PathStr,'\',StackList{i}];
         end
         
+        % Generate Stacks Data
         try
             [filepath,~,ext] = fileparts(char(StackList(i,1)));
             if size(ext,2)>1
@@ -104,13 +98,10 @@ if exist(StackList_csv_pth,'file') > 0
             errIndxs = [errIndxs, i];
         end
     end
+    % Remove the Stacks if unable to read the image
     StackList (errIndxs,:) = [];
     StackSizes_pixels (errIndxs,:) = [];
-    % check this section???
-    if size(StackList,2) == 7
-        StackSizes_pixels = cell2mat(StackList(:,5:7));
-    end
-    
+
     % Get positions from the list
     StackPositions_pixels = cell2mat(StackList(:,2:4)); %xlsread(StackPositions_pixels_csv_pth);
     StackPositions_pixels = StackPositions_pixels(:,[2,1,3]);
@@ -139,37 +130,18 @@ if exist(StackList_csv_pth,'file') > 0
             mkdir(DataFolder);
         end
         if handles.checkbox15.Value
-            try
-                if isempty(LogHandle)
-                    Log();
-                    LogHandle=findobj(0,'Name','Log');
-                    LogHandle.Children(2).String = {};
-                end
-                LogHandle.Children(2).String{end+1} = "Feature Extraction Started";
-                LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-            catch
-            end
+            UpdateLog(LogHandle,'Feature Extraction Started');
         end
-        [stop]=FeatureExtraction(handles,LogHandle,StackList,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels);
-        
+        [stop]=FeatureExtraction(handles,LogHandle,StackList,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels);  
     end
     
     if runFeatureMatching && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
             
             if handles.checkbox15.Value
-                try
-                    if isempty(LogHandle)
-                        Log();
-                        LogHandle=findobj(0,'Name','Log');
-%                         LogHandle.Children(2).String = {};
-                    end
-                    LogHandle.Children(2).String{end+1} = 'Feeature Matching Started';
-                    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-                catch
-                end
+                UpdateLog(LogHandle,'Feeature Matching Started');
             end
-            [~,Matched,stop]=Generate_Reg_MatchedPoints(handles,LogHandle,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,params.FM.mu);
+            [Matched,stop]=Generate_Reg_MatchedPoints(handles,LogHandle,All_overlaps,StackList,StackPositions_pixels,StackSizes_pixels,TransformationValue,DataFolder,Seq_Par,Par_workers,params.FM.mu);
         else
             warndlg('The Features Folder is not Exists! Please run Feature Extraction.','!! Warning !!');
         end
@@ -180,16 +152,7 @@ if exist(StackList_csv_pth,'file') > 0
         if exist([DataFolder,'/tmp'],'dir') > 0
             
             if handles.checkbox15.Value
-                try
-                    if isempty(LogHandle)
-                        Log();
-                        LogHandle=findobj(0,'Name','Log');
-                        LogHandle.Children(2).String = {};
-                    end
-                    LogHandle.Children(2).String{end+1} = 'Global Optimization Started';
-                    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-                catch
-                end
+                UpdateLog(LogHandle,'Global Optimization Started');
             end
             
             
@@ -259,16 +222,7 @@ if exist(StackList_csv_pth,'file') > 0
                         T.L = 0;
                 end
                 if handles.checkbox15.Value
-                    try
-                        if isempty(LogHandle)
-                            Log();
-                            LogHandle=findobj(0,'Name','Log');
-                            LogHandle.Children(2).String = {};
-                        end
-                        LogHandle.Children(2).String{end+1} = ['Registered Positions Data saved as: ',SaveLocation];
-                        LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-                    catch
-                    end
+                    UpdateLog(LogHandle,['Registered Positions Data saved as: ',SaveLocation]);
                 end
             else
                 warndlg('Global Optimization can not be run.','!! Warning !!');
@@ -311,16 +265,7 @@ if exist(StackList_csv_pth,'file') > 0
         end
         
         if handles.checkbox15.Value
-            try
-                if isempty(LogHandle)
-                    Log();
-                    LogHandle=findobj(0,'Name','Log');
-                    LogHandle.Children(2).String = {};
-                end
-                LogHandle.Children(2).String{end+1} = 'Blending Stareted';
-                LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-            catch
-            end
+            UpdateLog(LogHandle,'Blending Stareted');
         end
         
         
@@ -335,6 +280,8 @@ if exist(StackList_csv_pth,'file') > 0
         else
             warndlg('The Transformation file is not Exist! Please run Global optimization.','!! Warning !!');
         end
+        
+        % To remove empty parts of the Tiles
         %         Tile3D(all(all(Tile3D == 0,3),2),:,:) = [];
         %         Tile3D(:,all(all(Tile3D == 0,3),1),:) = [];
         %         Tile3D_org(all(all(Tile3D_org == 0,3),2),:,:) = [];
@@ -352,16 +299,7 @@ if exist(StackList_csv_pth,'file') > 0
         end
         
         if handles.checkbox15.Value
-            try
-                if isempty(LogHandle)
-                    Log();
-                    LogHandle=findobj(0,'Name','Log');
-                    LogHandle.Children(2).String = {};
-                end
-                LogHandle.Children(2).String{end+1} = 'Blending Done!';
-                LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-            catch
-            end
+            UpdateLog(LogHandle,'Blending Done');
         end
         
         if handles.checkbox10.Value
@@ -384,49 +322,32 @@ if exist(StackList_csv_pth,'file') > 0
                 load([DataFolder,params.GT.Transformation],'T');
         end
         if handles.checkbox15.Value
-            try
-                if isempty(LogHandle)
-                    Log();
-                    LogHandle=findobj(0,'Name','Log');
-                    LogHandle.Children(2).String = {};
-                end
-                LogHandle.Children(2).String{end+1} = 'Retilling Started!';
-                LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-            catch
-            end
+            UpdateLog(LogHandle,'Retilling Started!');
         end
         Retiling(handles,LogHandle,{StackList{:,1}},StackPositions_pixels,StackSizes_pixels,T,DataFolder,outputType,Seq_Par,Par_workers,DBAddress);
     end
     
-%     if runRetilling && ~stop && (outputType == 1 || outputType == 2)
-%         ZL = 2;
-%         NumTiles = inf;
-%         if handles.checkbox15.Value
-%             try
-%                 LogHandle.Children(2).String{end+1} = 'Creating Zoom Levels Started!';
-%                 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-%             catch
-%             end
-%         end
-%         
-%         while NumTiles > 1
-%             NumTiles = CreateZoomLevels(handles,LogHandle,ZL,DataFolder,outputType,DBAddress);
-%             ZL = ZL * 2;
-%         end
-%     end
+    % Create Zoom Level
+    %     if runRetilling && ~stop && (outputType == 1 || outputType == 2)
+    %         ZL = 2;
+    %         NumTiles = inf;
+    %         if handles.checkbox15.Value
+    %             try
+    %                 LogHandle.Children(2).String{end+1} = 'Creating Zoom Levels Started!';
+    %                 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+    %             catch
+    %             end
+    %         end
+    %
+    %         while NumTiles > 1
+    %             NumTiles = CreateZoomLevels(handles,LogHandle,ZL,DataFolder,outputType,DBAddress);
+    %             ZL = ZL * 2;
+    %         end
+    %     end
     
     if ~stop
         if handles.checkbox15.Value
-            try
-                if isempty(LogHandle)
-                    Log();
-                    LogHandle=findobj(0,'Name','Log');
-                    LogHandle.Children(2).String = {};
-                end
-                LogHandle.Children(2).String{end+1} = 'All Done!';
-                LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-            catch
-            end
+            UpdateLog(LogHandle,'All Done!');
         end
     end
     tb9 = findobj(Registrar,'Tag', 'axes3');

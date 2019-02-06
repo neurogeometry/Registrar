@@ -18,15 +18,9 @@ if usedDB == 1
     StatementObject.execute;
     close(StatementObject);
     if handles.checkbox15.Value
-        try
-            LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' inserted.'];
-            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
-        catch
-        end
+        UpdateLog(LogHandle,['Tile ',TileName,' inserted.']);
+        drawnow
     end
-    
-    
-    disp(['Tile ',TileName,' inserted.']);
 elseif usedDB == 2
     %                 TileName=num2str(i,['%0',num2str(fix(log10(prod(N_tiles)))+1),'.0f']);
     mkdir([SaveFolder,TileName]);
@@ -55,14 +49,9 @@ elseif usedDB == 2
     %     SaveFolder1 = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-Neocortical2_StackList\forJoe\Zoom1\';
     imwrite(Tile_glancer1,[SaveFolder,TileName1,'.jpg'],'jpg');
     if handles.checkbox15.Value
-        try
-            LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
-            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
-        catch
-        end
+        UpdateLog(LogHandle,['Tile ',TileName,' created.']);
+        drawnow
     end
-    
-    disp(['Tile ',TileName,' created.']);
 elseif usedDB == 3 % Neuroglancer
     %                 TileName=num2str(i,['%0',num2str(fix(log10(prod(N_tiles)))+1),'.0f']);
     %     for ii = 1:size(Tile,3)
@@ -83,14 +72,9 @@ elseif usedDB == 3 % Neuroglancer
     imwrite(Tile_glancer,[SaveFolder,'image/',TileName],'jpg');
     %Tile_glancer = [];
     if handles.checkbox15.Value
-        try
-            LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
-            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
-        catch
-        end
+        UpdateLog(LogHandle,['Tile ',TileName,' created.']);
+        drawnow
     end
-    
-    disp(['Tile ',TileName,' created.']);
 elseif usedDB == 4 % Nifti
     xstart = TilePositions(2)-2;
     ystart = TilePositions(1)-2;
@@ -123,20 +107,15 @@ elseif usedDB == 5 % HDF5 - Big Data Viewer (Fiji)
     fileattrib(DbName,'+w');
     h5writeatt(DbName,['/s',TileName,'/subdivisions'],'element_size_um',[0.5,0.5,0.5]);
     if handles.checkbox15.Value
-        try
-            LogHandle.Children(2).String{end+1} = 'HDF5 Created!';
-            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
-        catch
-        end
+            UpdateLog(LogHandle,'HDF5 Created!'); 
+            drawnow
     end
-    
-    
+
 elseif usedDB == 6 % CATMAID - TrackEM
     xstart = (TilePositions(1)-2)/TileSize(1);
     ystart = (TilePositions(2)-2)/TileSize(2);
     zstart = TilePositions(3)-2;
-    
-    
+
     for z = 0:size(Tile,3)-1
         folder = zstart+z;
         if ~exist([SaveFolder,'CATMAID/',num2str(folder)],'dir')
@@ -147,16 +126,9 @@ elseif usedDB == 6 % CATMAID - TrackEM
         SubtileTile_CATMAID = Tile(:,:,z+1);
         imwrite(SubtileTile_CATMAID,[SaveFolder,'CATMAID/',num2str(folder),'/',TileName],'jpg');
         if handles.checkbox15.Value
-            try
-                LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
-                LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
-            catch
-            end
+            UpdateLog(LogHandle,['Tile ',TileName,' created.']);
+            drawnow
         end
-        
-        
-        drawnow
-        disp(['Tile ',TileName,' created.']);
     end
     
 elseif usedDB == 7
@@ -165,14 +137,7 @@ elseif usedDB == 7
     
     hdf5write([SaveFolder,'HDF5','temp_',TileName,'.h5'], '/dataset1', Tile);
     if handles.checkbox15.Value
-        try
-            LogHandle.Children(2).String{end+1} = ['Tile ',TileName,' created.'];
-            LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);drawnow
-        catch
-        end
+        UpdateLog(LogHandle,['Tile ',TileName,' created.']);
+        drawnow
     end
-    
-    
-    disp(['Tile ',TileName,' created.']);
-    
 end
