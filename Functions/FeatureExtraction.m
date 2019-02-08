@@ -23,7 +23,7 @@ function [stop]=FeatureExtraction(handles,LogHandle,StackList,DataFolder,Seq_Par
 % Create Features folder
 mkdir([DataFolder,'/tmp/']);
 
-% for Stop
+% Stop
 handles.pushbutton10.UserData = 0;
 stop = 0;
 

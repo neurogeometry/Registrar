@@ -5,9 +5,6 @@
 % T contains transformation
 
 function [TSaveLocation,T]=Global_Linear_Transform(StackPositions,FeaturePositions,Transform_Type,DataFolder)
-
-% StackPositions=StackPositions(1:2,:);
-% FeaturePositions=FeaturePositions(1:2,1:2);
 addpath('../Functions');
 parameters;
 SaveLocationlatest = [DataFolder,params.G.StackPositions_Registered];
@@ -23,7 +20,6 @@ if strcmp(Transform_Type,'Translation')
     n_dist=10;
     
     L=[];
-%     SaveLocation = [DataFolder,params.GT.StackPositions_Registered];
     TSaveLocation = [DataFolder,'/T_Translation.mat'];
 elseif strcmp(Transform_Type,'Rigid')
     alpha=0.1; % overall regularization on Ls
@@ -37,7 +33,6 @@ elseif strcmp(Transform_Type,'Rigid')
     Dist_tol=2; % pixels
     Conn_tol=3;
     n_dist=10;
-%     SaveLocation = [DataFolder,params.GR.StackPositions_Registered];
     TSaveLocation = [DataFolder,'/T_Rigid.mat'];
 elseif strcmp(Transform_Type,'Affine')
     alpha=0.1; % overall regularization on Ls
@@ -58,7 +53,6 @@ end
 
 N=size(FeaturePositions,1);
 X=FeaturePositions;
-%StackPositions=-StackPositions(:,[2,1,3]);
 for i=1:N
     for j=i+1:N
         if ~isempty(X{i,j})

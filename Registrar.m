@@ -59,11 +59,7 @@ end
 
 % --- Executes just before Registrar is made visible.
 function Registrar_OpeningFcn(hObject, eventdata, handles, varargin)
-% This function has no output args, see OutputFcn.
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to Registrar (see VARARGIN)
+% Update Icon
 try
     jFrame=get(handles.figure1,'javaframe');
     jicon=javax.swing.ImageIcon('icon.png');
@@ -82,9 +78,6 @@ set(handles.edit14, 'String', num2str(MaxNumWorkers));
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes Registrar wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
-
 % --- Outputs from this function are returned to the command line.
 function varargout = Registrar_OutputFcn(hObject, eventdata, handles)
 if sum(size(handles.axes3.Children)) == 0
@@ -93,15 +86,11 @@ end
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
-
-% --- Executes during object creation, after setting all properties.
 function edit1_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes on button press in pushbutton7.
 function pushbutton7_Callback(hObject, eventdata, handles)
 addpath('Functions');
 parameters;
@@ -119,82 +108,13 @@ else
 end
 
 tic
-% try
+try
 registeration(StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles,LogHandle)
-% catch ME
-%     LogHandle.Children(2).String = ME.getReport;
-% end
+catch ME
+    LogHandle.Children(2).String = ME.getReport;
+end
 TotalTime = toc
 
-
-% 
-% % --- Executes during object creation, after setting all properties.
-% function edit12_CreateFcn(hObject, eventdata, handles)
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-% 
-% 
-% 
-% % --- Executes during object creation, after setting all properties.
-% function edit2_CreateFcn(hObject, eventdata, handles)
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-% 
-% 
-% 
-% % --- Executes during object creation, after setting all properties.
-% function edit3_CreateFcn(hObject, eventdata, handles)
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-% 
-% 
-% % --- Executes during object creation, after setting all properties.
-% function edit4_CreateFcn(hObject, eventdata, handles)
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-% 
-% 
-% % --- Executes during object creation, after setting all properties.
-% function edit5_CreateFcn(hObject, eventdata, handles)
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-
-% % --- Executes during object creation, after setting all properties.
-% function edt_stacklist_CreateFcn(hObject, eventdata, handles)
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-% % --- Executes during object creation, after setting all properties.
-% function edit9_CreateFcn(hObject, eventdata, handles)
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-% % --- Executes during object creation, after setting all properties.
-% function edit10_CreateFcn(hObject, eventdata, handles)
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-% % --- Executes during object creation, after setting all properties.
-% function edit11_CreateFcn(hObject, eventdata, handles)
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-% --- Executes on button press in pushbutton1.
 function pushbutton1_Callback(hObject, eventdata, handles)
 [filename, pathname] = uigetfile('*.csv', 'Pick a Stack List CSV file');
 if isequal(filename,0) || isequal(pathname,0)
@@ -204,8 +124,6 @@ else
     set(handles.edt_stacklist, 'String', fullfile(pathname, filename));
 end
 
-
-% --- Executes on button press in pushbutton4.
 function pushbutton4_Callback(hObject, eventdata, handles)
 [filename, pathname] = uigetfile('*.csv', 'Pick a Stack Positions CSV file');
 if isequal(filename,0) || isequal(pathname,0)
@@ -217,8 +135,6 @@ else
     set(handles.listbox3, 'String', num2str(StackPositions_pixels));
 end
 
-
-% --- Executes on button press in pushbutton5.
 function pushbutton5_Callback(hObject, eventdata, handles)
 [filename, pathname] = uigetfile('*.csv', 'Pick a Stack Overlap CSV file');
 if isequal(filename,0) || isequal(pathname,0)
@@ -228,8 +144,6 @@ else
     set(handles.edit10, 'String', fullfile(pathname, filename));
 end
 
-
-% --- Executes on button press in pushbutton6.
 function pushbutton6_Callback(hObject, eventdata, handles)
 [filename, pathname] = uigetfile('*.csv', 'Pick a Stack Sizes CSV file');
 if isequal(filename,0) || isequal(pathname,0)
@@ -239,86 +153,22 @@ else
     set(handles.edit11, 'String', fullfile(pathname, filename));
 end
 
-
-% % --- Executes during object creation, after setting all properties.
-% function edit13_CreateFcn(hObject, eventdata, handles)
-% % hObject    handle to edit13 (see GCBO)
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    empty - handles not created until after all CreateFcns called
-% 
-% % Hint: edit controls usually have a white background on Windows.
-% %       See ISPC and COMPUTER.
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-% % --- Executes during object creation, after setting all properties.
-% function listbox1_CreateFcn(hObject, eventdata, handles)
-% % hObject    handle to listbox1 (see GCBO)
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    empty - handles not created until after all CreateFcns called
-% 
-% % Hint: listbox controls usually have a white background on Windows.
-% %       See ISPC and COMPUTER.
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-% --- Executes on button press in pushbutton8.
 function pushbutton8_Callback(hObject, eventdata, handles)
 winopen('data/StackPositions_Registered.csv');
 
-
-
-% --- Executes on button press in pushbutton9.
 function pushbutton9_Callback(hObject, eventdata, handles)
 winopen('data/StackPositions_Registered.csv');
-
-
-% --- Executes during object creation, after setting all properties.
-% function listbox2_CreateFcn(hObject, eventdata, handles)
-% % hObject    handle to listbox2 (see GCBO)
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    empty - handles not created until after all CreateFcns called
-% 
-% % Hint: listbox controls usually have a white background on Windows.
-% %       See ISPC and COMPUTER.
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-% % --- Executes during object creation, after setting all properties.
-% function listbox3_CreateFcn(hObject, eventdata, handles)
-% % hObject    handle to listbox3 (see GCBO)
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    empty - handles not created until after all CreateFcns called
-% 
-% % Hint: listbox controls usually have a white background on Windows.
-% %       See ISPC and COMPUTER.
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-
-
 
 % --------------------------------------------------------------------
 function docmnu_Callback(hObject, eventdata, handles)
 docurl = 'http://neurogeometry.com/';
 web(docurl);
 
-
-
 % --------------------------------------------------------------------
 function websitemnu_Callback(hObject, eventdata, handles)
 docurl = 'http://neurogeometry.com/';
 web(docurl);
 
-% --- Executes on selection change in v.
 function v_Callback(hObject, eventdata, handles)
 val = get(handles.v,'Value');
 
@@ -335,75 +185,23 @@ elseif val == 3 % Stack Registration
     handles.chkretilling.Enable = 'off';
 end
 
-% if val == 1 %MouseLight
-%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\MouseLight_StackList.csv');
-% elseif val == 2 % Diadem1,2
-%     set(handles.edt_stacklist,'String','C:\Armen\Publications\Paper35 (Registration Seyed)\MicroscopeFiles\Neocortical2_StackList.csv');
-% elseif val == 3 % Diadem1,2
-%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\Neocortical2_StackList.csv');
-% elseif val == 4 % Neuromuscular
-%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\Neuromuscular_StackList_4Stacks.csv');
-% elseif val == 5 % Holtmaat
-%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\Holtmaat_StackList.csv');
-% elseif val == 6 % Visual
-%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\Visual_StackList.csv');
-% elseif val == 7 % TimeLapse
-%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\TimeLapse_Holtmaat_StackList.csv');
-% elseif val == 8 % TimeLapse
-%     set(handles.edt_stacklist,'String','../../MicroscopeFiles\slicesHoltmat.csv');
-% elseif val == 9 % Other
-%     set(handles.edt_stacklist,'String','');
-% end
-
-
-% --- Executes during object creation, after setting all properties.
 function v_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to v (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes on button press in checkbox6.
 function checkbox6_Callback(hObject, eventdata, handles)
 val = get(handles.checkbox6,'Value');
 if val == 0
-    %     set(handles.chkdebug,'Enable','off');
     set(handles.checkbox13,'Enable','off');
     set(handles.checkbox14,'Enable','off');
     set(handles.checkbox10,'Enable','off');
 else
-    %     set(handles.chkdebug,'Enable','on');
     set(handles.checkbox13,'Enable','on');
     set(handles.checkbox14,'Enable','on');
     set(handles.checkbox10,'Enable','on');
 end
 
-
-% % --- Executes during object creation, after setting all properties.
-% function popupmenu2_CreateFcn(hObject, eventdata, handles)
-% % Hint: popupmenu controls usually have a white background on Windows.
-% %       See ISPC and COMPUTER.
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-% % --- Executes during object creation, after setting all properties.
-% function popupmenu3_CreateFcn(hObject, eventdata, handles)
-% % Hint: popupmenu controls usually have a white background on Windows.
-% %       See ISPC and COMPUTER.
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-% --- Executes on selection change in popupmenu4.
 function popupmenu4_Callback(hObject, eventdata, handles)
 val = get(handles.popupmenu4,'Value');
 if val == 1
@@ -418,34 +216,16 @@ else
     set(handles.text28,'Enable','on');
 end
 
-
-% % --- Executes during object creation, after setting all properties.
-% function popupmenu4_CreateFcn(hObject, eventdata, handles)
-% % Hint: popupmenu controls usually have a white background on Windows.
-% %       See ISPC and COMPUTER.
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
-
-
-% --- Executes during object creation, after setting all properties.
 function edit14_CreateFcn(hObject, eventdata, handles)
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes during object creation, after setting all properties.
 function edit15_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes on button press in checkbox8.
 function checkbox8_Callback(hObject, eventdata, handles)
 val = get(handles.checkbox8,'Value');
 if val
@@ -455,52 +235,6 @@ else
     volumeViewer close
 end
 
-
-% % --- Executes during object creation, after setting all properties.
-% function slider1_CreateFcn(hObject, eventdata, handles)
-% if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor',[.9 .9 .9]);
-% end
-
-
-% % --- Executes on slider movement.
-% function slider2_Callback(hObject, eventdata, handles)
-% hf = gca;
-% % if isempty(hf.UserData)
-% %     hf = findobj(Registrar,'Tag', 'slider2');
-% %     Tile3D1=evalin('base','Tile3D');
-% %     plainsViewer(Tile3D1);
-% % end
-% disp(round(get(hObject,'Value')));
-% if round(get(hObject,'Value'))>0
-%     try
-%         hi=hf.UserData.h_im;
-%         if ~isempty(hi)
-%             hf.UserData.currplane = round(get(hObject,'Value'));
-%             hi.CData=hf.UserData.IM(:,:,hf.UserData.currplane);
-%             hf3 = findobj(hf.Parent,'-depth',1,'Tag', 'axes5');
-%             hf4 = findobj(hf.Parent,'-depth',1,'Tag', 'axes6');
-%             hi3=hf3.UserData.h_im;
-%             hi4=hf4.UserData.h_im;
-%             hi3.CData=squeeze(hf.UserData.IM(hf.UserData.currplane,:,:));
-%             hi4.CData=imrotate(squeeze(hf.UserData.IM(:,hf.UserData.currplane,:)),90);
-%             hf.Title.String=['Current plane: ',num2str(hf.UserData.currplane),' / ',num2str(size(hf.UserData.IM,3))];
-%             drawnow;
-%         end
-%     catch
-%         warndlg('Please click on the Image','!! Warning !!');
-%     end
-% end
-
-
-% % --- Executes during object creation, after setting all properties.
-% function slider2_CreateFcn(hObject, eventdata, handles)
-% if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor',[.9 .9 .9]);
-% end
-
-
-% --- Executes on button press in checkbox10.
 function checkbox10_Callback(hObject, eventdata, handles)
 val = get(handles.checkbox10,'Value');
 if val
@@ -515,194 +249,17 @@ else
     volumeViewer CLOSE
 end
 
-% function help_mnu_Callback(hObject, eventdata, handles)
-
-% --- Executes on button press in pushbutton10.
 function pushbutton10_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton10 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 set(handles.pushbutton10,'userdata',1)
 
 disp('Stop');
 return
 
-
-% --- Executes on key press with focus on pushbutton10 and none of its controls.
 function pushbutton10_KeyPressFcn(hObject, eventdata, handles)
-% hObject    handle to pushbutton10 (see GCBO)
-% eventdata  structure with the following fields (see MATLAB.UI.CONTROL.UICONTROL)
-%	Key: name of the key that was pressed, in lower case
-%	Character: character interpretation of the key(s) that was pressed
-%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
-% handles    structure with handles and user data (see GUIDATA)
 set(handles.pushbutton10,'userdata',1)
 disp('Stop');
 return
 
-% % --- Executes on button press in radio_after.
-% function radio_after_Callback(hObject, eventdata, handles)
-% val = get(handles.uibuttongroup3.SelectedObject,'Tag');
-% % z_projection
-% % radio_layerview
-% if strcmp(val,'z_projection')
-%     Tile3D_Registered=evalin('base','Tile3D');
-%     set(handles.slider2,'Visible','off');
-%     tb7 = findobj(Registrar,'Tag', 'axes1');
-%     
-%     P_XLim = tb7.XLim;
-%     P_YLim = tb7.YLim;
-%     P_Position = tb7.Position;
-%     h_im=imshow(max(Tile3D_Registered,[],3),[0 max(Tile3D_Registered(:))],'Parent',tb7);
-%     
-%     
-%     tb7=h_im.Parent;
-%     tb7.Tag='axes1';
-%     tb7.Title.String= 'Z Projection';
-%     %     tb7.XLim = [0.5 size(h_im.CData,2)+0.5];
-%     %     tb7.YLim = [0.5 size(h_im.CData,1)+0.5];
-%     tb7.XLim = P_XLim;
-%     tb7.YLim = P_YLim;
-%     tb7.Position=  P_Position;
-%     
-%     hf3 = findobj(tb7.Parent,'-depth',1,'Tag', 'axes5');
-%     hf4 = findobj(tb7.Parent,'-depth',1,'Tag', 'axes6');
-%     hf3.YLabel.String='';hf3.XLabel.String='';
-%     hf4.YLabel.String='';hf4.XLabel.String='';
-%     cla(hf3);
-%     cla(hf4);
-% else
-%     Tile=evalin('base','Tile3D');
-%     set(handles.slider2,'Visible','on');
-%     set(handles.slider2,'Min',1,'Max',size(Tile,3),'Value', 1, 'SliderStep', [1/size(Tile,3) 1/size(Tile,3)]);
-%     %     set(handles.slider2,'Max',size(Tile3D1,3));
-%     %     set(handles.slider2,'SliderStep',1);
-%     plainsViewer(Tile);
-% end
-
-
-% % --- Executes on button press in radio_layerview.
-% function radio_layerview_Callback(hObject, eventdata, handles)
-% val = get(handles.uibuttongroup2.SelectedObject,'Tag');
-% if strcmp(val,'radio_after')
-%     Tile=evalin('base','Tile3D');
-%     set(handles.slider2,'Visible','on');
-%     set(handles.slider2,'Min',1,'Max',size(Tile,3),'Value', 1, 'SliderStep', [1/size(Tile,3) 1/size(Tile,3)]);
-%     %     set(handles.slider2,'Max',size(Tile3D1,3));
-%     %     set(handles.slider2,'SliderStep',1);
-%     plainsViewer(Tile);
-% else
-%     Tile=evalin('base','Tile3D_org');
-%     set(handles.slider2,'Visible','on');
-%     set(handles.slider2,'Min',1,'Max',size(Tile,3),'Value', 1, 'SliderStep', [1/size(Tile,3) 1/size(Tile,3)]);
-%     %     set(handles.slider2,'Max',size(Tile3D1,3));
-%     %     set(handles.slider2,'SliderStep',1);
-%     plainsViewer(Tile);
-% end
-
-
-% % --- Executes on button press in radio_before.
-% function radio_before_Callback(hObject, eventdata, handles)
-% val = get(handles.uibuttongroup3.SelectedObject,'Tag');
-% % z_projection
-% % radio_layerview
-% if strcmp(val,'z_projection')
-%     Tile3D_org=evalin('base','Tile3D_org');
-%     set(handles.slider2,'Visible','off');
-%     tb7 = findobj(Registrar,'Tag', 'axes1');
-%     
-%     P_XLim = tb7.XLim;
-%     P_YLim = tb7.YLim;
-%     P_Position = tb7.Position;
-%     h_im=imshow(max(Tile3D_org,[],3),[0 max(Tile3D_org(:))],'Parent',tb7);
-%     
-%     
-%     tb7=h_im.Parent;
-%     tb7.Tag='axes1';
-%     tb7.Title.String= 'Z Projection';
-%     %     tb7.XLim = [0.5 size(h_im.CData,2)+0.5];
-%     %     tb7.YLim = [0.5 size(h_im.CData,1)+0.5];
-%     
-%     tb7.XLim = P_XLim;
-%     tb7.YLim = P_YLim;
-%     tb7.Position=  P_Position;
-%     
-%     hf3 = findobj(tb7.Parent,'-depth',1,'Tag', 'axes5');
-%     hf4 = findobj(tb7.Parent,'-depth',1,'Tag', 'axes6');
-%     hf3.YLabel.String='';hf3.XLabel.String='';
-%     hf4.YLabel.String='';hf4.XLabel.String='';
-%     cla(hf3);
-%     cla(hf4);
-% else
-%     Tile=evalin('base','Tile3D_org');
-%     set(handles.slider2,'Visible','on');
-%     set(handles.slider2,'Min',1,'Max',size(Tile,3),'Value', 1, 'SliderStep', [1/size(Tile,3) 1/size(Tile,3)]);
-%     %     set(handles.slider2,'Max',size(Tile3D1,3));
-%     %     set(handles.slider2,'SliderStep',1);
-%     plainsViewer(Tile);
-% end
-
-
-% % --- Executes on button press in z_projection.
-% function z_projection_Callback(hObject, eventdata, handles)
-% val = get(handles.uibuttongroup2.SelectedObject,'Tag');
-% if strcmp(val,'radio_after')
-%     Tile3D_Registered=evalin('base','Tile3D');
-%     set(handles.slider2,'Visible','off');
-%     tb7 = findobj(Registrar,'Tag', 'axes1');
-%     
-%     P_XLim = tb7.XLim;
-%     P_YLim = tb7.YLim;
-%     P_Position = tb7.Position;
-%     h_im=imshow(max(Tile3D_Registered,[],3),[0 max(Tile3D_Registered(:))],'Parent',tb7);
-%     
-%     
-%     tb7=h_im.Parent;
-%     tb7.Tag='axes1';
-%     tb7.Title.String= 'Z Projection';
-%     %     tb7.XLim = [0.5 size(h_im.CData,2)+0.5];
-%     %     tb7.YLim = [0.5 size(h_im.CData,1)+0.5];
-%     tb7.XLim = P_XLim;
-%     tb7.YLim = P_YLim;
-%     tb7.Position=  P_Position;
-%     
-%     hf3 = findobj(tb7.Parent,'-depth',1,'Tag', 'axes5');
-%     hf4 = findobj(tb7.Parent,'-depth',1,'Tag', 'axes6');
-%     hf3.YLabel.String='';hf3.XLabel.String='';
-%     hf4.YLabel.String='';hf4.XLabel.String='';
-%     cla(hf3);
-%     cla(hf4);
-% else
-%     Tile3D_org=evalin('base','Tile3D_org');
-%     set(handles.slider2,'Visible','off');
-%     tb7 = findobj(Registrar,'Tag', 'axes1');
-%     
-%     P_XLim = tb7.XLim;
-%     P_YLim = tb7.YLim;
-%     P_Position = tb7.Position;
-%     h_im=imshow(max(Tile3D_org,[],3),[0 max(Tile3D_org(:))],'Parent',tb7);
-%     
-%     
-%     tb7=h_im.Parent;
-%     tb7.Tag='axes1';
-%     tb7.Title.String= 'Z Projection';
-%     %     tb7.XLim = [0.5 size(h_im.CData,2)+0.5];
-%     %     tb7.YLim = [0.5 size(h_im.CData,1)+0.5];
-%     
-%     tb7.XLim = P_XLim;
-%     tb7.YLim = P_YLim;
-%     tb7.Position=  P_Position;
-%     
-%     hf3 = findobj(tb7.Parent,'-depth',1,'Tag', 'axes5');
-%     hf4 = findobj(tb7.Parent,'-depth',1,'Tag', 'axes6');
-%     hf3.YLabel.String='';hf3.XLabel.String='';
-%     hf4.YLabel.String='';hf4.XLabel.String='';
-%     cla(hf3);
-%     cla(hf4);
-% end
-
-
-% --- Executes on button press in chkdebug.
 function chkdebug_Callback(hObject, eventdata, handles)
 
 if handles.chkdebug.Value
@@ -717,18 +274,8 @@ else
     catch
     end
 end
-% hObject    handle to chkdebug (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of chkdebug
-
-
-% --- Executes on button press in chkretilling.
 function chkretilling_Callback(hObject, eventdata, handles)
-% hObject    handle to chkretilling (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 val = get(handles.chkretilling,'Value');
 if val == 1
     set(handles.popupretilling,'Enable','on');
@@ -737,41 +284,22 @@ else
     set(handles.popupretilling,'Enable','off');
     set(handles.txtoutput,'Enable','off');
 end
-% Hint: get(hObject,'Value') returns toggle state of chkretilling
-
-% % --- Executes during object creation, after setting all properties.
-% function popupretilling_CreateFcn(hObject, eventdata, handles)
-% % hObject    handle to popupretilling (see GCBO)
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    empty - handles not created until after all CreateFcns called
-% 
-% % Hint: popupmenu controls usually have a white background on Windows.
-% %       See ISPC and COMPUTER.
-% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-%     set(hObject,'BackgroundColor','white');
-% end
-
 
 % --------------------------------------------------------------------
 function parameters_mnu_Callback(hObject, eventdata, handles)
 !notepad Functions\parameters.m
 % open('Functions\parameters.m');
 
-
 % --------------------------------------------------------------------
 function website_mnu_Callback(hObject, eventdata, handles)
 web('http://www.northeastern.edu/neurogeometry/resources/registrar');
-
 
 % --------------------------------------------------------------------
 function manual_mnu_Callback(hObject, eventdata, handles)
 web('http://www.northeastern.edu/neurogeometry/resources/registrar');
 %open('UserManual.docx');
 
-
-% --- Executes on button press in checkbox13.
 function checkbox13_Callback(hObject, eventdata, handles)
-
 if handles.checkbox13.Value
     Visualization();
     VisualizationHandle=findobj(0,'Name','Visualization');
@@ -796,7 +324,6 @@ else
     end
 end
 
-% --- Executes on button press in checkbox14.
 function checkbox14_Callback(hObject, eventdata, handles)
 
 if handles.checkbox14.Value
@@ -823,17 +350,12 @@ else
     end
 end
 
-
-% --- Executes during object deletion, before destroying properties.
 function figure1_DeleteFcn(hObject, eventdata, handles)
 delete(findall(0));
 
-% --- Executes when user attempts to close figure1.
 function figure1_CloseRequestFcn(hObject, eventdata, handles)
 delete(hObject);
 
-
-% --- Executes on button press in checkbox15.
 function checkbox15_Callback(hObject, eventdata, handles)
 if handles.checkbox15.Value
     Log();
@@ -848,8 +370,6 @@ else
     end
 end
 
-
-% --- Executes on button press in checkbox16.
 function checkbox16_Callback(hObject, eventdata, handles)
 if handles.checkbox16.Value
     DatasetMap();

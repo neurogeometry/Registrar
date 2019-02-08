@@ -1,5 +1,4 @@
 % This function creates seamless image tiles from the dataset of original image stacks and stack transformations.
-
 function Retiling(handles,LogHandle,StackList,StackPositions,StackSizes,T,DataFolder,outputType,Seq_Par,Par_workers,DBFile)
 % addpath('../Functions');
 parameters
@@ -8,15 +7,8 @@ paramsRERemoveBlack = paramsRERemoveBlack;
 paramsBigTileSize=paramsBigTileSize;
 paramsFinalTileSize=paramsFinalTileSize;
 discovery = 1;
-
-% if discovery
-%     DBFile = 0;
-% end
 paramsEmptyVoxelsValue = paramsEmptyVoxelsValue;
 options.overwrite = 1;
-% InfoImage=imfinfo(char(StackList(1,1)));
-% M_tiles = ceil(InfoImage(1).Height/paramsBigTileSize(1));
-% paramsBigTileSize = paramsBigTileSize.*2;
 Trimimage = 0;
 image_id = 1;
 x = [];
@@ -39,28 +31,20 @@ else
         StackClass = class(imread(char(StackList(1,1))));
     else
         allfiles = dir(filepath);
-        %         InfoImage=imfinfo(char([allfiles(3).folder,'/',allfiles(3).name]));
         InfoImage=imfinfo(char([filepath,'/',allfiles(3).name]));
         if strcmp(InfoImage.Format,'jpg')
-            %             FinalImage=ImportStack([allfiles(3).folder,'/'],StackSizes(1,:));
             FinalImage=ImportStack([filepath,'/'],StackSizes(1,:));
             MaxIntensityValue = max(FinalImage(:));
         else
             MaxIntensityValue = InfoImage(1).MaxSampleValue;
         end
-        %         StackClass = class(imread(char([allfiles(3).folder,'/',allfiles(3).name])));
         StackClass = class(imread(char([filepath,'/',allfiles(3).name])));
     end
 end
 
 
 if outputType == 1
-    %     SpecimenName = extractBefore(extractAfter(DataFolder,'MicroscopeFiles/Results-'),'_StackList');
     SpecimenName = extractAfter(DataFolder,'Results-');
-    %     DBFile = [pwd,'/',DataFolder,'/nctracer.db'];
-    %     DBFile = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
-    % for connection help: https://www.mathworks.com/help/database/ug/sqlite-jdbc-windows.html#bt8kopj-1
-    %     delete(DBFile);
     if exist(DBFile) > 0
         conn = database('','','','org.sqlite.JDBC',['jdbc:sqlite:',DBFile]);
         x = conn.Handle;
@@ -164,9 +148,6 @@ if outputType == 1
 end
 
 SaveFolder=[DataFolder,params.RE.savefolder,'Zoom1/'];
-% for test
-% SaveFolder = 'E:/TilesCreation/Data/MouselightFull_Neuroglancer/';
-
 N_stacks=length(StackList);
 if outputType == 3
     mkdir([SaveFolder,'image']);
@@ -180,15 +161,12 @@ end
 StackHW=StackSizes./2;
 
 if strcmp(T.transform,'Translation')
-    % Transform the binding boxes of all stacks
     b=T.b';
-    
     Verts=zeros(8,3,N_stacks);
     Verts_transformed=zeros(8,3,N_stacks);
     for i=1:N_stacks
         Verts(:,:,i)=ones(8,1)*StackPositions(i,:)-1+[1,1,1;StackSizes(i,1),1,1;1,StackSizes(i,2),1;StackSizes(i,1),StackSizes(i,2),1;...
             1,1,StackSizes(i,3);StackSizes(i,1),1,StackSizes(i,3);1,StackSizes(i,2),StackSizes(i,3);StackSizes(i,1),StackSizes(i,2),StackSizes(i,3)];
-        %         Verts_transformed(:,:,i)=Verts(:,:,i)+b(i,:);
         Verts_transformed(:,:,i)=Verts(:,:,i)+ones(size(Verts(:,:,i),1),1)*b(i,:);
     end
     
@@ -212,17 +190,11 @@ if strcmp(T.transform,'Translation')
     reduction=paramsBigTileSize./paramsFinalTileSize;
     [xx,yy,zz]=ind2sub(reduction,(1:prod(reduction))');
     
-    
-    
     FinalTilePositions=zeros(prod(reduction)*prod(N_tiles),3);
     for i=1:prod(N_tiles)
         FinalTilePositions((i-1)*prod(reduction)+1:i*prod(reduction),:)=TilePositions(i,:)+([xx,yy,zz]-1).*(ones(prod(reduction),1)*paramsFinalTileSize);
     end
-    %     remove_FinalTile_ind=(FinalTilePositions(:,1)>Max(1) | FinalTilePositions(:,2)>Max(2) | FinalTilePositions(:,3)>Max(3));
-    %     FinalTile_name=(1:length(remove_FinalTile_ind))';
-    %     FinalTile_name(remove_FinalTile_ind)=nan;
-    %     FinalTile_name=FinalTile_name-cumsum(remove_FinalTile_ind);
-    %     FinalN_tiles=N_tiles.*reduction;
+    
     FinalTilePositions =[];
     
     if Seq_Par > 1
@@ -238,7 +210,6 @@ if strcmp(T.transform,'Translation')
             end
             TileCenter=TilePositions(i,:)+(paramsBigTileSize-1)./2;
             StackInd=find(abs(StackCentersTransformed(:,1)-TileCenter(1))<StackHW(:,1)+TileHW(1) & abs(StackCentersTransformed(:,2)-TileCenter(2))<StackHW(:,2)+TileHW(2) & abs(StackCentersTransformed(:,3)-TileCenter(3))<StackHW(:,3)+TileHW(3));
-            %            StackInd=find(abs(StackCentersTransformed(:,1)-ones(N_stacks,1)*TileCenter(1))<StackHW(:,1)+ones(N_stacks,1)*TileHW(1) & abs(StackCentersTransformed(:,2)-ones(N_stacks,1)*TileCenter(2))<StackHW(:,2)+ones(N_stacks,1)*TileHW(2) & abs(StackCentersTransformed(:,3)-ones(N_stacks,1)*TileCenter(3))<StackHW(:,3)+ones(N_stacks,1)*TileHW(3));
             Tile=zeros(paramsBigTileSize,'uint8');
             Tile_logical=false(paramsBigTileSize);
             
@@ -246,16 +217,8 @@ if strcmp(T.transform,'Translation')
             for j=1:length(StackInd)
                 if paramsREuseHDF5
                     X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
-                    %                     if Trimimage
-                    %                         X=X(h:end-h,w:end-w,:);
-                    %                     end
                 else
-                    %                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
-                    %                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
-                    X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
-                    %                     if Trimimage
-                    %                         X=X(h:end-h,w:end-w,:);
-                    %                     end
+                   X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                 end
                 X = uint8(double(X)./double(MaxIntensityValue)*255);
                 
@@ -296,10 +259,6 @@ if strcmp(T.transform,'Translation')
         for i=1:prod(N_tiles)
             TileCenter=TilePositions(i,:)+(paramsBigTileSize-1)./2;
             StackInd=find(abs(StackCentersTransformed(:,1)-TileCenter(1))<StackHW(:,1)+TileHW(1) & abs(StackCentersTransformed(:,2)-TileCenter(2))<StackHW(:,2)+TileHW(2) & abs(StackCentersTransformed(:,3)-TileCenter(3))<StackHW(:,3)+TileHW(3));
-            %           StackInd=find(abs(StackCentersTransformed(:,1)-ones(N_stacks,1)*TileCenter(1))<StackHW(:,1)+ones(N_stacks,1)*TileHW(1) & abs(StackCentersTransformed(:,2)-ones(N_stacks,1)*TileCenter(2))<StackHW(:,2)+ones(N_stacks,1)*TileHW(2) & abs(StackCentersTransformed(:,3)-ones(N_stacks,1)*TileCenter(3))<StackHW(:,3)+ones(N_stacks,1)*TileHW(3));
-            
-            %             Tile=nan(paramsBigTileSize);
-            %Tile=ones(paramsBigTileSize,'uint8')*paramsEmptyVoxelsValue;
             Tile=zeros(paramsBigTileSize,'uint8');
             Tile_logical=false(paramsBigTileSize);
             for j=1:length(StackInd)
@@ -309,8 +268,6 @@ if strcmp(T.transform,'Translation')
                         X=X(h:end-h,w:end-w,:);
                     end
                 else
-                    %pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
-                    %file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
                     X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                     if Trimimage
                         X=X(h:end-h,w:end-w,:);
@@ -327,11 +284,6 @@ if strcmp(T.transform,'Translation')
                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
                         X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3));
                 else
-                    %                     temp = Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3));
-                    %                     temp(temp==paramsEmptyVoxelsValue)=0;
-                    %                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
-                    %                         max(temp,X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3)));
-                    
                     Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3))=...
                         max(Tile(TileStart(1):TileEnd(1),TileStart(2):TileEnd(2),TileStart(3):TileEnd(3)),...
                         X(StackStart(1):StackEnd(1),StackStart(2):StackEnd(2),StackStart(3):StackEnd(3)));
@@ -353,7 +305,6 @@ if strcmp(T.transform,'Translation')
         end
     end
 elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
-    % Transform the binding boxes of all stacks
     b=T.b';
     L=T.L;
     
@@ -414,8 +365,6 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 if paramsREuseHDF5
                     X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
                 else
-                    %                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
-                    %                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
                     X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                 end
                 
@@ -473,8 +422,6 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 if paramsREuseHDF5
                     X = hdf5read([DataFolder,'/tmp/temp_',num2str(StackInd(j)),'.h5'], '/dataset1');
                 else
-                    %                     pth=StackList{StackInd(j)}(1:find(StackList{StackInd(j)}=='/',1,'last'));
-                    %                     file_list=StackList{StackInd(j)}(find(StackList{StackInd(j)}=='/',1,'last')+1:end);
                     X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
                 end
                 
@@ -493,7 +440,6 @@ elseif strcmp(T.transform,'Rigid') || strcmp(T.transform,'Affine')
                 if paramsRERemoveBlack
                     Tile(ind) = 0;
                 end
-                %Tile(ind)=max(Tile(ind),X(ind2(ind)));
                 Tile(ind)=X(ind2(ind));
             end
             
@@ -535,9 +481,6 @@ if outputType ==1 || outputType ==2 || outputType ==4
 elseif outputType ==3
     
     json_string = ['{"data_type": "uint8", "num_channels": 1, "scales": [{"chunk_sizes": [[',num2str(paramsFinalTileSize(1)),',',num2str(paramsFinalTileSize(2)),',',num2str(paramsFinalTileSize(3)),']], "encoding": "jpeg", "key": "image", "resolution": [128, 128, 128], "size": [',num2str(TilePositions(end,2)+paramsFinalTileSize(2)),',',num2str(TilePositions(end,1)+paramsFinalTileSize(1)),',',num2str(TilePositions(end,3)+paramsFinalTileSize(3)),'], "voxel_offset": [0, 0, 0]}], "type": "image"}'];
-    
-    %   jsonencode(containers.Map( {'data_type','num_channels','scales'}, [1,1,1]))
-    
     fileID = fopen([SaveFolder,'/info'],'w');
     nbytes = fprintf(fileID,json_string);
     fclose(fileID);

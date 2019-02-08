@@ -22,32 +22,22 @@ function [Tile3D_org,Tile3D,stop] = blending(StackPositions_pixels_original,Stac
 addpath('../Functions');
 parameters;
 % paramsBPremove_pad = 0;
-% axes_xz = findobj(Registrar,'Tag', 'v');
 options.overwrite = 1;
 tb11 = findobj(Registrar,'Tag', 'pushbutton10');
 set(tb11,'userdata',0);
 stop = 0;
-
-% allfiles = dir(char(StackList(stackID,1)));
-% InfoImage=imfinfo([allfiles(end).folder,'\', allfiles(end).name]);
-% cl = ['uint',num2str(InfoImage.BitDepth)];
 
 disp(['Reading ',char(StackList(stackID,1))]);
 [~,~,ext] = fileparts(char(StackList(stackID,1)));
 if strcmp(ext,'.JPG') || strcmp(ext,'.png')
     IM_Source = imread(char(StackList(stackID,1)));
 else
-    %     IM_Source = ImportStack(char(StackList(stackID,1)));
     if paramsREuseHDF5
         IM_Source = hdf5read([DataFolder,'\tmp\temp_',num2str(stackID),'.h5'], '/dataset1');
     else
         IM_Source = ImportStack(char(StackList(stackID,1)),StackSizes_pixels(stackID,:));
     end
 end
-% IM_Source(:,1:3,:) = 60000;
-% IM_Source(:,end-2:end,:) = 60000;
-% IM_Source(1:3,:,:) = 60000;
-% IM_Source(end-2:end,:,:) = 60000;
 
 StackPositions_pixels_original = round(StackPositions_pixels_original);
 Neighbors = findStackNeighbors(stackID,StackSizes_pixels,StackPositions_pixels_original);
@@ -109,9 +99,6 @@ for i = 1:size(Neighbors,1)
     End1=min(size(IM_Source),size(Tile3D)-StackPosition_registered+1);
     Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3))=max(Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3)),...
         IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3)));
-    
-    %               figure();imshow(max(Tile3D,[],3),[0 max(Tile3D(:))]);
-    %      figure();imshow(max(IM_Source_Pad_translate,[],3),[0 max(IM_Source_Pad_translate(:))]);
 end
 
 
@@ -119,9 +106,4 @@ if params.BP.saveImages
     saveastiff(Tile3D,[DataFolder,'\stacks_registered.tif'],options);
     saveastiff(Tile3D_org,[DataFolder,'\stacks_before_register.tif'],options);
 end
-
-% for Fig 3-A with below parameters    
-%Parameters to control the size of the visualization tile size
-% params.BP.extSize = [2024 2024 0];
-% figure,imshow(max(Tile3D_org(2025:5005,1160:3047,:),[],3) ,[0 max(Tile3D_org(:))]);
 end

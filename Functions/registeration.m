@@ -48,15 +48,12 @@ end
 % Check if CSV file exist
 if exist(StackList_csv_pth,'file') > 0
     StackList = table2cell(readtable(StackList_csv_pth,'Delimiter',','));
-    
     [PathStr,FolderName]=fileparts(StackList_csv_pth);
     DataFolder=[PathStr,'/Results-',FolderName];
-    
     % index to remove invalid files
     errIndxs = [];
     StackSizes_pixels = zeros(size(StackList,1),3);
     for i = 1:size(StackList,1)
-        
         % To check the path if it is local path
         try
             [filepath,~,ext] = fileparts(char(StackList(i,1)));
@@ -69,7 +66,6 @@ if exist(StackList_csv_pth,'file') > 0
         catch
             StackList{i} = [PathStr,'\',StackList{i}];
         end
-        
         % Generate Stacks Data
         try
             [filepath,~,ext] = fileparts(char(StackList(i,1)));
@@ -101,7 +97,7 @@ if exist(StackList_csv_pth,'file') > 0
     % Remove the Stacks if unable to read the image
     StackList (errIndxs,:) = [];
     StackSizes_pixels (errIndxs,:) = [];
-
+    
     % Get positions from the list
     StackPositions_pixels = cell2mat(StackList(:,2:4)); %xlsread(StackPositions_pixels_csv_pth);
     StackPositions_pixels = StackPositions_pixels(:,[2,1,3]);
@@ -115,14 +111,15 @@ if exist(StackList_csv_pth,'file') > 0
         All_overlaps = All_overlaps';
     end
     
+    % Feature Extraction
     if runFeatureExtraction
         if(exist(DataFolder, 'dir')>0 )
-            if(exist([DataFolder,'/features/'], 'dir')>0 )
+            if(exist([DataFolder,'/tmp/'], 'dir')>0 )
                 if ispc
-                    dos_cmd = sprintf( 'rmdir /S /Q "%s"', [DataFolder,'/features/'] );
+                    dos_cmd = sprintf( 'rmdir /S /Q "%s"', [DataFolder,'/tmp/'] );
                     [ ~, ~ ] = system( dos_cmd );
                 else
-                    dos_cmd = sprintf( 'rmdir /S /Q "%s"', [DataFolder,'/features/'] );
+                    dos_cmd = sprintf( 'rmdir /S /Q "%s"', [DataFolder,'/tmp/'] );
                     [ ~, ~ ] = system( dos_cmd );
                 end
             end
@@ -132,12 +129,12 @@ if exist(StackList_csv_pth,'file') > 0
         if handles.checkbox15.Value
             UpdateLog(LogHandle,'Feature Extraction Started');
         end
-        [stop]=FeatureExtraction(handles,LogHandle,StackList,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels);  
+        [stop]=FeatureExtraction(handles,LogHandle,StackList,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels);
     end
     
+    % Feature Matching
     if runFeatureMatching && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
-            
             if handles.checkbox15.Value
                 UpdateLog(LogHandle,'Feeature Matching Started');
             end
@@ -145,17 +142,15 @@ if exist(StackList_csv_pth,'file') > 0
         else
             warndlg('The Features Folder is not Exists! Please run Feature Extraction.','!! Warning !!');
         end
-        
     end
+    
+    % Global Registration
     runGlobal = 0;
     if runGlobalOpt && ~stop
         if exist([DataFolder,'/tmp'],'dir') > 0
-            
             if handles.checkbox15.Value
                 UpdateLog(LogHandle,'Global Optimization Started');
             end
-            
-            
             switch TransformationValue
                 case 1
                     if exist([DataFolder,params.FM.MatchedLocationsFile_Translation],'file')
@@ -165,7 +160,6 @@ if exist(StackList_csv_pth,'file') > 0
                         warndlg('The matching file using Translation transform is not exists, please run feature matching using Translation.','!! Warning !!');
                     end
                 case 2
-                    
                     if exist([DataFolder,params.FM.MatchedLocationsFile_Rigid],'file')
                         load([DataFolder,params.FM.MatchedLocationsFile_Rigid],'Matched');
                         runGlobal = 1;
@@ -194,7 +188,7 @@ if exist(StackList_csv_pth,'file') > 0
                         warndlg('The matching file using Translation transform is not exists, please run feature matching using Translation.','!! Warning !!');
                     end
             end
-            
+            % Run Global Registration
             if runGlobal && ~stop
                 if TypeOfRegistration == 3
                     StackPositions_pixels(:,3) = 0;
@@ -202,18 +196,11 @@ if exist(StackList_csv_pth,'file') > 0
                 switch TransformationValue
                     case 1
                         Transform_Type = 'Translation';
-                        %                       [SaveLocation,T]=Global_Optimal_Translation(StackPositions_pixels,Matched,DataFolder);
                         [SaveLocation,T]=Global_Linear_Transform(StackPositions_pixels,Matched,Transform_Type,DataFolder);
                     case 2
                         Transform_Type = 'Rigid';
-                        %                         [SaveLocation,StackPositions_Registered]=Global_Optimal_Translation(StackPositions_pixels,Matched,DataFolder);
                         [SaveLocation,T]=Global_Linear_Transform(StackPositions_pixels,Matched,Transform_Type,DataFolder);
                     case 3
-                        %                [SaveLocation,StackPositions_Registered]=Global_Optimal_Translation(StackPositions_pixels,Matched,DataFolder);
-                        %                                                 [SaveLocation,StackPositions_Registered,L,b]=Global_Optimal_Affine(StackPositions_pixels,Matched,DataFolder);
-                        %                                                 T.L = L;
-                        %                                                 T.b = b;
-                        %                                                 T.transform = 'Affine';
                         Transform_Type = 'Affine';
                         [SaveLocation,T]=Global_Linear_Transform(StackPositions_pixels,Matched,Transform_Type,DataFolder);
                     case 4
@@ -234,6 +221,7 @@ if exist(StackList_csv_pth,'file') > 0
         T = [];
     end
     
+    % Blending
     if runBlending && ~stop
         if isempty(T)
             switch TransformationValue
@@ -263,45 +251,32 @@ if exist(StackList_csv_pth,'file') > 0
                     end
             end
         end
-        
         if handles.checkbox15.Value
             UpdateLog(LogHandle,'Blending Stareted');
         end
-        
-        
         if ~isempty(T)
             % 3 for Allignement of Stacks
             if TypeOfRegistration == 3
                 [Tile3D_org,Tile3D] = blending_stackreg(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);
             else
-                [Tile3D_org,Tile3D,stop] = blending(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);
-                %                 [Tile3D_org,Tile3D,stop] = blending_mine(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);
+                [Tile3D_org,Tile3D,stop] = blending(StackPositions_pixels,StackSizes_pixels,StackList,blendingSID,T.L,T.b,DataFolder);  
             end
         else
             warndlg('The Transformation file is not Exist! Please run Global optimization.','!! Warning !!');
         end
-        
-        % To remove empty parts of the Tiles
-        %         Tile3D(all(all(Tile3D == 0,3),2),:,:) = [];
-        %         Tile3D(:,all(all(Tile3D == 0,3),1),:) = [];
-        %         Tile3D_org(all(all(Tile3D_org == 0,3),2),:,:) = [];
-        %         Tile3D_org(:,all(all(Tile3D_org == 0,3),1),:) = [];
         if handles.checkbox13.Value
             Visualization();
             VisualizationHandle=findobj(0,'Name','Visualization');
             VisualizationHandle.Visible = 'on';
-            
             ButtonGroup1V = VisualizationHandle.Children(2);
             AfterButton = ButtonGroup1V.Children(1);
             set(ButtonGroup1V,'SelectedObject',AfterButton);
             Axes1V = VisualizationHandle.Children(3);
             imshow(max(Tile3D,[],3),[0 max(Tile3D(:))],'Parent',Axes1V);
         end
-        
         if handles.checkbox15.Value
             UpdateLog(LogHandle,'Blending Done');
         end
-        
         if handles.checkbox10.Value
             volumeViewer(Tile3D);
         end
@@ -309,7 +284,7 @@ if exist(StackList_csv_pth,'file') > 0
         assignin('base','Tile3D_org',Tile3D_org);
     end
     
-    % if Retilling checkbox is checked
+    % Retilling
     if runRetilling && ~stop
         switch TransformationValue
             case 1
