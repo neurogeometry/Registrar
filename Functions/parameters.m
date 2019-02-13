@@ -144,7 +144,7 @@ paramsFinalTileSize = [128*2 128*2 64]; % powers of 2 only
 paramsEmptyVoxelsValue=111;
 
 
-DBAddress = '../../nctracer.db';
+DBAddress = 'C:\Users\Seyed\Documents\DatasetTests\registrar/nctracer.db';
 %DBAddress = 'E:/TilesCreation/NCTracerWeb/New/NCtracerWeb-master/NCtracerWeb-master/NCT-Web/data/nctracer.db';
                          
                          

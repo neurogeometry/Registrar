@@ -1,4 +1,4 @@
-function FeatureExtractionFunc(File,stackID,DataFolder,StackPositions_pixels,StackSizes_pixels)
+function FeatureExtractionFunc(IM_Original,stackID,DataFolder,StackPositions_pixels,StackSizes_pixels)
 % -------------------------------------------------------------------------
 % Author: Seyed Mostafa Mousavi Kahaki, Armen Stepanyants
 % Northeastern University, USA
@@ -7,7 +7,7 @@ function FeatureExtractionFunc(File,stackID,DataFolder,StackPositions_pixels,Sta
 FEwindowsize = [4 4 4];
 
 % Import Stack
-IM_Original=ImportStack(char(File),StackSizes_pixels(1,:));
+% IM_Original=ImportStack(char(File),StackSizes_pixels(1,:));
 
 % Find seeds
 r_seed=Find_Seeds(IM_Original,StackPositions_pixels,StackSizes_pixels);
