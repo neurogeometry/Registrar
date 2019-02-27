@@ -3,6 +3,8 @@ function StackOverlaps(StackList_csv_pth)
 StackList = table2cell(readtable(StackList_csv_pth,'Delimiter',','));
 [PathStr,FolderName]=fileparts(StackList_csv_pth);
 DataFolder=[PathStr,'/Results-',FolderName];
+newFolder = strcat(PathStr,'/Results-',FolderName);
+mkdir(newFolder);
 % index to remove invalid files
 errIndxs = [];
 StackSizes_pixels = zeros(size(StackList,1),3);
@@ -76,6 +78,6 @@ end
 % dlmwrite([DataFolder,'\StackSizes_pixels.csv'],StackSizes_pixels);
 
 % For Mac/UNIX
-dlmwrite([DataFolder,'/overlaps.csv'],overlaps);
-dlmwrite([DataFolder,'/StackPositions_pixels.csv'],StackPositions_pixels);
-dlmwrite([DataFolder,'/StackSizes_pixels.csv'],StackSizes_pixels);
+dlmwrite(strcat(newFolder,'/overlaps.csv'),overlaps);
+dlmwrite(strcat(newFolder,'/StackPositions_pixels.csv'),StackPositions_pixels);
+dlmwrite(strcat(newFolder,'/StackSizes_pixels.csv'),StackSizes_pixels);
