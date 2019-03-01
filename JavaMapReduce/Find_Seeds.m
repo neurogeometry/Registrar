@@ -4,9 +4,9 @@
 % thr is the threshold
 % R_min,R_step, and R_max are parameters of Multi_Scale_LoG filter
 
-function SVr=Find_Seeds(Orig,StackPositions_pixels,StackSizes_pixels)
+function SVr=Find_Seeds(Orig)
 FEsmooth3BoxSize = 3;
-FEk = 1.5;
+FEk = 0.5;
 FEExpected_Missalignment = [0.1,0.1,0.1];
 FEMaxN_Features=1000;
 FEMesh = [15 15 5];
@@ -28,17 +28,17 @@ keep_ind=false(1,length(ind));
 [x,y,z]=ind2sub(sizeIm,ind);
 delt=round(FEExpected_Missalignment.*sizeIm);
 
-if length (SizeIM) ~= 2
-    for i=2:size(StackPositions_pixels,1)
-        keep_ind(x+StackPositions_pixels(1,1)-1+delt(1)>=StackPositions_pixels(i,1) & x+StackPositions_pixels(1,1)-1-delt(1)<=StackPositions_pixels(i,1)+StackSizes_pixels(i,1)-1 &...
-            y+StackPositions_pixels(1,2)-1+delt(2)>=StackPositions_pixels(i,2) & y+StackPositions_pixels(1,2)-1-delt(2)<=StackPositions_pixels(i,2)+StackSizes_pixels(i,2)-1 &...
-            z+StackPositions_pixels(1,3)-1+delt(3)>=StackPositions_pixels(i,3) & z+StackPositions_pixels(1,3)-1-delt(3)<=StackPositions_pixels(i,3)+StackSizes_pixels(i,3)-1)=true;
-    end
-    ind=ind(keep_ind);
-    x=x(keep_ind);
-    y=y(keep_ind);
-    z=z(keep_ind);
-end
+% if length (SizeIM) ~= 2
+%     for i=2:size(StackPositions_pixels,1)
+%         keep_ind(x+StackPositions_pixels(1,1)-1+delt(1)>=StackPositions_pixels(i,1) & x+StackPositions_pixels(1,1)-1-delt(1)<=StackPositions_pixels(i,1)+StackSizes_pixels(i,1)-1 &...
+%             y+StackPositions_pixels(1,2)-1+delt(2)>=StackPositions_pixels(i,2) & y+StackPositions_pixels(1,2)-1-delt(2)<=StackPositions_pixels(i,2)+StackSizes_pixels(i,2)-1 &...
+%             z+StackPositions_pixels(1,3)-1+delt(3)>=StackPositions_pixels(i,3) & z+StackPositions_pixels(1,3)-1-delt(3)<=StackPositions_pixels(i,3)+StackSizes_pixels(i,3)-1)=true;
+%     end
+%     ind=ind(keep_ind);
+%     x=x(keep_ind);
+%     y=y(keep_ind);
+%     z=z(keep_ind);
+% end
 
 clear keep_ind
 Orig=Orig(ind);
@@ -57,6 +57,7 @@ SVz=zeros(2*FEMaxN_Features,1);
 
 while ~isempty(temp_ind) && count<=FEMaxN_Features
     count=count+1;
+%     disp(x);
     SVx(count)=x(temp_ind);
     SVy(count)=y(temp_ind);
     SVz(count)=z(temp_ind);
