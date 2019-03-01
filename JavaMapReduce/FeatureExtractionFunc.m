@@ -1,16 +1,18 @@
-function FeatureExtractionFunc(IM_Original,stackID,DataFolder,StackPositions_pixels,StackSizes_pixels)
+function [r_seed,FeatureVector] = FeatureExtractionFunc(IM_Original)
 % -------------------------------------------------------------------------
 % Author: Seyed Mostafa Mousavi Kahaki, Armen Stepanyants
 % Northeastern University, USA
 % =========================================================================
 % -------------------------------------------------------------------------
+
 FEwindowsize = [4 4 4];
 
 % Import Stack
 % IM_Original=ImportStack(char(File),StackSizes_pixels(1,:));
 
 % Find seeds
-r_seed=Find_Seeds(IM_Original,StackPositions_pixels,StackSizes_pixels);
+% r_seed=Find_Seeds(IM_Original,StackPositions_pixels,StackSizes_pixels);
+r_seed=Find_Seeds(IM_Original);
 
 % Remove extra features
 [X1,Y1,Z1]=size(IM_Original);
@@ -30,8 +32,9 @@ for i=1:size(r_seed,1)
 end
 
 % Write feature locations and Feature vectors into HDF5 files
-hdf5write([DataFolder,'/tmp/Feature_seeds',num2str(stackID),'.h5'], '/dataset1', r_seed);
-hdf5write([DataFolder,'/tmp/Feature_vector',num2str(stackID),'.h5'], '/dataset1', FeatureVector);
-seedsFile = [DataFolder,'/tmp/Feature_',num2str(stackID),'.h5'];
+% hdf5write(strcat(DataFolder,'/tmp/Feature_seeds',num2str(stackID),'.h5'), '/dataset1', r_seed);
+% hdf5write(strcat(DataFolder,'/tmp/Feature_vector',num2str(stackID),'.h5'), '/dataset1', FeatureVector);
+% seedsFile = strcat(DataFolder,'/tmp/Feature_',num2str(stackID),'.h5');
+
 end
 
