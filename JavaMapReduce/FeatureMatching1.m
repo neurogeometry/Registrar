@@ -7,7 +7,6 @@ StackList = table2cell(readtable(StackList_csv_pth,'Delimiter',','));
 [PathStr,FolderName]=fileparts(StackList_csv_pth);
 DataFolder=[PathStr,'/Results-',FolderName];
 
-
 % For Windows/Linux
 % overlaps_csv = cell2mat(table2cell(readtable([DataFolder,'/overlaps.csv'],'Delimiter',',')));
 % StackPositions_pixels_csv = cell2mat(table2cell(readtable([DataFolder,'/StackPositions_pixels.csv'],'Delimiter',',')));
@@ -37,40 +36,29 @@ for i=1:size(All_overlaps,1)
     end
 end
 
-
 for i=1:size(Overlaps,1)
-       SourceID = Overlaps(i,1);
+    SourceID = Overlaps(i,1);
     Source_seed_r_seed = hdf5read([DataFolder,'/tmp/Feature_seeds',num2str(SourceID),'.h5'], '/dataset1');
     Source_seed_FeatureVector = hdf5read([DataFolder,'/tmp/Feature_vector',num2str(SourceID),'.h5'], '/dataset1');
-    if ~isempty(Source_seed_r_seed)
+    TargetID=Overlaps(i,2);
+    Target_seed_r_seed = hdf5read([DataFolder,'/tmp/Feature_seeds',num2str(TargetID),'.h5'], '/dataset1');
+    Target_seed_FeatureVector = hdf5read([DataFolder,'/tmp/Feature_vector',num2str(TargetID),'.h5'], '/dataset1');
+    if ~isempty(Target_seed_r_seed)
         
-
-            TargetID=Overlaps(i,2);
+        [SourceSubFeatures,SourceSubFeaturesVectors] = OverlapRegion1(SourceID,TargetID,Source_seed_r_seed,Source_seed_FeatureVector,StackPositions_pixels,StackSizes_pixels,paramsFMPad);
+        [TargetSubFeatures,TargetSubFeaturesVectors] = OverlapRegion1(TargetID,SourceID,Target_seed_r_seed,Target_seed_FeatureVector,StackPositions_pixels,StackSizes_pixels,paramsFMPad);
+        
+        if size(SourceSubFeatures,1) >= paramsFMminReqFeatures && size(TargetSubFeatures,1)>= paramsFMminReqFeatures%params.FM.minReqFeatures
             
-            Target_seed_r_seed = hdf5read([DataFolder,'/tmp/Feature_seeds',num2str(TargetID),'.h5'], '/dataset1');
-            Target_seed_FeatureVector = hdf5read([DataFolder,'/tmp/Feature_vector',num2str(TargetID),'.h5'], '/dataset1');
-            if ~isempty(Target_seed_r_seed)
-                
-                [SourceSubFeatures,SourceSubFeaturesVectors] = OverlapRegion1(SourceID,TargetID,Source_seed_r_seed,Source_seed_FeatureVector,StackPositions_pixels,StackSizes_pixels,paramsFMPad);
-                [TargetSubFeatures,TargetSubFeaturesVectors] = OverlapRegion1(TargetID,SourceID,Target_seed_r_seed,Target_seed_FeatureVector,StackPositions_pixels,StackSizes_pixels,paramsFMPad);
-                
-                if size(SourceSubFeatures,1) >= paramsFMminReqFeatures && size(TargetSubFeatures,1)>= paramsFMminReqFeatures%params.FM.minReqFeatures
-                    
-                    Source_StackPositions = StackPositions_pixels(SourceID,:);
-                    Target_StackPositions = StackPositions_pixels(TargetID,:);
-                    [MatchLocations,MatchLocationsHang] = Stitching_3D_Func(SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue);
-                    
-                    Matched(SourceID,TargetID) = {MatchLocations};
-                    Matched_hung(SourceID,TargetID) = {MatchLocationsHang};
-                    
-                end
-                
-            end
-
-    end
-   
+            Source_StackPositions = StackPositions_pixels(SourceID,:);
+            Target_StackPositions = StackPositions_pixels(TargetID,:);
+            [MatchLocations,MatchLocationsHang] = Stitching_3D_Func(SourceSubFeatures,SourceSubFeaturesVectors,TargetSubFeatures,TargetSubFeaturesVectors,Source_StackPositions,Target_StackPositions,TransformationValue);
+            
+            Matched(SourceID,TargetID) = {MatchLocations};
+            Matched_hung(SourceID,TargetID) = {MatchLocationsHang};    
+        end
+    end  
 end
-
 
 if TransformationValue ==1
     save(matchedLocationFile_Translation,'Matched','Matched_hung','-v7.3');
