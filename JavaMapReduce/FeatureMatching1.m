@@ -60,15 +60,15 @@ for i=1:size(Overlaps,1)
     end  
 end
 
-if TransformationValue ==1
-    save(matchedLocationFile_Translation,'Matched','Matched_hung','-v7.3');
-elseif TransformationValue ==2
-    save(matchedLocationFile_Rigid,'Matched','Matched_hung','-v7.3');
-elseif TransformationValue ==3
-    save(matchedLocationFile_Affine,'Matched','Matched_hung','-v7.3');
-elseif TransformationValue ==4
-    save(matchedLocationFile_Non_Rigid,'Matched','Matched_hung','-v7.3');
-end
+% if TransformationValue ==1
+%     save(matchedLocationFile_Translation,'Matched','Matched_hung','-v7.3');
+% elseif TransformationValue ==2
+%     save(matchedLocationFile_Rigid,'Matched','Matched_hung','-v7.3');
+% elseif TransformationValue ==3
+%     save(matchedLocationFile_Affine,'Matched','Matched_hung','-v7.3');
+% elseif TransformationValue ==4
+%     save(matchedLocationFile_Non_Rigid,'Matched','Matched_hung','-v7.3');
+% end
 
 disp(['Matched Locations saved as: ',DataFolder]);
 end
