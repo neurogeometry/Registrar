@@ -1,4 +1,12 @@
-function [MatchLocations,MatchLocationsHang] = Stitching_3D_Func(Source_seed,SourceFeatures,Target_seed,TargetFeatures,Source_StackPositions,Target_StackPositions,TransformationValue)
+function [MatchLocations,MatchLocationsHang] = Stitching_3D_Func(SourceID,TargetID,StackPositions_pixels,StackSizes_pixels,Source_seed_r_seed,Source_seed_FeatureVector,Target_seed_r_seed,Target_seed_FeatureVector,TransformationValue)
+
+Source_StackPositions = StackPositions_pixels(SourceID,:);
+Target_StackPositions = StackPositions_pixels(TargetID,:);
+[Source_seed,SourceFeatures] = OverlapRegion1(SourceID,TargetID,Source_seed_r_seed,Source_seed_FeatureVector,StackPositions_pixels,StackSizes_pixels,0);
+[Target_seed,TargetFeatures] = OverlapRegion1(TargetID,SourceID,Target_seed_r_seed,Target_seed_FeatureVector,StackPositions_pixels,StackSizes_pixels,0);
+        
+
+
 paramsFMDT = 60;
 paramsFM_C1 = [];
 paramsFM_C2 = [];
