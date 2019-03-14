@@ -22,7 +22,7 @@ function varargout = Registrar(varargin)
 %
 %      Registrar('Property','Value',...) creates a new
 %      Registrar or raises the existing singleton*.  Starting from
-%      the left, property value pairs are applied to the GUI before
+%      the left, propertyg value pairs are applied to the GUI before
 %      Registrar_OpeningFcn gets called.  An unrecognized property
 %      name or invalid value makes property application stop.  All inputs
 %      are passed to Registrar_OpeningFcn via varargin.
