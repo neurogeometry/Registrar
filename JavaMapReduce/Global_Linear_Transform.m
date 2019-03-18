@@ -14,7 +14,6 @@ if strcmp(Transform_Type,'Translation')
     Dist_tol=2; % pixels
     Conn_tol=2;
     n_dist=10;
-    
     L=[];
     
 elseif strcmp(Transform_Type,'Rigid')
@@ -48,7 +47,15 @@ else
 end
 
 N=size(FeaturePositions,1);
-X=FeaturePositions;
+
+FeaturePositions(FeaturePositions==0);
+for i=1:size(FeaturePositions,1)
+    for j=1:size(FeaturePositions,2)
+        X{i,j} = FeaturePositions(i,j);
+    end
+end
+% X=FeaturePositions;
+
 for i=1:N
     for j=i+1:N
         if ~isempty(X{i,j})
