@@ -2,8 +2,8 @@ clear all;
 close all;
 clc;
 
-sourceID = 1;
-targetID = 2;
+sourceID = 2;
+targetID = 3;
 TraceNum = 2;
 mu = 1040;
 affine = 1;
@@ -71,27 +71,27 @@ IM_source_max=max(IM_Source,[],3);
 IM_target_max=max(IM_Target,[],3);
 
 %% Show All Traces  ----------------- Fig 1. A
-N = N + 1;
-figure(N);imshow(IM_source_max,[0 50]);
-N = N + 1;
-figure(N);imshow(IM_target_max,[0 50]);
-for i=1:size(fname_First,1)
-    % Using Trace
-
-    sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];
-    targetPath = [GTpath,'Matches\Traces\',fname_Second{i}];
-
-    [AM_Source,r_Source,R_Source]=swc2AM(sourcePath);
-    [AM_Target,r_Target,R_Target]=swc2AM(targetPath);
-    [AM_Source,r_Source,~] = AdjustPPM(AM_Source,r_Source,R_Source,ppm);
-    [AM_Target,r_Target,~] = AdjustPPM(AM_Target,r_Target,R_Target,ppm);
-
-    figure(N-1);hold on; PlotAM(AM_Source,r_Source,color(i,:))
-    text(r_Source(round(size(r_Source,1)/3),2),r_Source(round(size(r_Source,1)/3),1),['Axon #',num2str(i)],'Color',color(i,:))
-    figure(N);hold on; PlotAM(AM_Target,r_Target,color(i,:))
-    text(r_Target(round(size(r_Target,1)/3),2),r_Target(round(size(r_Target,1)/3),1),['Axon #',num2str(i)],'Color',color(i,:))
-
-end
+% N = N + 1;
+% figure(N);imshow(IM_source_max,[0 50]);
+% N = N + 1;
+% figure(N);imshow(IM_target_max,[0 50]);
+% for i=1:size(fname_First,1)
+%     % Using Trace
+%     
+%     sourcePath = [GTpath,'Matches\Traces\',fname_First{i}];
+%     targetPath = [GTpath,'Matches\Traces\',fname_Second{i}];
+%     
+%     [AM_Source,r_Source,R_Source]=swc2AM(sourcePath);
+%     [AM_Target,r_Target,R_Target]=swc2AM(targetPath);
+%     [AM_Source,r_Source,~] = AdjustPPM(AM_Source,r_Source,R_Source,ppm);
+%     [AM_Target,r_Target,~] = AdjustPPM(AM_Target,r_Target,R_Target,ppm);
+%     
+%     figure(N-1);hold on; PlotAM(AM_Source,r_Source,color(i,:))
+%     text(r_Source(round(size(r_Source,1)/3),2),r_Source(round(size(r_Source,1)/3),1),['Axon #',num2str(i)],'Color',color(i,:))
+%     figure(N);hold on; PlotAM(AM_Target,r_Target,color(i,:))
+%     text(r_Target(round(size(r_Target,1)/3),2),r_Target(round(size(r_Target,1)/3),1),['Axon #',num2str(i)],'Color',color(i,:))
+%     
+% end
 
 % %% Show One Trace  ----------------- Fig 1. B
 % TraceNum = 2;
@@ -155,30 +155,32 @@ end
 % end
 
 % % Matching Result  ----------------- Fig 2.
-% stitched = appendimages(IM_target_max,IM_source_max,'horizontal');
-% %                   ----------------- Fig 2. A
-% N = N + 1;
-% matchesStep = 3;
-% figure(N);imshow(stitched,[0 20])
-% figure(N);hold on;plot(Matched_hung{sourceID,targetID}(1:matchesStep:end,5),Matched_hung{sourceID,targetID}(1:matchesStep:end,4),'*r');
-% figure(N);hold on;plot(Matched_hung{sourceID,targetID}(1:matchesStep:end,2)+size(IM_target_max,1)+45,Matched_hung{sourceID,targetID}(1:matchesStep:end,1),'*r');
-% figure(N);hold on;
-% for i = 1:matchesStep:length(Matched_hung{sourceID,targetID})
-% line([Matched_hung{sourceID,targetID}(i,5) Matched_hung{sourceID,targetID}(i,2)+size(IM_target_max,1)+45], ...
-%                     [Matched_hung{sourceID,targetID}(i,4) Matched_hung{sourceID,targetID}(i,1)], 'Color', rand(1,3));
-% end
-%
-% %                   ----------------- Fig 2. B
-% N = N + 1;
-% figure(N);imshow(stitched,[0 20])
-% figure(N);hold on;plot(Matched{sourceID,targetID}(:,5),Matched{sourceID,targetID}(:,4),'*r');
-% figure(N);hold on;plot(Matched{sourceID,targetID}(:,2)+size(IM_target_max,1)+45,Matched{sourceID,targetID}(:,1),'*r');
-% figure(N);hold on;
-% for i = 1: length(Matched{sourceID,targetID})
-% line([Matched{sourceID,targetID}(i,5) Matched{sourceID,targetID}(i,2)+size(IM_target_max,1)+45], ...
-%                     [Matched{sourceID,targetID}(i,4) Matched{sourceID,targetID}(i,1)], 'Color', rand(1,3));
-% end
-% %                   ----------------- Fig 2. C
+stitched = appendimages(IM_target_max,IM_source_max,'horizontal');
+%                   ----------------- Fig 2. A
+N = N + 1;
+matchesStep = 3;
+endm = 0;
+figure(N);imshow(stitched,[0 40])
+figure(N);hold on;plot(Matched_hung{sourceID,targetID}(1:matchesStep:end-endm,5),Matched_hung{sourceID,targetID}(1:matchesStep:end-endm,4),'*r');
+figure(N);hold on;plot(Matched_hung{sourceID,targetID}(1:matchesStep:end-endm,2)+size(IM_target_max,1)+45,Matched_hung{sourceID,targetID}(1:matchesStep:end-endm,1),'*r');
+figure(N);hold on;
+for i = 1:matchesStep:length(Matched_hung{sourceID,targetID})-endm
+line([Matched_hung{sourceID,targetID}(i,5) Matched_hung{sourceID,targetID}(i,2)+size(IM_target_max,1)+45], ...
+                    [Matched_hung{sourceID,targetID}(i,4) Matched_hung{sourceID,targetID}(i,1)], 'Color', rand(1,3));
+end
+
+%                   ----------------- Fig 2. B
+N = N + 1;
+figure(N);imshow(stitched,[0 40])
+figure(N);hold on;plot(Matched{sourceID,targetID}(:,5),Matched{sourceID,targetID}(:,4),'*r');
+figure(N);hold on;plot(Matched{sourceID,targetID}(:,2)+size(IM_target_max,1)+45,Matched{sourceID,targetID}(:,1),'*r');
+figure(N);hold on;
+for i = 1: length(Matched{sourceID,targetID})
+line([Matched{sourceID,targetID}(i,5) Matched{sourceID,targetID}(i,2)+size(IM_target_max,1)+45], ...
+                    [Matched{sourceID,targetID}(i,4) Matched{sourceID,targetID}(i,1)], 'Color', rand(1,3));
+end
+i
+%                   ----------------- Fig 2. C
 % [~,L,b,Cxyz,Nxyz,nxyz,Grid_start]=Optimal_Bspline_Transform(Global_Matched_Source,Global_Matched_Target,nxyz,affine,mu);
 % nx=10; ny=10; nz=10;
 % Min=min(Global_Matched_Source,[],2);

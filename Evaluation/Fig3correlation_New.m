@@ -10,7 +10,26 @@ pad = [0 60 0];
 
 csv_pth = 'C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\CorrelationResults\';
 files = dir(csv_pth);
-
+% 
+% k = 1;
+% correllation = {};
+% for i = 3:size(files,1)-1
+%     correllation{k} = load([files(i).folder,'\',files(i).name,'\','corr.mat']);
+%     k=k+1;
+% end
+% j = 1;
+% for i=1:4
+%     O(j) = correllation{i}.corr_old;
+%     T(j) = correllation{i}.corr_Translation;
+%     R(j) = correllation{i}.corr_Rigid;
+%     A(j) = correllation{i}.corr_Affine;
+%     NR(j) = correllation{i}.corr_NonRigid;
+%     j = j +1
+% end
+% 
+% boxplot([O(:),T(:),R(:),...
+%     A(:),NR(:)],'Whisker',inf)
+% axis square, box on
 
 for i = 3:size(files,1)-1
     

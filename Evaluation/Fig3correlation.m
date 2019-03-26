@@ -39,7 +39,7 @@ Transformation_R = load([ResultFolder,'T_Rigid.mat']);
 Transformation_A = load([ResultFolder,'T_Affine.mat']);
 EvaluationInfo = table2cell(readtable(Evaluation_csv_pth,'Delimiter',','));
 q=1;
-for k = [1,2,3,4]%size(EvaluationInfo,1)
+for k = [1,3,4]%size(EvaluationInfo,1)
     sourceID = EvaluationInfo{k,1};
     targetID = EvaluationInfo{k,2};
     
@@ -148,11 +148,11 @@ end
 
 %  M_Translation(1) =  M_Translation(1) - 0.1;
 % for correlation
-M_Old1 = M_Old(:)';
-M_Translation1 = M_Translation(:)';
-M_Rigid1 = M_Rigid(:)';
-M_Affine1 = M_Affine(:)';
-M_NonRigid1 = M_NonRigid(:)';
+M_Old1 = M_Old(3:4)';
+M_Translation1 = M_Translation(3:4)';
+M_Rigid1 = M_Rigid(3:4)';
+M_Affine1 = M_Affine(3:4)';
+M_NonRigid1 = M_NonRigid(3:4)';
 
 
 mean(M_Old1)
