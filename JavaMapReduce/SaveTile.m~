@@ -89,7 +89,7 @@ elseif usedDB == 7
 elseif usedDB == 8 % png
     mkdir([SaveFolder,TileName]);
     for z = 0:size(Tile,3)-1       
-        TileName_1 = [sprintf('%04d', z),'.png'];
-        imwrite(Tile(:,:,z+1),[SaveFolder,TileName,'/',TileName_1],'png');
+        TileName = [sprintf('%04d', 2),'.png'];
+        imwrite(SubtileTile_CATMAID,[SaveFolder,TileName],'jpg');
     end
 end

@@ -2,9 +2,9 @@
 function Retiling(StackList,StackPositions,StackSizes,T,DataFolder,REsavefolder,outputType,DBFile)
 paramsRERemoveBlack = 1;
 paramsBigTileSize = [512 512 64]; % powers of 2 only
-paramsFinalTileSize = [128*2 128*2 64]; % powers of 2 only
+paramsFinalTileSize = [128*4 128*4 64]; % powers of 2 only
 paramsEmptyVoxelsValue=111;
-
+disp(size(StackList));
 Trimimage = 0;
 image_id = 1;
 x = [];
@@ -14,23 +14,23 @@ if Trimimage
     h = 5;
     StackSizes = StackSizes - [h*2,w*2,0];
 end
-[filepath,~,ext] = fileparts(char(StackList(1,1)));
-
-if size(ext,2)>1
-    InfoImage=imfinfo(char(StackList(1,1)));
-    MaxIntensityValue = InfoImage(1).MaxSampleValue;
-    StackClass = class(imread(char(StackList(1,1))));
-else
-    allfiles = dir(filepath);
-    InfoImage=imfinfo(char([filepath,'/',allfiles(3).name]));
-    if strcmp(InfoImage.Format,'jpg')
-        FinalImage=ImportStack([filepath,'/'],StackSizes(1,:));
-        MaxIntensityValue = max(FinalImage(:));
-    else
-        MaxIntensityValue = InfoImage(1).MaxSampleValue;
-    end
-    StackClass = class(imread(char([filepath,'/',allfiles(3).name])));
-end
+% [filepath,~,ext] = fileparts(char(StackList(1,1)));
+MaxIntensityValue = 255;
+% if size(ext,2)>1
+%     InfoImage=imfinfo(char(StackList(1,1)));
+%     MaxIntensityValue = InfoImage(1).MaxSampleValue;
+%     StackClass = class(imread(char(StackList(1,1))));
+% else
+%     allfiles = dir(filepath);
+%     InfoImage=imfinfo(char([filepath,'/',allfiles(3).name]));
+%     if strcmp(InfoImage.Format,'jpg')
+%         FinalImage=ImportStack([filepath,'/'],StackSizes(1,:));
+%         MaxIntensityValue = max(FinalImage(:));
+%     else
+%         MaxIntensityValue = InfoImage(1).MaxSampleValue;
+%     end
+%     StackClass = class(imread(char([filepath,'/',allfiles(3).name])));
+% end
 
 % Use DB
 if outputType == 1
@@ -138,7 +138,10 @@ if outputType == 1
 end
 
 SaveFolder=[DataFolder,REsavefolder,'Zoom1/'];
-N_stacks=length(StackList);
+% N_stacks=length(StackList);
+N_stacks = size(StackList,1);
+disp(StackList);
+disp(N_stacks);
 % if outputType == 3
 %     mkdir([SaveFolder,'image']);
 % elseif outputType == 4
@@ -193,8 +196,12 @@ if strcmp(T.transform,'Translation')
         Tile=zeros(paramsBigTileSize,'uint8');
         Tile_logical=false(paramsBigTileSize);
         for j=1:length(StackInd)
-            
-            X=ImportStack(StackList{StackInd(j)},StackSizes(StackInd(j),:));
+            disp(StackList(StackInd(j),:));
+            disp(class(StackList(StackInd(j),:)));
+            disp(StackSizes(StackInd(j),:));
+            disp(class(StackSizes(StackInd(j),:)));
+            X=ImportStack(string(StackList(StackInd(j),:)));
+%             X=ImportStack(string(StackList(StackInd(j),:)),[512,512,47]);
             if Trimimage
                 X=X(h:end-h,w:end-w,:);
             end
@@ -319,4 +326,3 @@ if outputType ==1
     clear conn
     disp('Done with DB');
 end
-
