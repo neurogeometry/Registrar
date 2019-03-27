@@ -1,5 +1,5 @@
 function SaveTile(usedDB,Tile,image_id,x,TilePositions,TileSize,z_level,SaveFolder,N_tiles)
-TileName=[num2str(TilePositions(1)),'_',num2str(TilePositions(2)),'_',num2str(TilePositions(3))];
+TileName=[num2str(TilePositions(2)),'_',num2str(TilePositions(1)),'_',num2str(TilePositions(3))];
 if usedDB == 1
     raw_im = reshape(Tile,1,[]);
     insertcommand = 'INSERT INTO pix (image_id,x,y,z,x_dim,y_dim,z_dim,pixels,zoom_out) values (?,?,?,?,?,?,?,?,?)';

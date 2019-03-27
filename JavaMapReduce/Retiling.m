@@ -1,8 +1,8 @@
 % This function creates seamless image tiles from the dataset of original image stacks and stack transformations.
 function Retiling(StackList,StackPositions,StackSizes,T,DataFolder,REsavefolder,outputType,DBFile)
 paramsRERemoveBlack = 1;
-paramsBigTileSize = [512 512 64]; % powers of 2 only
-paramsFinalTileSize = [128*4 128*4 64]; % powers of 2 only
+paramsBigTileSize = [512 512 128]; % powers of 2 only
+paramsFinalTileSize = [128*4 128*4 128]; % powers of 2 only
 paramsEmptyVoxelsValue=111;
 disp(size(StackList));
 Trimimage = 0;
