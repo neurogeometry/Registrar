@@ -1,18 +1,18 @@
-function [r_seed,FeatureVector] = FeatureExtractionFunc(IM_Original)
+function [r_seed,FeatureVector] = FeatureExtractionFunc(IM_Original,FEwindowsize,FEsmooth3BoxSize,FEk,FEExpected_Missalignment,FEMaxN_Features,FEMesh)
 % -------------------------------------------------------------------------
 % Author: Seyed Mostafa Mousavi Kahaki, Armen Stepanyants
 % Northeastern University, USA
 % =========================================================================
 % -------------------------------------------------------------------------
 
-FEwindowsize = [4 4 4];
+% FEwindowsize = [4 4 4];
 
 % Import Stack
 % IM_Original=ImportStack(char(File),StackSizes_pixels(1,:));
 
 % Find seeds
 % r_seed=Find_Seeds(IM_Original,StackPositions_pixels,StackSizes_pixels);
-r_seed=Find_Seeds(IM_Original);
+r_seed=Find_Seeds(IM_Original,FEsmooth3BoxSize,FEk,FEExpected_Missalignment,FEMaxN_Features,FEMesh);
 
 % Remove extra features
 [X1,Y1,Z1]=size(IM_Original);

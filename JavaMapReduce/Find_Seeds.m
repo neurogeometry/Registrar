@@ -4,12 +4,12 @@
 % thr is the threshold
 % R_min,R_step, and R_max are parameters of Multi_Scale_LoG filter
 
-function SVr=Find_Seeds(Orig)
-FEsmooth3BoxSize = 3;
-FEk = 0.5;
-FEExpected_Missalignment = [0.1,0.1,0.1];
-FEMaxN_Features=1000;
-FEMesh = [15 15 5];
+function SVr=Find_Seeds(Orig,FEsmooth3BoxSize,FEk,FEExpected_Missalignment,FEMaxN_Features,FEMesh)
+% FEsmooth3BoxSize = 3;
+% FEk = 0.5;
+% FEExpected_Missalignment = [0.1,0.1,0.1];
+% FEMaxN_Features=1000;
+% FEMesh = [15 15 5];
 
 Orig = double(Orig);
 SizeIM = size(Orig);

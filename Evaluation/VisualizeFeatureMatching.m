@@ -1,13 +1,13 @@
 function VisualizeFeatureMatching(Matches)%(PathSource,PathTarget,Matches)
-PathSource = 'C:\Users\Seyed\Documents\DatasetTests\registrar\Data\Neocortical\00001.tif';
-PathTarget = 'C:\Users\Seyed\Documents\DatasetTests\registrar\Data\Neocortical\00002.tif';
+PathSource = '/Users/chuhan/Documents/study/2019Spring/neurogeometry/NCTWeb/NCT-Web/src/main/data/registration/Images/01/00001.tif';
+PathTarget = '/Users/chuhan/Documents/study/2019Spring/neurogeometry/NCTWeb/NCT-Web/src/main/data/registration/Images/02/00002.tif';
 Source_StackPositions = [1851,749,-22];
 Target_StackPositions = [1857,1192,-7];
 matchLoc_Source = Matches(:,1:3);
 matchLoc_Target = Matches(:,4:6);
 Match_Indexes = 1:size(Matches,1);
-IMSource=ImportStack(PathSource,[512,512,77]);
-IMTarget=ImportStack(PathTarget,[512,512,71]);
+IMSource=ImportStack(PathSource);
+IMTarget=ImportStack(PathTarget);
 IM_source_max=max(IMSource,[],3);
 IM_target_max=max(IMTarget,[],3);
 [X1,Y1,~]=size(IMSource);

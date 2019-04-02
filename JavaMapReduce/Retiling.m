@@ -1,9 +1,9 @@
 % This function creates seamless image tiles from the dataset of original image stacks and stack transformations.
-function Retiling(StackList,StackPositions,StackSizes,T,DataFolder,REsavefolder,outputType,DBFile)
-paramsRERemoveBlack = 1;
-paramsBigTileSize = [512 512 128]; % powers of 2 only
-paramsFinalTileSize = [128*4 128*4 128]; % powers of 2 only
-paramsEmptyVoxelsValue=111;
+function Retiling(StackList,StackPositions,StackSizes,T,DataFolder,REsavefolder,outputType,DBFile,paramsRERemoveBlack,paramsBigTileSize,paramsFinalTileSize,paramsEmptyVoxelsValue,MaxIntensityValue)
+% paramsRERemoveBlack = 1;
+% paramsBigTileSize = [512 512 128]; % powers of 2 only
+% paramsFinalTileSize = [128*4 128*4 128]; % powers of 2 only
+% paramsEmptyVoxelsValue=111;
 disp(size(StackList));
 Trimimage = 0;
 image_id = 1;
@@ -15,7 +15,7 @@ if Trimimage
     StackSizes = StackSizes - [h*2,w*2,0];
 end
 % [filepath,~,ext] = fileparts(char(StackList(1,1)));
-MaxIntensityValue = 255;
+% MaxIntensityValue = 255;
 % if size(ext,2)>1
 %     InfoImage=imfinfo(char(StackList(1,1)));
 %     MaxIntensityValue = InfoImage(1).MaxSampleValue;

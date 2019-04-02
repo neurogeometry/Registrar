@@ -1,32 +1,4 @@
-function [Match_Indexes] = RANSAC(SourceLocations,TargetLocations,TransformationValue,mu)
-if TransformationValue == 1 % Translation
-    NumRandPoints = 1;
-    MaxNumSamples=10^6;
-    MaxNumMatches=inf;
-    MaxErrorDistance = 2;
-    InlierRatio = 0.20;
-elseif TransformationValue == 2 % Rigid
-    NumRandPoints = 2;
-    MaxNumSamples=10^3;
-    MaxNumMatches=15;
-    MaxErrorDistance = 2;
-    InlierRatio = 0.20;
-elseif TransformationValue == 3 % Affine
-    NumRandPoints = 2;
-    MaxNumSamples=10^5;
-    MaxNumMatches=10; % inf
-    MaxErrorDistance = 2;
-    InlierRatio = 0.20;
-elseif TransformationValue == 4 % Non-Rigid
-    NumRandPoints = 4;
-    MaxNumSamples=10^3;
-    MaxNumMatches=10;
-    MaxErrorDistance = 3;
-    nxyz = [256;256;156];
-    affine = 1;
-    InlierRatio = 0.05; % 0.10
-end
-
+function [Match_Indexes] = RANSAC(SourceLocations,TargetLocations,TransformationValue,mu,NumRandPoints,MaxNumSamples,MaxNumMatches,MaxErrorDistance,InlierRatio,nxyz,affine)
 NumAllMatches = size(TargetLocations,2);
 if nchoosek(NumAllMatches,NumRandPoints)<=MaxNumSamples
     AllSamples=nchoosek(1:NumAllMatches,NumRandPoints);
@@ -66,10 +38,8 @@ while  i <= size(AllSamples,1) && length(Match_Indexes) <= MaxNumMatches
     
     CorrectNumbers = (AllDistances2 < MaxErrorDistance^2);
     i = i+1;
-    length(Match_Indexes)
     if sum(CorrectNumbers) > length(Match_Indexes)
         Match_Indexes = find(CorrectNumbers);
     end
 end
-
 end

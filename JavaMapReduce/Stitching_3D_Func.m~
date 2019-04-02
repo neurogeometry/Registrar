@@ -55,9 +55,11 @@ if size(Source_seed,1) > 0 && size(Source_seed,1) > 0
     
     MatchLocationsHang = [Global_Matched_Source',Global_Matched_Target'];
     
-    
-    Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue,mu,NumRandPoints,MaxNumSamples,MaxNumMatches,MaxErrorDistance,InlierRatio,nxyz,affine);
+    try
+        Match_Indexes = RANSAC(Global_Matched_Source,Global_Matched_Target,TransformationValue,mu,NumRandPoints,MaxNumSamples,MaxNumMatches,MaxErrorDistance,InlierRatio,nxyz,affine);
    
+        
+    end
     
     MatchLocations=NaN(length(Match_Indexes),6);
     if ~isempty(Match_Indexes)

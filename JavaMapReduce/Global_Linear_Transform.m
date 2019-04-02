@@ -4,58 +4,51 @@
 % Backward stepwise selection is used to eliminate outliers in matches
 % T contains transformation
 
-function [T]=Global_Linear_Transform(StackPositions,FeaturePositions,Transform_Type)
-if strcmp(Transform_Type,'Translation')
-    delta=0.1; % overal regularization of shifts
-    lambda=0; % individual regularization of shifts
-    learning_rate=0.1;
-    Max_Iterations=10000;
-    ObjFunc_tol=10^-8;
-    Dist_tol=2; % pixels
-    Conn_tol=2;
-    n_dist=10;
-    L=[];
-    
-elseif strcmp(Transform_Type,'Rigid')
-    alpha=0.1; % overall regularization on Ls
-    betta=0.1; % individual regularizations on Ls
-    gamma=5; % enforcing unitary transforms
-    delta=0.1; % overal regularization of shifts
-    lambda=0; % individual regularization of shifts
-    learning_rate=0.1;
-    Max_Iterations=10000;
-    ObjFunc_tol=10^-8;
-    Dist_tol=2; % pixels
-    Conn_tol=3;
-    n_dist=10;
-    
-elseif strcmp(Transform_Type,'Affine')
-    alpha=0.1; % overall regularization on Ls
-    betta=0.1; % individual regularizations on Ls
-    delta=0.1; % overal regularization of shifts
-    lambda=0; % individual regularization of shifts
-    learning_rate=0.1;
-    Max_Iterations=10000;
-    ObjFunc_tol=10^-8;
-    Dist_tol=2; % pixels
-    Conn_tol=3;
-    n_dist=10;
-%     SaveLocation = [DataFolder,params.GA.StackPositions_Registered];
-    
-else
-    error('Transform_Type has to be Translation, Rigid, or Affine')
-end
+function [T]=Global_Linear_Transform(StackPositions,FeaturePositions,Transform_Type,delta,lambda,alpha,betta,gamma,learning_rate,Max_Iterations,ObjFunc_tol,Dist_tol,Conn_tol,n_dist,L)
+% if strcmp(Transform_Type,'Translation')
+%     delta=0.1; % overal regularization of shifts
+%     lambda=0; % individual regularization of shifts
+%     learning_rate=0.1;
+%     Max_Iterations=10000;
+%     ObjFunc_tol=10^-8;
+%     Dist_tol=2; % pixels
+%     Conn_tol=2;
+%     n_dist=10;
+% 
+%     L=[];
+% 
+% elseif strcmp(Transform_Type,'Rigid')
+%     alpha=0.1; % overall regularization on Ls
+%     betta=0.1; % individual regularizations on Ls
+%     gamma=5; % enforcing unitary transforms
+%     delta=0.1; % overal regularization of shifts
+%     lambda=0; % individual regularization of shifts
+%     learning_rate=0.1;
+%     Max_Iterations=10000;
+%     ObjFunc_tol=10^-8;
+%     Dist_tol=2; % pixels
+%     Conn_tol=3;
+%     n_dist=10;
+% 
+% elseif strcmp(Transform_Type,'Affine')
+%     alpha=0.1; % overall regularization on Ls
+%     betta=0.1; % individual regularizations on Ls
+%     delta=0.1; % overal regularization of shifts
+%     lambda=0; % individual regularization of shifts
+%     learning_rate=0.1;
+%     Max_Iterations=10000;
+%     ObjFunc_tol=10^-8;
+%     Dist_tol=2; % pixels
+%     Conn_tol=3;
+%     n_dist=10;
+% %     SaveLocation = [DataFolder,params.GA.StackPositions_Registered];
+% 
+% else
+%     error('Transform_Type has to be Translation, Rigid, or Affine')
+% end
 
 N=size(FeaturePositions,1);
-
-FeaturePositions(FeaturePositions==0);
-for i=1:size(FeaturePositions,1)
-    for j=1:size(FeaturePositions,2)
-        X{i,j} = FeaturePositions(i,j);
-    end
-end
-% X=FeaturePositions;
-
+X=FeaturePositions;
 for i=1:N
     for j=i+1:N
         if ~isempty(X{i,j})
@@ -94,7 +87,7 @@ IN=repmat(I,1,N);
 outlier=true;
 while outlier
     K=k-diag(sum(k));
-    
+
     sum_r=zeros(3*N,N);
     Sum_r=zeros(3*N,N);
     Sum_rr=zeros(3*N,3*N);
@@ -111,7 +104,7 @@ while outlier
         Sum_r(1+3*(i-1):3*i,i)=sum_r(1+3*(i-1):3*i,i)-sum(sum_r(1+3*(i-1):3*i,:),2);
         Sum_rr(1+3*(i-1):3*i,1+3*(i-1):3*i)=Sum_rr(1+3*(i-1):3*i,1+3*(i-1):3*i)-temp;
     end
-    
+
     i=0;
     RMS_dist=zeros(1,ceil(Max_Iterations/n_dist));
     flag=true;
@@ -121,7 +114,7 @@ while outlier
             i=i+1;
             dEdb=-4/sum(k(:)).*(IN*Sum_r+b*K)+2*delta/N^2.*repmat(sum(b,2),1,N)+2*lambda/N.*b;
             b=b-learning_rate.*dEdb;
-            
+
             if mod(i,n_dist)==0
                 RMS_temp=0;
                 for ii=1:N
@@ -151,7 +144,7 @@ while outlier
             dEdb=-4/sum(k(:)).*(L*Sum_r+b*K)+2*delta/N^2.*repmat(sum(b,2),1,N)+2*lambda/N.*b;
             L=L-learning_rate.*dEdL;
             b=b-learning_rate.*dEdb;
-            
+
             if mod(i,n_dist)==0
                 RMS_temp=0;
                 for ii=1:N
@@ -176,7 +169,7 @@ while outlier
             dEdb=-4/sum(k(:)).*(L*Sum_r+b*K)+2*delta/N^2.*repmat(sum(b,2),1,N)+2*lambda/N.*b;
             L=L-learning_rate.*dEdL;
             b=b-learning_rate.*dEdb;
-            
+
             if mod(i,n_dist)==0
                 RMS_temp=0;
                 for ii=1:N
@@ -193,7 +186,7 @@ while outlier
             end
         end
     end
-    
+
     RMS_final=zeros(N,N);
     for ii=1:N
         for jj=ii+1:N
@@ -211,7 +204,7 @@ while outlier
             end
         end
     end
-    
+
     M=max(RMS_final(:));
     [iii,jjj]=find(RMS_final==M);
     if M>=Dist_tol && k(iii,jjj)<=Conn_tol
