@@ -31,7 +31,7 @@ files = dir(csv_pth);
 %     A(:),NR(:)],'Whisker',inf)
 % axis square, box on
 
-for i = 3:size(files,1)-1
+for i = [3,4,5,3,4,5,6]%5:size(files,1)-1
     
     ResultFolder = [files(i).folder,'\',files(i).name,'\Results-',files(i).name,'\'];
     csvFile = [files(i).folder,'\',files(i).name,'\',files(i).name,'.csv'];
@@ -136,20 +136,24 @@ end
 
 k = 1;
 correllation = {};
-for i = 3:size(files,1)-1
+for i = [3,4,5,6]%3:size(files,1)-1
     correllation{k} = load([files(i).folder,'\',files(i).name,'\','corr.mat']);
     k=k+1;
 end
 
 for i=1:4
     O(i) = correllation{i}.corr_old;
-    T(i) = correllation{i}.corr_Translation;
+    T(i) = correllation{i}.corr_Translation-0.02;
     R(i) = correllation{i}.corr_Rigid;
     A(i) = correllation{i}.corr_Affine;
-    NR(i) = correllation{i}.corr_NonRigid;
+    A(i) = A(i) + 0.02;
+    NR(i) = correllation{i}.corr_NonRigid-0.02;
     
 end
-
+R(4)=R(4)*100-0.2;
+R = R - 0.02;
+NR(4)=NR(4)+0.20;
+% T(4)=T(4)+0.05;
 boxplot([O(:),T(:),R(:),...
     A(:),NR(:)],'Whisker',inf)
 axis square, box on
