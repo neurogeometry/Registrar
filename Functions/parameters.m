@@ -20,14 +20,14 @@ params.FE.MLOG2 = 3;               %default:   params.FE.MLOG2 = 3
 params.FE.MLOG3 = 3;               %default:   params.FE.MLOG3 = 3
 
 %  Size of the window to exgtract information around features 
-params.FE.windowsize = [4 4 4];
+params.FE.windowsize = [8 8 8];
 
 %  Feature Extraction Threshold - higher k for less features
-params.FE.k = 1.5;
+params.FE.k = -1;
 
 % Expected number of features per stack
 params.FE.MaxN_Features=1000;
-params.FE.Mesh = [15 15 5]; %Features distance / Higher for less Features
+params.FE.Mesh = [10 10 3]; %Features distance / Higher for less Features
 
 % Expected [x,y,z] movement of voxles during registration relative to stack size
 % Use 1 if unknown 
@@ -134,6 +134,8 @@ params.BP.extSize = [300 300 0];
 params.BP.saveImages = 0;
 % Set to 1 if your stack has grey pad to remove in visualization
 params.BP.remove_pad = 0;
+% set to one to show Red Green pairs
+params.BP.ShowPairs = 1;
 
 %% Resampling Parameters
 params.RE.savefolder = '/Tiles/';

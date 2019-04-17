@@ -38,7 +38,9 @@ else
         IM_Source = ImportStack(char(StackList(stackID,1)),StackSizes_pixels(stackID,:));
     end
 end
-
+if params.BP.ShowPairs
+    FirstOrg = IM_Source;
+end
 StackPositions_pixels_original = round(StackPositions_pixels_original);
 Neighbors = findStackNeighbors(stackID,StackSizes_pixels,StackPositions_pixels_original);
 
@@ -77,14 +79,22 @@ for i = 1:size(Neighbors,1)
             IM_Source = ImportStack(char(StackList(SourceID,1)),StackSizes_pixels(SourceID,:));
         end
     end
-
+    
     Start=max([1,1,1;StackPositions_neighb(i,:)]);
     End=min(size(Tile3D_org),StackPositions_neighb(i,:)+size(IM_Source)-1);
     Start1=max([1,1,1;1-StackPositions_neighb(i,:)+1]);
     End1=min(size(IM_Source),size(Tile3D_org)-StackPositions_neighb(i,:)+1);
     Tile3D_org(Start(1):End(1),Start(2):End(2),Start(3):End(3))=max(Tile3D_org(Start(1):End(1),Start(2):End(2),Start(3):End(3)),...
         IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3)));
-    
+    if params.BP.ShowPairs
+        figure(9),imshowpair(max(FirstOrg,[],3),max(IM_Source,[],3),'Scaling','independent'); 
+        title('Before Registration');
+%         C = imfuse(max(FirstOrg,[],3),max(IM_Source,[],3),'falsecolor','Scaling','joint','ColorChannels',[1 2 0]);
+% %         C = imfuse(max(FirstOrg,[],3),max(IM_Source,[],3),'checkerboard','Scaling','joint');
+%         figure(13)
+%         imshow(C)
+        correlation_before=Stack_Correlation(FirstOrg,IM_Source,[0,0,0],[0,0,0])
+    end
     if size(L,2) > 1
         [IM_Source,StackPosition_registered]=Perform_Linear_Transform(IM_Source,StackPositions_pixels_original(SourceID,:),L(:,(3*SourceID)-2:3*SourceID),b(:,SourceID));
     else
@@ -97,6 +107,16 @@ for i = 1:size(Neighbors,1)
     End=min(size(Tile3D),StackPosition_registered+size(IM_Source)-1);
     Start1=max([1,1,1;1-StackPosition_registered+1]);
     End1=min(size(IM_Source),size(Tile3D)-StackPosition_registered+1);
+    if params.BP.ShowPairs
+        figure(11),imshowpair(max(Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3)),[],3),max(IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3)),[],3),...
+            'method','falsecolor','Scaling','independent');
+        title('After Registration');
+%         C = imfuse(max(Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3)),[],3),max(IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3)),[],3),'falsecolor','Scaling','joint','ColorChannels',[1 2 0]);
+%         figure(12)
+%         imshow(C)
+        
+        correlation_after=Stack_Correlation(Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3)),IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3)),[0,0,0],[0,0,0])
+    end
     Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3))=max(Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3)),...
         IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3)));
 end
