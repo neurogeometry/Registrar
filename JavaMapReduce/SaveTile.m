@@ -87,9 +87,14 @@ elseif usedDB == 7
     
     hdf5write([SaveFolder,'HDF5','temp_',TileName,'.h5'], '/dataset1', Tile);
 elseif usedDB == 8 % png
-    mkdir([SaveFolder,TileName]);
+    TileName1 = ['PNG/',TileName];
+    mkdir([SaveFolder,TileName1]);
     for z = 0:size(Tile,3)-1       
         TileName_1 = [sprintf('%04d', z),'.png'];
-        imwrite(Tile(:,:,z+1),[SaveFolder,TileName,'/',TileName_1],'png');
+        imwrite(Tile(:,:,z+1),[SaveFolder,TileName1,'/',TileName_1],'png');
     end
+    TileName2 = ['TIF/',TileName];
+    mkdir([SaveFolder,TileName2]);
+    options.overwrite = 1;
+    saveastiff(Tile, [SaveFolder,TileName2,'/',TileName2,'.tif'],options);
 end
