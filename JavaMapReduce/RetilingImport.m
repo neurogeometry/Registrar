@@ -4,6 +4,7 @@ function RetilingImport(StackList,StackPositions,StackSizes,DataFolder,REsavefol
 % paramsBigTileSize = [512 512 128]; % powers of 2 only
 % paramsFinalTileSize = [128*4 128*4 128]; % powers of 2 only
 % paramsEmptyVoxelsValue=111;
+disp('Retiling Started');
 disp(size(StackList));
 Trimimage = 0;
 image_id = 1;

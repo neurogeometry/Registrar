@@ -6,6 +6,7 @@ function DataRetiling(StackList,StackPositions,StackSizes,T,DataFolder,REsavefol
 % paramsEmptyVoxelsValue=111;
 if isempty(T)
     disp('T is Empty');
+    T = [];
     T.transform = 'Translation';
     T.b = 0;
     Register = 0;
@@ -215,7 +216,7 @@ if strcmp(T.transform,'Translation')
             disp(class(StackList(StackInd(j),:)));
             disp(StackSizes(StackInd(j),:));
             disp(class(StackSizes(StackInd(j),:)));
-            X=ImportStack(string(StackList(StackInd(j),:)));
+            X=ImportStack(string(StackList(StackInd(j),:)),StackSizes(StackInd(j),:));
 %             X=ImportStack(string(StackList(StackInd(j),:)),[512,512,47]);
             if Trimimage
                 X=X(h:end-h,w:end-w,:);
