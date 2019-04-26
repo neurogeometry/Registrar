@@ -47,11 +47,11 @@ Neighbors = findStackNeighbors(stackID,StackSizes_pixels,StackPositions_pixels_o
 Tile3D_org=zeros(size(IM_Source)+2*params.BP.extSize,class(IM_Source));
 Tile3D_org(params.BP.extSize(1)+1:end-params.BP.extSize(1),params.BP.extSize(2)+1:end-params.BP.extSize(2),params.BP.extSize(3)+1:end-params.BP.extSize(3))=IM_Source;
 
-if size(L,2) > 1
-    [IM_Source,StackPosition_reg_source]=Perform_Linear_Transform(IM_Source,StackPositions_pixels_original(stackID,:),L(:,(3*stackID)-2:3*stackID),b(:,stackID));
-else
-    StackPosition_reg_source = StackPositions_pixels_original(stackID,:)+b(:,stackID)'; %comming stack position
-end
+% if size(L,2) > 1
+%     [IM_Source,StackPosition_reg_source]=Perform_Linear_Transform(IM_Source,StackPositions_pixels_original(stackID,:),L(:,(3*stackID)-2:3*stackID),b(:,stackID));
+% else
+%     StackPosition_reg_source = StackPositions_pixels_original(stackID,:)+b(:,stackID)'; %comming stack position
+% end
 
 Tile3D=zeros(size(IM_Source)+2*params.BP.extSize,class(IM_Source));
 Tile3D(params.BP.extSize(1)+1:end-params.BP.extSize(1),params.BP.extSize(2)+1:end-params.BP.extSize(2),params.BP.extSize(3)+1:end-params.BP.extSize(3))=IM_Source;
@@ -104,12 +104,25 @@ for i = 1:size(Neighbors,1)
         correlation_before=Stack_Correlation(FirstOrg,IM_Source,[0,0,0],[0,0,0])
     end
     if size(L,2) > 1
-        [IM_Source,StackPosition_registered]=Perform_Linear_Transform(IM_Source,StackPositions_pixels_original(SourceID,:),L(:,(3*SourceID)-2:3*SourceID),b(:,SourceID));
+        
+        % For keeping original unchanged
+        %FirstOrg
+        L1=L(:,(3*stackID)-2:3*stackID);
+        b1=b(:,stackID);
+        L2=L(:,(3*SourceID)-2:3*SourceID);
+        b2=b(:,SourceID);
+        LL=(L1^-1)*L2;
+        bb=(L1^-1)*(b2-b1);
+        [IM_Source,StackPosition_registered]=Perform_Linear_Transform(IM_Source,StackPositions_pixels_original(SourceID,:),LL,bb);
+        % end
+        
+%         [IM_Source,StackPosition_registered]=Perform_Linear_Transform(IM_Source,StackPositions_pixels_original(SourceID,:),L(:,(3*SourceID)-2:3*SourceID),b(:,SourceID));
     else
         StackPosition_registered = StackPositions_pixels_original(SourceID,:)+b(:,SourceID)'; %comming stack position
     end
     
-    StackPosition_registered=StackPosition_registered-StackPosition_reg_source+params.BP.extSize+1;
+      StackPosition_registered=StackPosition_registered-StackPositions_pixels_original(SourceID,:)+params.BP.extSize+1;
+%     StackPosition_registered=StackPosition_registered-StackPosition_reg_source+params.BP.extSize+1;
     
     Start=max([1,1,1;StackPosition_registered]);
     End=min(size(Tile3D),StackPosition_registered+size(IM_Source)-1);
