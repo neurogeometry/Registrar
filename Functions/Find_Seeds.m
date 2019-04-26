@@ -44,6 +44,7 @@ if length(sizeIm)==2
     sizeIm=[sizeIm,1];
 end
 
+%{
 ind=find(Orig>thr);
 keep_ind=false(1,length(ind));
 [x,y,z]=ind2sub(sizeIm,ind);
@@ -69,25 +70,41 @@ clear Orig
 x=x(ind);
 y=y(ind);
 z=z(ind);
-% x = gpuArray(x);
-% y = gpuArray(y);
-% z = gpuArray(z);
+
 count=0;
 temp_ind=1;
-SVx=zeros(2*params.FE.MaxN_Features,1);
-SVy=zeros(2*params.FE.MaxN_Features,1);
-SVz=zeros(2*params.FE.MaxN_Features,1);
-% SVx = gpuArray(SVx);
-% SVy = gpuArray(SVy);
-% SVz = gpuArray(SVz);
-while ~isempty(temp_ind) && count<=params.FE.MaxN_Features
+SVr=zeros(params.FE.MaxN_Features,3);
+while ~isempty(temp_ind) && count<params.FE.MaxN_Features
     count=count+1;
-    SVx(count)=x(temp_ind);
-    SVy(count)=y(temp_ind);
-    SVz(count)=z(temp_ind);
-    rem_ind=find(abs(x-x(temp_ind))<=params.FE.Mesh(1) & abs(y-y(temp_ind))<=params.FE.Mesh(2) & abs(z-z(temp_ind))<=params.FE.Mesh(3));
-    ind(rem_ind)=0;
+    SVr(count,:)=[x(temp_ind),y(temp_ind),z(temp_ind)];
+    aaa=(ind>0 & abs(x-x(temp_ind))<=params.FE.Mesh(1) & abs(y-y(temp_ind))<=params.FE.Mesh(2) & abs(z-z(temp_ind))<=params.FE.Mesh(3));
+    ind(aaa)=0;
     temp_ind=find(ind>0,1,'first');
+end
+SVr=SVr(1:count,:);
+%}
+
+
+Mask=false(SizeIM);
+delt=round(params.FE.Expected_Missalignment.*sizeIm);
+
+for i=2:size(StackPositions_pixels,1)
+    Min=max([[1,1,1];StackPositions_pixels(i,:)-delt-StackPositions_pixels(1,:)+1],[],1);
+    Max=min([StackSizes_pixels(1,:);StackPositions_pixels(i,:)+StackSizes_pixels(i,:)+delt-StackPositions_pixels(1,:)],[],1);
+    Mask(Min(1):Max(1),Min(2):Max(2),Min(3):Max(3))=true;
+end
+Orig(~Mask)=0;
+
+SVx=zeros(params.FE.MaxN_Features,1);
+SVy=zeros(params.FE.MaxN_Features,1);
+SVz=zeros(params.FE.MaxN_Features,1);
+count=0;
+[M,ind]=max(Orig(:));
+while M>thr && count<params.FE.MaxN_Features 
+    count=count+1;
+    [SVx(count),SVy(count),SVz(count)]=ind2sub(sizeIm,ind);
+    Orig(max(SVx(count)-params.FE.Mesh(1),1):min(SVx(count)+params.FE.Mesh(1),sizeIm(1)),max(SVy(count)-params.FE.Mesh(2),1):min(SVy(count)+params.FE.Mesh(2),sizeIm(2)),max(SVz(count)-params.FE.Mesh(3),1):min(SVz(count)+params.FE.Mesh(3),sizeIm(3)))=0;
+    [M,ind]=max(Orig(:));
 end
 
 SVr=[SVx(1:count),SVy(1:count),SVz(1:count)];

@@ -52,7 +52,7 @@ if handles.chkdebug.Value && Seq_Par ~= 2
     
 end
 
-hungInput = zeros(size(Source_seed,1),size(Target_seed,1));
+hungInput = 10^12.*ones(size(Source_seed,1),size(Target_seed,1));
 
 % ZMAD = ZeroMeanAbsoluteDifferences
 % MSE: MeanSquareError
@@ -68,18 +68,28 @@ hungInput = zeros(size(Source_seed,1),size(Target_seed,1));
 if strcmp(paramsFMMetric,'ZMAD')
     nTargetFeatures=bsxfun(@rdivide,TargetFeatures,mean(TargetFeatures,2));
     nSourceFeatures=bsxfun(@rdivide,SourceFeatures,mean(SourceFeatures,2));
-    for i=1:size(SourceFeatures,2)
-        hungInput=hungInput+abs(bsxfun(@minus,nTargetFeatures(:,i)',nSourceFeatures(:,i)));
+        
+    for i = 1 : size(Source_seed,1)
+        for j = 1 : size(Target_seed,1)
+            if sum((Source_seed(i,:)+Source_StackPositions-Target_seed(j,:)-Target_StackPositions).^2)^0.5<=paramsFMDT
+                hungInput(i,j)=mean(abs(nSourceFeatures(i,:)-nTargetFeatures(j,:)));
+            end
+        end
     end
-    hungInput=hungInput./size(SourceFeatures,2);
     
-    TempDisp=zeros(size(SourceFeatures,1),size(TargetFeatures,1));
-    for i=1:size(Target_seed,2)
-        TempDisp=TempDisp+(bsxfun(@minus,Target_seed(:,i)',Source_seed(:,i))).^2;
-    end
-    Dthr=(sum(Displacement.^2))^0.5;
-    hungInput(isnan(hungInput)) = 10^12;
-    hungInput(abs(TempDisp.^0.5-Dthr)>paramsFMDT)=10^12;
+%     for i=1:size(SourceFeatures,2)
+%         hungInput=hungInput+abs(bsxfun(@minus,nTargetFeatures(:,i)',nSourceFeatures(:,i)));
+%     end
+%     hungInput=hungInput./size(SourceFeatures,2);
+%     
+%     TempDisp=zeros(size(SourceFeatures,1),size(TargetFeatures,1));
+%     for i=1:size(Target_seed,2)
+%         TempDisp=TempDisp+(bsxfun(@minus,Target_seed(:,i)',Source_seed(:,i))).^2;
+%     end
+%     Dthr=(sum(Displacement.^2))^0.5;
+%     hungInput(isnan(hungInput)) = 10^12;
+%     hungInput(abs(TempDisp.^0.5-Dthr)>paramsFMDT)=10^12;
+
 elseif strcmp(paramsFMMetric,'EigenVector')
     Source_vectors=zeros(3,3,size(Source_seed,1));
     Source_values=zeros(3,3,size(Source_seed,1));

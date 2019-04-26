@@ -153,7 +153,7 @@ while sum(vlines)<K
         Z(i_temp,j_temp)=true;
 
         C(hlines,vlines)=C(hlines,vlines)+M;
-        C(~hlines,~vlines)=C(~hlines,~vlines)-M;
+        C(~hlines,~vlines)=temp1-M;
         
         Z(hlines,vlines)=false;
         S(hlines,vlines)=false;

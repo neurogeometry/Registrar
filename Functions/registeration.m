@@ -127,7 +127,7 @@ if exist(StackList_csv_pth,'file') > 0
             mkdir(DataFolder);
         end
         if handles.checkbox15.Value
-            UpdateLog(LogHandle,'Feature Extraction Started');
+            UpdateLog(LogHandle,' Extraction Started');
         end
         [stop]=FeatureExtraction(handles,LogHandle,StackList,DataFolder,Seq_Par,Par_workers,All_overlaps,StackPositions_pixels,StackSizes_pixels);
     end
