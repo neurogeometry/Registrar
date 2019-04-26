@@ -87,6 +87,14 @@ for i = 1:size(Neighbors,1)
     Tile3D_org(Start(1):End(1),Start(2):End(2),Start(3):End(3))=max(Tile3D_org(Start(1):End(1),Start(2):End(2),Start(3):End(3)),...
         IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3)));
     if params.BP.ShowPairs
+        
+        NotRegisteredRGB = cat(4,FirstOrg,IM_Source,zeros(size(FirstOrg)));
+        NotRegisteredRGB=permute(NotRegisteredRGB,[1,2,4,3]);
+        options.color = true;
+        saveastiff(NotRegisteredRGB,[DataFolder,'\NotRegisteredRGB.tif'],options);
+        
+        
+        
         figure(9),imshowpair(max(FirstOrg,[],3),max(IM_Source,[],3),'Scaling','independent'); 
         title('Before Registration');
 %         C = imfuse(max(FirstOrg,[],3),max(IM_Source,[],3),'falsecolor','Scaling','joint','ColorChannels',[1 2 0]);
@@ -108,14 +116,21 @@ for i = 1:size(Neighbors,1)
     Start1=max([1,1,1;1-StackPosition_registered+1]);
     End1=min(size(IM_Source),size(Tile3D)-StackPosition_registered+1);
     if params.BP.ShowPairs
-        figure(11),imshowpair(max(Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3)),[],3),max(IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3)),[],3),...
+        IMR1 = Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3));
+        IMR2 = IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3));
+        RegisteredRGB = cat(4,IMR1,IMR2,zeros(size(IMR1)));
+        RegisteredRGB=permute(RegisteredRGB,[1,2,4,3]);
+        options.color = true;
+        saveastiff(RegisteredRGB,[DataFolder,'\RegisteredRGB.tif'],options);
+        
+        figure(11),imshowpair(max(IMR1,[],3),max(IMR2,[],3),...
             'method','falsecolor','Scaling','independent');
         title('After Registration');
 %         C = imfuse(max(Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3)),[],3),max(IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3)),[],3),'falsecolor','Scaling','joint','ColorChannels',[1 2 0]);
 %         figure(12)
 %         imshow(C)
         
-        correlation_after=Stack_Correlation(Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3)),IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3)),[0,0,0],[0,0,0])
+        correlation_after=Stack_Correlation(IMR1,IMR2,[0,0,0],[0,0,0])
     end
     Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3))=max(Tile3D(Start(1):End(1),Start(2):End(2),Start(3):End(3)),...
         IM_Source(Start1(1):End1(1),Start1(2):End1(2),Start1(3):End1(3)));
