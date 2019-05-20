@@ -22,9 +22,9 @@ if strcmp(Transform_Type,'Translation')
     L=[];
     TSaveLocation = [DataFolder,'/T_Translation.mat'];
 elseif strcmp(Transform_Type,'Rigid')
-    alpha=0.1; % overall regularization on Ls
+    alpha=0.5; % overall regularization on Ls
     betta=0.1; % individual regularizations on Ls
-    gamma=5; % enforcing unitary transforms
+    gamma=2; % enforcing unitary transforms
     delta=0.1; % overal regularization of shifts
     lambda=0; % individual regularization of shifts
     learning_rate=0.1;

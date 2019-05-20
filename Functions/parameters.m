@@ -135,7 +135,7 @@ params.BP.saveImages = 0;
 % Set to 1 if your stack has grey pad to remove in visualization
 params.BP.remove_pad = 0;
 % set to one to show Red Green pairs
-params.BP.ShowPairs = 1;
+params.BP.ShowPairs = 0;
 
 %% Resampling Parameters
 params.RE.savefolder = '/Tiles/';

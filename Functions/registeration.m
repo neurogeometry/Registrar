@@ -303,22 +303,22 @@ if exist(StackList_csv_pth,'file') > 0
     end
     
     % Create Zoom Level
-    %     if runRetilling && ~stop && (outputType == 1 || outputType == 2)
-    %         ZL = 2;
-    %         NumTiles = inf;
-    %         if handles.checkbox15.Value
-    %             try
-    %                 LogHandle.Children(2).String{end+1} = 'Creating Zoom Levels Started!';
-    %                 LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
-    %             catch
-    %             end
-    %         end
-    %
-    %         while NumTiles > 1
-    %             NumTiles = CreateZoomLevels(handles,LogHandle,ZL,DataFolder,outputType,DBAddress);
-    %             ZL = ZL * 2;
-    %         end
-    %     end
+        if runRetilling && ~stop && (outputType == 1 || outputType == 2 || outputType == 7)
+            ZL = 2;
+            NumTiles = inf;
+            if handles.checkbox15.Value
+                try
+                    LogHandle.Children(2).String{end+1} = 'Creating Zoom Levels Started!';
+                    LogHandle.Children(2).Value = size(LogHandle.Children(2).String,1);
+                catch
+                end
+            end
+    
+            while NumTiles > 1
+                NumTiles = CreateZoomLevels(handles,LogHandle,ZL,DataFolder,outputType,DBAddress);
+                ZL = ZL * 2;
+            end
+        end
     
     if ~stop
         if handles.checkbox15.Value

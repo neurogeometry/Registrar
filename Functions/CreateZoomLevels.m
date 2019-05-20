@@ -64,7 +64,7 @@ else
     Tile_x=zeros(1,length(Tile_names)-2);
     Tile_y=zeros(1,length(Tile_names)-2);
     Tile_z=zeros(1,length(Tile_names)-2);
-    for i=1:length(Tile_names)-2
+    for i=1:length(Tile_names)-3
         temp=Tile_names(i+2).name;
         ind=find(temp=='_');
         Tile_x(i)=str2double(temp(1:ind(1)-1));
@@ -267,21 +267,26 @@ for i=1:prod(N_tiles_new)
             %                 imwrite(Tile(:,:,j),[SaveFolder,TileName,'/',TileName1,'.jpg'],'jpg');
             %             end
             
+            TileName1 = ['PNG/',TileName];
+            mkdir([SaveFolder,TileName1]);
+            for z = 0:size(Tile,3)-1       
+                TileName_1 = [sprintf('%04d', z),'.png'];
+                imwrite(Tile(:,:,z+1),[SaveFolder,TileName1,'/',TileName_1],'png');
+            end
             
-            
-            % for save as JPEG (Like Neuroglancer) for Joe
-            C1 = permute(Tile,[1 3 2]);
-            Tile_glancer1 = reshape(C1,[],size(Tile,2),1);
-            xstart1 = NewTilePositions(i,2)-1;
-            xend1 = xstart1+size(Tile,1);
-            ystart1 = NewTilePositions(i,1)-1;
-            yend1 = ystart1+size(Tile,2);
-            zstart1 = NewTilePositions(i,3)-1;
-            zend1 = zstart1+size(Tile,3);
-            TileName1 = [num2str(xstart1),'-',num2str(xend1),'_',num2str(ystart1),'-',num2str(yend1),'_',num2str(zstart1),'-',num2str(zend1)];
-            %                 saveastiff(im2uint8(Tile_glancer), [SaveFolder,'image/',TileName]);
-            %             SaveFolder1 = ['C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-Neocortical2_StackList\forJoe\Zoom',num2str(ZoomLevel),'\'];
-            imwrite(Tile_glancer1,[SaveFolder,TileName1,'.jpg'],'jpg');
+%             % for save as JPEG (Like Neuroglancer) for Joe
+%             C1 = permute(Tile,[1 3 2]);
+%             Tile_glancer1 = reshape(C1,[],size(Tile,2),1);
+%             xstart1 = NewTilePositions(i,2)-1;
+%             xend1 = xstart1+size(Tile,1);
+%             ystart1 = NewTilePositions(i,1)-1;
+%             yend1 = ystart1+size(Tile,2);
+%             zstart1 = NewTilePositions(i,3)-1;
+%             zend1 = zstart1+size(Tile,3);
+%             TileName1 = [num2str(xstart1),'-',num2str(xend1),'_',num2str(ystart1),'-',num2str(yend1),'_',num2str(zstart1),'-',num2str(zend1)];
+%             %                 saveastiff(im2uint8(Tile_glancer), [SaveFolder,'image/',TileName]);
+%             %             SaveFolder1 = ['C:\Users\Seyed\Documents\DatasetTests\MicroscopeFiles\Results-Neocortical2_StackList\forJoe\Zoom',num2str(ZoomLevel),'\'];
+%             imwrite(Tile_glancer1,[SaveFolder,TileName1,'.jpg'],'jpg');
             
             if handles.checkbox15.Value
                 try

@@ -23,14 +23,14 @@ if TransformationValue == 1 % Translation
 elseif TransformationValue == 2 % Rigid
     NumRandPoints = 2;
     MaxNumSamples=10^5;
-    MaxNumMatches=20;
-    MaxErrorDistance = 2;
+    MaxNumMatches=inf;
+    MaxErrorDistance = 3;
     InlierRatio = 0.1;
 elseif TransformationValue == 3 % Affine
     NumRandPoints = 4;
     MaxNumSamples=10^5;
-    MaxNumMatches=20; % inf
-    MaxErrorDistance = 2;
+    MaxNumMatches=50; % inf
+    MaxErrorDistance = 3;
     InlierRatio = 0.1;
 elseif TransformationValue == 4 % Non-Rigid
     NumRandPoints = 4;
