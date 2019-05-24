@@ -38,6 +38,21 @@ E:\SubTiling\00759\00759-ngc.0.tif,203299.775250213,198088.934353151,19118.62381
 
 E:\SubTiling\00760\00760-ngc.0.tif,204164.694690563,198088.934353151,19118.6238160000
 
+# Code Structure
+
+The Registrar.m is the main file which call the GUI and will other functions. The main function in this file called registration():
+
+```
+try
+    registeration(StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles,LogHandle)
+catch ME
+    LogHandle.Children(2).String = ME.getReport;
+end
+```
+The registration() function includes <a href='https://github.com/neurogeometry/'>Stack Overlaps</a>, <a href='https://github.com/neurogeometry/'>Feature Extraction</a>, <a href='https://github.com/neurogeometry/'>Feature Matching</a>, <a href='https://github.com/neurogeometry/'>Blending</a>, <a href='https://github.com/neurogeometry/'>Retiling</a>, and <a href='https://github.com/neurogeometry/'>Create Zoom-levels</a> functions.
+
+The detailed information about these functions can be found <a href='https://github.com/neurogeometry/'>here</a>.
+
 # License
 
 Copyright 2018 Northeastern University.
