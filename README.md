@@ -49,7 +49,14 @@ catch ME
     LogHandle.Children(2).String = ME.getReport;
 end
 ```
-The registration() function includes <a href='https://github.com/neurogeometry/'>Stack Overlaps</a>, <a href='https://github.com/neurogeometry/'>Feature Extraction</a>, <a href='https://github.com/neurogeometry/'>Feature Matching</a>, <a href='https://github.com/neurogeometry/'>Blending</a>, <a href='https://github.com/neurogeometry/'>Retiling</a>, and <a href='https://github.com/neurogeometry/'>Create Zoom-levels</a> functions.
+The <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#registration'>registration()</a> function includes the following main functions:
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#findoverlaps'>FindOverlaps()</a> (generates the stack overlaps information)</br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#featureextraction'>Feature Extraction()</a> (find features in overlaps regions of all stacks)</br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#feature-matching'>Feature Matching()</a> (pairwise feature matching) </br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#global-registration'>Global Registration()</a> (minimize the registration error globally and find transformation for each stack) </br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#blending'>Blending()</a> (generate seamless registered image for visualization)</br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#retiling'>Retiling()</a> (generate final tiles)</br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#createzoomlevels'>CreateZoomLevels()</a> (create different zoom levels)</br>
 
 The detailed information about these functions can be found <a href='https://github.com/neurogeometry/'>here</a>.
 
