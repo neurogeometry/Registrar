@@ -1,14 +1,14 @@
 # Registrar Functions
 
 The main functions in Registrar software are:
-- <a href='https://github.com/neurogeometry/'>Registration()</a> (generates the stack overlaps information)</br>
-- <a href='https://github.com/neurogeometry/'>FindOverlaps()</a> (generates the stack overlaps information)</br>
-- <a href='https://github.com/neurogeometry/'>Feature Extraction()</a> (find features in overlaps regions of all stacks)</br>
-- <a href='https://github.com/neurogeometry/'>Feature Matching()</a> (pairwise feature matching) </br>
-- <a href='https://github.com/neurogeometry/'>Global Registration()</a> (minimize the registration error globally and find transformation for each stack) </br>
-- <a href='https://github.com/neurogeometry/'>Blending()</a> (generate seamless registered image for visualization)</br>
-- <a href='https://github.com/neurogeometry/'>Retiling()</a> (generate final tiles)</br>
-- <a href='https://github.com/neurogeometry/'>CreateZoomLevels()</a> (create different zoom levels)</br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#registration'>Registration()</a> (generates the stack overlaps information)</br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#findoverlaps'>FindOverlaps()</a> (generates the stack overlaps information)</br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#featureextraction'>Feature Extraction()</a> (find features in overlaps regions of all stacks)</br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#feature-matching'>Feature Matching()</a> (pairwise feature matching) </br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#global-registration'>Global Registration()</a> (minimize the registration error globally and find transformation for each stack) </br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#blending'>Blending()</a> (generate seamless registered image for visualization)</br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#retiling'>Retiling()</a> (generate final tiles)</br>
+- <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#createzoomlevels'>CreateZoomLevels()</a> (create different zoom levels)</br>
 
 ## Registration()
 This is the main function in the GUI file (Registrar.m) which runs when user set parameters and click on Run on the GUI. 
