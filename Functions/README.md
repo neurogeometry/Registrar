@@ -121,12 +121,12 @@ The inputs of this functions includes:
 - StackSizes_pixels: the size of each stack. The size of the matrix is 3*N where 3 corresponsd to stack sizes in 3 dimentions and N is the number of image stacks.
 - T: the transformation information for all image stacks
 - DataFolder: the address of the output directory. The features will be saved in this folder.
-- outputType: the type of output: 
-1. NCTracer SQLite database format
-2. Tiff volume file format
-3. Google Neuroglancer format
-4. Nifti volume format
-5. HDF5 database format
-6. Catmaid format
-7. NCTRacer JPEG compresion
+- outputType: this parameter determines the output type of the image stacks, registrar can generate the results in different data formats inclusing: 
+</br>&nbsp;&nbsp;1. NCTracer SQLite database format
+</br>&nbsp;&nbsp;2. Tiff volume file format
+</br>&nbsp;&nbsp;3. Google Neuroglancer format
+</br>&nbsp;&nbsp;4. Nifti volume format
+</br>&nbsp;&nbsp;5. &nbsp;&nbsp;HDF5 database format
+</br>&nbsp;&nbsp;6. Catmaid format
+</br>&nbsp;&nbsp;7. NCTRacer JPEG compresion
 
