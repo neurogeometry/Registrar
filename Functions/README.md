@@ -130,3 +130,27 @@ The inputs of this functions includes:
 </br>&nbsp;&nbsp;6. Catmaid format
 </br>&nbsp;&nbsp;7. NCTRacer JPEG compresion
 
+## CreateZoomLevels()
+In order to speed up the visualization, and avoid calculating the zoom information while navigating through image stacks, you may precalculate the data for different zoom levels. This has been done in a function called CreateZoomLevels() inside the registration.m file:
+```
+CreateZoomLevels(handles,LogHandle,ZL,DataFolder,outputType,DBAddress);
+```
+The inputs of this functions includes:
+- handles: the handles object of the main GUI.
+- LogHandle: the handles object of the Log GUI.
+- ZL: the zoom level value. this should be an integer number which is a power of 2.
+- outputType: this parameter determines the output type of the image stacks, registrar can generate the results in different data formats inclusing: 
+</br>&nbsp;&nbsp;1. NCTracer SQLite database format
+</br>&nbsp;&nbsp;2. Tiff volume file format
+</br>&nbsp;&nbsp;3. Google Neuroglancer format
+</br>&nbsp;&nbsp;4. Nifti volume format
+</br>&nbsp;&nbsp;5. &nbsp;&nbsp;HDF5 database format
+</br>&nbsp;&nbsp;6. Catmaid format
+</br>&nbsp;&nbsp;7. NCTRacer JPEG compresion
+
+This process will create the zoom out data for different zoom level in the specified format. The result will be saved in the corresponding zoom folder inside the given address in DataFolder.
+
+
+
+
+
