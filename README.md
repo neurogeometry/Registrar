@@ -60,6 +60,11 @@ The <a href='https://github.com/neurogeometry/Registrar/tree/master/Functions#re
 
 The detailed information about these functions can be found <a href='https://github.com/neurogeometry/'>here</a>.
 
+# Developers
+Seyed Mostafa Mousavi Kahaki 
+</br>
+Armen Stepanyants
+
 # License
 
 Copyright 2018 Northeastern University.
