@@ -6,9 +6,9 @@ This project has been supported by the National Institude of Health (NIH)
 </br></br>
 Registrar is open source software for accurate spatial registration of multiple overlapping stacks of images, registration of stacks of images acquired in a time-lapse manner, and registration of image plains within individual stacks. Registrar provides a utility for registration based on translation, rigid, affine, and B-spline transformations. This software was developed by Seyed M.M. Kahaki and Armen Stepanyants with input from other members of the Neurogeometry group.
 </br></br>
-<img src="https://web.northeastern.edu/kahaki/Registrar_.PNG" alt="Registrar" align="middle"> 
+<img src="https://web.northeastern.edu/kahaki/Registrar_.PNG" alt="Registrar" align="middle" width="70%" height="70%"> 
 </br></br></br>
-<img src="https://web.northeastern.edu/kahaki/reg_before_after.PNG" alt="Registrar" align="middle">
+<img src="https://web.northeastern.edu/kahaki/reg_before_after.PNG" alt="Registrar" align="middle" width="70%" height="70%">
 
 ## Functionalities
 The ability to map neural circuits on the scale of an entire brain is critical for advancing our understanding of brain functions. Circuit mapping can be based on whole-brain imaging of sparsely labeled populations of neurons with 3D confocal or two-photon microscopy. Registrar is a software for stitching and registration designed for different proposes including 1. Stitching of 3D image stacks of entire brain, 2. registration of time-lapse images, and 3. registration of images within stacks. 
