@@ -100,7 +100,7 @@ if exist(StackList_csv_pth,'file') > 0
     
     % Get positions from the list
     StackPositions_pixels = cell2mat(StackList(:,2:4)); %xlsread(StackPositions_pixels_csv_pth);
-    StackPositions_pixels = StackPositions_pixels(:,[2,1,3]);
+%     StackPositions_pixels = StackPositions_pixels(:,[2,1,3]);
     
     % Find stacks overlap
     All_overlaps = FindOverlaps(handles,StackPositions_pixels,StackSizes_pixels,StackList);

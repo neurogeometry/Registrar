@@ -108,11 +108,12 @@ else
 end
 
 tic
-try
 registeration(StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles,LogHandle)
-catch ME
-    LogHandle.Children(2).String = ME.getReport;
-end
+% try
+%     registeration(StackList_csv_pth,TransformationValue,Seq_Par,Par_workers,blendingSID,handles,LogHandle)
+% catch ME
+%     LogHandle.Children(2).String = ME.getReport;
+% end
 TotalTime = toc
 
 function pushbutton1_Callback(hObject, eventdata, handles)

@@ -142,12 +142,14 @@ elseif usedDB == 6 % CATMAID - TrackEM
 %     end
     
 elseif usedDB == 7 % png
+    TileName=[num2str(TilePositions(2)),'_',num2str(TilePositions(1)),'_',num2str(TilePositions(3))];
     TileName1 = ['PNG/',TileName];
     mkdir([SaveFolder,TileName1]);
     for z = 0:size(Tile,3)-1       
         TileName_1 = [sprintf('%04d', z),'.png'];
         imwrite(Tile(:,:,z+1),[SaveFolder,TileName1,'/',TileName_1],'png');
     end
+    TileName=[num2str(TilePositions(1)),'_',num2str(TilePositions(2)),'_',num2str(TilePositions(3))];
     TileName2 = [TileName];
     mkdir([SaveFolder,TileName2]);
     options.overwrite = 1;

@@ -258,6 +258,7 @@ for i=1:prod(N_tiles_new)
                 close(StatementObject);
             end
         else
+            TileName=[num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,2)),'_',num2str(NewTilePositions(i,3))];
             mkdir([SaveFolder,TileName]);
             saveastiff(Tile, [SaveFolder,TileName,'/',TileName,'.tif'],options);
             
@@ -266,7 +267,7 @@ for i=1:prod(N_tiles_new)
             %                 TileName1=[num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,1)+j-1)];
             %                 imwrite(Tile(:,:,j),[SaveFolder,TileName,'/',TileName1,'.jpg'],'jpg');
             %             end
-            
+            TileName=[num2str(NewTilePositions(i,2)),'_',num2str(NewTilePositions(i,1)),'_',num2str(NewTilePositions(i,3))];
             TileName1 = ['PNG/',TileName];
             mkdir([SaveFolder,TileName1]);
             for z = 0:size(Tile,3)-1       
