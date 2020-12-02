@@ -17,7 +17,7 @@ sizeX=size(X);
 if length(sizeX)==2
     sizeX(3)=1;
 end
-
+ 
 if isempty(StackPosition)  % X is a 3xN array of positions
     if isempty(L)
         X_prime=X+ones(sizeX(1),1)*b;
